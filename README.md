@@ -4,7 +4,7 @@
 
 1. Download the EEXCESS-wordpress-plugin from TBD and install it to your wordpress distribution. For an installation guide please visit http://codex.wordpress.org/Managing_Plugins .
 2. Activate the plugin on your wordpress plugin page.
-3. To use the EEXCESS-wordpress-plugin create / edit a post. Inside the texteditor you can get recommendations by simple select the text and click the "Get Recommendation"-button inside the EEXCESS area beneath the editor. An alternativ to this method is, to write #eexcess:keyword and press the space button (e.g. #eexcess:Munic). The plugin will automatically strip the keyword from this phrase and try to get recommendations for the given keyword.
+3. To use the EEXCESS-wordpress-plugin create / edit a post. Inside the texteditor you can get recommendations by simple select the text and click the "Get Recommendation"-button inside the EEXCESS area beneath the editor. An alternativ to this method is, to write #eexcess:keyword# or multiple keywords with #eexcess:keyword1 keyword2# (e.g. #eexcess:Munic Bavaria#). The plugin will automatically strip the keyword from this phrase and try to get recommendations for the given keyword.
 
 
 ## Settings
