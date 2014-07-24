@@ -2,7 +2,7 @@
 var EEXCESS = {
     "trigger" : { // the options needed for triggering a recommendation
         "keyCodes" : [ // Defines all keycodes needed for triggering the event
-            32 // whitespace
+            220 // sharp
         ],
         "marker" : "#eexcess:", // this marker signals the listener to get recommendations
         "textSpan" : 2 // the amount of words send

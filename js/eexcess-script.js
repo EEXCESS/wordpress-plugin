@@ -28,6 +28,9 @@ $j(document).ready(function() {
                 EEXCESS.recommendationData.terms = terms;
                 getRecommendations(EEXCESS.recommendationData);
                 var cleanedContent = ed.getContent().replace(EEXCESS.trigger.marker, "");
+
+                var index = cleanedContent.lastIndexOf("</");
+                cleanedContent = cleanedContent.substring(0, index - 1) + cleanedContent.substring(index, cleanedContent.length);            
                 ed.setContent("");
                 ed.selection.setContent($j(cleanedContent).html());
             }
@@ -49,9 +52,10 @@ $j(document).ready(function() {
             if(terms != null) {
                 EEXCESS.recommendationData.terms = terms; 
                 getRecommendations(EEXCESS.recommendationData);
-            }
-            
-            $j(this).val($j(this).val().replace(EEXCESS.trigger.marker, ""));
+
+                $j(this).val($j(this).val().replace(EEXCESS.trigger.marker, ""));
+                $j(this).val($j(this).val().slice(0 , -1))
+            }  
         }
     })
     
@@ -105,6 +109,7 @@ $j(document).ready(function() {
      */
     function getTerms(content, visualEditor, marker) {
         var index = content.lastIndexOf(EEXCESS.trigger.marker);
+
         if(index != -1 || !marker) { 
             // Removing multiple whitespaces
             content = content.replace(/\s{2,}/g," ");
@@ -119,18 +124,24 @@ $j(document).ready(function() {
             
             var results = content.match(/("[^"]+"|[^"\s]+)/g);
             
+
             if(marker) {
                 // Slicing the results array according to the textSpan option defined in the EEXCESS.trigger object
                 results = results.slice(results.length - EEXCESS.trigger.textSpan);
-                // removing the marker from the result
-                results[results.length - 1] = results[results.length - 1].substring(EEXCESS.trigger.marker.length);
+                for(var i = 0; i < results.length; i++) {
+                    // removing the marker from the result
+                    if(results[i].indexOf(EEXCESS.trigger.marker) > -1) {
+                        results[i] = results[i].substring(EEXCESS.trigger.marker.length);      
+                    } else if(results[i].indexOf("") > -1) {
+                        results[i] = results[i].substring(0, results[i].length - 1);  
+                    }
+                }
             }
-            
             // Removing punctuation marks from the result
             for(var i = 0; i < results.length; i++) {
                 results[i] = results[i].replace(/[\.,#-\/!$%\^&\*;:{}=\-_`~()]/g,"");
             }
-   
+            
             return results;
         }
         
