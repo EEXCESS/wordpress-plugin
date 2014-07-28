@@ -1,10 +1,8 @@
 // Plugin options object
 var EEXCESS = {
     "trigger" : { // the options needed for triggering a recommendation
-        "keyCodes" : [ // Defines all keycodes needed for triggering the event
-            220 // sharp
-        ],
         "marker" : "#eexcess:", // this marker signals the listener to get recommendations
+        "closingTag" : "#", // #eexcess:keywords#
         "textSpan" : 2 // the amount of words send
     },
     "recommendationData" : { // The object for the ajax call

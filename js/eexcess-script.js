@@ -21,18 +21,19 @@ $j(document).ready(function() {
 
     // Will be called on a keyUp event inside the tinyMCE editor 
     EEXCESS.extractTerm = function(ed, e) {
-        if(jQuery.inArray(e.which, EEXCESS.trigger.keyCodes) != -1) {
-            var terms = getTerms(ed.getContent(), true, true);
-
+        var text  = ed.getContent();
+        if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
+            var terms = getTerms(text, true, true);
+                        
             if(terms != null) {
                 EEXCESS.recommendationData.terms = terms;
                 getRecommendations(EEXCESS.recommendationData);
-                var cleanedContent = ed.getContent().replace(EEXCESS.trigger.marker, "");
-
-                var index = cleanedContent.lastIndexOf("</");
-                cleanedContent = cleanedContent.substring(0, index - 1) + cleanedContent.substring(index, cleanedContent.length);            
-                ed.setContent("");
-                ed.selection.setContent($j(cleanedContent).html());
+                var cleanedContent = text.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
+                cleanedContent = cleanedContent.slice(0 , -1);            
+                ed.setContent(cleanedContent);
+                // set cursor position to the end
+                ed.selection.select(ed.getBody(), true); 
+                ed.selection.collapse(false);
             }
         }
     };
@@ -46,16 +47,17 @@ $j(document).ready(function() {
     
     // Observe the text editor
     $j(document).on("keyup", "textarea#content", function(e) {
-        if(jQuery.inArray(e.which, EEXCESS.trigger.keyCodes) != -1) {
-            var terms = getTerms($j(this).val(), false, true);
-            
+        var text  = $j(this).val();
+        if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
+            var terms = getTerms(text, false, true);
+        
             if(terms != null) {
                 EEXCESS.recommendationData.terms = terms; 
                 getRecommendations(EEXCESS.recommendationData);
 
                 $j(this).val($j(this).val().replace(EEXCESS.trigger.marker, ""));
                 $j(this).val($j(this).val().slice(0 , -1))
-            }  
+            } 
         }
     })
     
