@@ -22,6 +22,7 @@ $j(document).ready(function() {
     // Will be called on a keyUp event inside the tinyMCE editor 
     EEXCESS.extractTerm = function(ed, e) {
         var text  = ed.getContent();
+        
         if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
             var terms = getTerms(text, true, true);
                         

@@ -112,7 +112,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
         <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations">
         <div id="content">
             <p>
-            Get recommendations for keywords by using "#eexcess:Keyword" inside the textarea. 
+            Get recommendations for keywords by using "#eexcess:Keyword#" inside the textarea. 
             Furthermore, you can select parts of the text and then click the "Get Recommendations" button.
             </p>   
         </div>
@@ -135,7 +135,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
         // Data for the api call
         $postData = array(
-            "numResults" => 60,
+            "numResults" => 999,
             "contextKeywords" => array()
         );
 
