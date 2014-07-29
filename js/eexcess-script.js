@@ -18,7 +18,7 @@ $j.fn.setCursorPosition = function(pos) {
 
 // Use jQuery via $j(...)
 $j(document).ready(function() {
-
+    // Getting the cursor position 
     $j.fn.getCursorPosition = function() {
         var input = this.get(0);
         if (!input) return; // No (input) element found
@@ -34,7 +34,7 @@ $j(document).ready(function() {
             return sel.text.length - selLen;
         }
     }
-
+    // Setting the cursor position
     $j.fn.selectRange = function(start, end) {
         if(!end) end = start; 
         return this.each(function() {
@@ -65,7 +65,7 @@ $j(document).ready(function() {
                 var cleanedContent = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition, text.length);
                 cleanedContent = cleanedContent.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
                 ed.setContent(cleanedContent);
-                // set cursor position
+                // setting the cursor position
                 setCursorPosition(ed, cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
             }
         }
@@ -94,6 +94,7 @@ $j(document).ready(function() {
                 text = text.replace(match[0], match[0].slice(0, match[0].length - 1));
                 text = text.replace(EEXCESS.trigger.marker, "");
                 $j(this).val(text);
+                // setting the cursor position
                 $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
             } 
         }
