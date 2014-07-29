@@ -19,6 +19,38 @@ $j.fn.setCursorPosition = function(pos) {
 // Use jQuery via $j(...)
 $j(document).ready(function() {
 
+    $j.fn.getCursorPosition = function() {
+        var input = this.get(0);
+        if (!input) return; // No (input) element found
+        if ('selectionStart' in input) {
+            // Standard-compliant browsers
+            return input.selectionStart;
+        } else if (document.selection) {
+            // IE
+            input.focus();
+            var sel = document.selection.createRange();
+            var selLen = document.selection.createRange().text.length;
+            sel.moveStart('character', -input.value.length);
+            return sel.text.length - selLen;
+        }
+    }
+
+    $j.fn.selectRange = function(start, end) {
+        if(!end) end = start; 
+        return this.each(function() {
+            if (this.setSelectionRange) {
+                this.focus();
+                this.setSelectionRange(start, end);
+            } else if (this.createTextRange) {
+                var range = this.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', end);
+                range.moveStart('character', start);
+                range.select();
+            }
+        });
+    };
+
     // Will be called on a keyUp event inside the tinyMCE editor 
     EEXCESS.extractTerm = function(ed, e) {
         var text  = ed.getContent();
@@ -29,12 +61,12 @@ $j(document).ready(function() {
             if(terms != null) {
                 EEXCESS.recommendationData.terms = terms;
                 getRecommendations(EEXCESS.recommendationData);
-                var cleanedContent = text.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
-                cleanedContent = cleanedContent.slice(0 , -1);            
+                var cursorPosition = getCurserPosition(ed);
+                var cleanedContent = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition, text.length);
+                cleanedContent = cleanedContent.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
                 ed.setContent(cleanedContent);
-                // set cursor position to the end
-                ed.selection.select(ed.getBody(), true); 
-                ed.selection.collapse(false);
+                // set cursor position
+                setCursorPosition(ed, cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
             }
         }
     };
@@ -49,15 +81,20 @@ $j(document).ready(function() {
     // Observe the text editor
     $j(document).on("keyup", "textarea#content", function(e) {
         var text  = $j(this).val();
-        if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
+        var regex = eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/");
+        if(regex.test(text)) { // Tests if the text contains #eexcess:keywords#
             var terms = getTerms(text, false, true);
         
             if(terms != null) {
                 EEXCESS.recommendationData.terms = terms; 
                 getRecommendations(EEXCESS.recommendationData);
-
-                $j(this).val($j(this).val().replace(EEXCESS.trigger.marker, ""));
-                $j(this).val($j(this).val().slice(0 , -1))
+                var cursorPosition = $j(this).getCursorPosition();
+                var text = $j(this).val();
+                var match = text.match(regex);    
+                text = text.replace(match[0], match[0].slice(0, match[0].length - 1));
+                text = text.replace(EEXCESS.trigger.marker, "");
+                $j(this).val(text);
+                $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
             } 
         }
     })
@@ -202,5 +239,66 @@ $j(document).ready(function() {
                 container.html(EEXCESS.errorMessages.noRecommandations);
             }
         });
+    };
+
+    function getCurserPosition(editor) {
+        //set a bookmark so we can return to the current position after we reset the content later
+        var bm = editor.selection.getBookmark(0);    
+
+        //select the bookmark element
+        var selector = "[data-mce-type=bookmark]";
+        var bmElements = editor.dom.select(selector);
+
+        //put the cursor in front of that element
+        editor.selection.select(bmElements[0]);
+        editor.selection.collapse();
+
+        //add in my special span to get the index...
+        //we won't be able to use the bookmark element for this because each browser will put id and class attributes in different orders.
+        var elementID = "######cursor######";
+        var positionString = '<span id="'+elementID+'"></span>';
+        editor.selection.setContent(positionString);
+
+        //get the content with the special span but without the bookmark meta tag
+        var content = editor.getContent({format: "html"});
+        //find the index of the span we placed earlier
+        var index = content.indexOf(positionString);
+
+        //remove my special span from the content
+        editor.dom.remove(elementID, false);            
+
+        //move back to the bookmark
+        editor.selection.moveToBookmark(bm);
+
+        return index;
+    }; 
+
+    function setCursorPosition(editor, index) {
+         //get the content in the editor before we add the bookmark... 
+        //use the format: html to strip out any existing meta tags
+        var content = editor.getContent({format: "html"});
+
+        //split the content at the given index
+        var part1 = content.substr(0, index);
+        var part2 = content.substr(index);
+
+        //create a bookmark... bookmark is an object with the id of the bookmark
+        var bookmark = editor.selection.getBookmark(0);
+
+        //this is a meta span tag that looks like the one the bookmark added... just make sure the ID is the same
+        var positionString = '<span id="'+bookmark.id+'_start" data-mce-type="bookmark" data-mce-style="overflow:hidden;line-height:0px"></span>';
+        //cram the position string inbetween the two parts of the content we got earlier
+        var contentWithString = part1 + positionString + part2;
+
+        //replace the content of the editor with the content with the special span
+        //use format: raw so that the bookmark meta tag will remain in the content
+        editor.setContent(contentWithString, ({format: "raw"}));
+
+        //move the cursor back to the bookmark
+        //this will also strip out the bookmark metatag from the html
+        editor.selection.moveToBookmark(bookmark);
+
+        //return the bookmark just because
+        return bookmark;
     };
 });
