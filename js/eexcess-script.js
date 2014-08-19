@@ -2,21 +2,21 @@
 $j = jQuery.noConflict();
 
 $j.fn.setCursorPosition = function(pos) {
-  this.each(function(index, elem) {
-    if (elem.setSelectionRange) {
-      elem.setSelectionRange(pos, pos);
-    } else if (elem.createTextRange) {
-      var range = elem.createTextRange();
-      range.collapse(true);
-      range.moveEnd('character', pos);
-      range.moveStart('character', pos);
-      range.select();
-    }
-  });
-  return this;
+    this.each(function(index, elem) {
+        if (elem.setSelectionRange) {
+          elem.setSelectionRange(pos, pos);
+        } else if (elem.createTextRange) {
+          var range = elem.createTextRange();
+          range.collapse(true);
+          range.moveEnd('character', pos);
+          range.moveStart('character', pos);
+          range.select();
+        }
+    });
+    return this;
 };
 
-// Use jQuery via $j(...)
+// Use jQuery via $j(...)t
 $j(document).ready(function() {
     // Getting the cursor position 
     $j.fn.getCursorPosition = function() {
@@ -105,17 +105,16 @@ $j(document).ready(function() {
         event.preventDefault();
         var text = "";
         
-        // Casual TextEditor
-        if (window.getSelection) { 
-            // Check if the textarea was selected
-            if(window.getSelection().focusNode != null && window.getSelection().focusNode.className == "wp-editor-container") {
-                text = window.getSelection().toString();
-            }
-        } 
-        
         // Visual Editor
         if(text == "" && tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) { 
             text = tinyMCE.activeEditor.selection.getContent( {format : "text"} );
+        } else{ // Casual TextEditor
+            try {
+                var ta = $j('.wp-editor-area').get(0);
+                text = ta.value.substring(ta.selectionStart, ta.selectionEnd);
+            } catch (e) {
+                console.log('Exception during get selection text');
+            }
         }
         
         if(text != "") {
@@ -162,7 +161,7 @@ $j(document).ready(function() {
                 content = tmp.textContent || tmp.innerText || "";
             } 
             
-            
+            // Split string into words
             var results = content.match(/("[^"]+"|[^"\s]+)/g);
             
 
@@ -178,11 +177,16 @@ $j(document).ready(function() {
                     }
                 }
             }
-            // Removing punctuation marks from the result
+            // Removing punctuation marks from the result and discards empty strings (i.e. "")
+            tmp = [];
             for(var i = 0; i < results.length; i++) {
-                results[i] = results[i].replace(/[\.,#-\/!$%\^&\*;:{}=\-_`~()]/g,"");
+                var val = results[i].replace(/[\.,#-\/!$%\^&\*;:{}=\-_`~()\[\]]/g,"");
+                if(val != ""){
+                    tmp[tmp.length] = val
+                }
             }
-            
+            results = tmp;
+
             return results;
         }
         

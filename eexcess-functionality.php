@@ -46,6 +46,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
         }
     }
 
+    add_action( 'add_meta_boxes', 'myplugin_add_meta_box' );
     /**
      * Adds a box to the main column on the Post edit screen.
      */
@@ -59,7 +60,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
         );
 
     }
-    add_action( 'add_meta_boxes', 'myplugin_add_meta_box' );
 
     /**
      * Prints the box content.
