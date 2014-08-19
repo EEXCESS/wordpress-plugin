@@ -110,11 +110,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
         </script>
         
         <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations">
+        <input name="abortRequest" class="button button-primary" id="abortRequest" value="Abort Request">
         <div id="content">
             <p>
             Get recommendations for keywords by using "#eexcess:Keyword#" inside the textarea. 
             Furthermore, you can select parts of the text and then click the "Get Recommendations" button.
-            </p>   
+            </p>
+            <div class='eexcess-spinner'></div>
+            <div id='list'></div>
         </div>
     <?php } 
 
@@ -167,6 +170,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
         $initArray['setup'] = "function(ed) {
             ed.onKeyUp.add(function(ed, e) {
                 EEXCESS.extractTerm(ed, e);
+            });
+            ed.onKeyDown.add(function(ed, e) {
+                EEXCESS.catchKeystroke(ed, e);
             });
         }";
         

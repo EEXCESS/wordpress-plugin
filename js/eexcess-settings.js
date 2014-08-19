@@ -24,5 +24,8 @@ var EEXCESS = {
     "errorMessages" : {
         "noRecommandations" : "No Recommendations found.",
         "noTextSelected" : "Please select some text."
+    },
+    "keyboardBindungs" : {
+        "getRecommendations" : 69 // Javascript keyCode for 'e' see http://www.mediaevent.de/javascript/Extras-Javascript-Keycodes.html
     }
 };

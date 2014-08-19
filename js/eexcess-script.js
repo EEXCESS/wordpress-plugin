@@ -1,6 +1,8 @@
 // Avoid jQuery conflicts from different plugins
 $j = jQuery.noConflict();
 
+var request = null; // used to store a ajax request in order to be able to abort it.
+
 $j.fn.setCursorPosition = function(pos) {
     this.each(function(index, elem) {
         if (elem.setSelectionRange) {
@@ -18,6 +20,15 @@ $j.fn.setCursorPosition = function(pos) {
 
 // Use jQuery via $j(...)t
 $j(document).ready(function() {
+
+    // hide some objects for later user
+    $j('#abortRequest').hide();
+    var spinner = $j("#eexcess_container .inside #content .eexcess-spinner");
+    var resultList = $j("#eexcess_container .inside #content #list");
+    var introText = $j("#eexcess_container .inside #content p");
+    spinner.hide();
+    resultList.hide();
+
     // Getting the cursor position 
     $j.fn.getCursorPosition = function() {
         var input = this.get(0);
@@ -71,6 +82,31 @@ $j(document).ready(function() {
         }
     };
 
+    // Catches keydown events withing the visual editor (i.e. tinyMCE)
+    EEXCESS.catchKeystroke = function(ed, e) {
+        assessKeystroke(e);
+    }
+        
+    // Triggers the recommendations call by button
+    $j(document).on("mousedown", "#getRecommendations", function(event){
+        getSelectedTextAndRecommend(event);
+    });
+
+    // Triggers the recommendations call by keyboard (through ctrl+e)
+    $j(document).on("keydown", "#content", function(e){
+        assessKeystroke(e);
+    });
+
+    // Triggers the abort Request button
+    $j(document).on("mousedown", "#abortRequest", function(event){
+        request.abort();
+        toggleButtons();
+        resultList.hide("slow");
+        spinner.hide("slow", function(){
+            introText.show("slow");
+        });
+    });
+
     // Observe the post title
     $j(document).on("change", "input[name='post_title']", function() {
         // get recommendations from title
@@ -99,9 +135,17 @@ $j(document).ready(function() {
             } 
         }
     })
-    
-    // Triggers the recommendations call by button
-    $j(document).on("mousedown", "#getRecommendations", function(event) {
+
+    // Checks if a keystroke combo was pressed (e.g. ctrl+e)
+    function assessKeystroke(keyPressed){
+        if (keyPressed.keyCode == EEXCESS.keyboardBindungs.getRecommendations
+            && keyPressed.ctrlKey){
+            console.log("test");
+            getSelectedTextAndRecommend(keyPressed);
+        }
+    }
+
+    function getSelectedTextAndRecommend(event) {
         event.preventDefault();
         var text = "";
         
@@ -124,8 +168,8 @@ $j(document).ready(function() {
         } else {
             displayError(EEXCESS.errorMessages.noTextSelected, $j("#getRecommendations"));
         }
-    });
-    
+    }
+
     /**
      * Inserts a div that contains an error message after a given element.
      *
@@ -133,7 +177,7 @@ $j(document).ready(function() {
      * @param element The element after which to display the error.
      */
     function displayError(msg, element) {
-        // Removing previously added error messages
+        // Removing previously added error messages       
         $j(".error").remove();
         var div = $j('<div class="error">' + msg + '</div>');
         $j(element).after(div);
@@ -193,14 +237,42 @@ $j(document).ready(function() {
         return null;
     };
 
+    function toggleButtons(){
+        var recommendButton = $j('#getRecommendations');
+        var abortButton = $j('#abortRequest')
+
+        if(recommendButton.is(":visible")){
+            recommendButton.toggle("slow", function(){
+                abortButton.toggle("slow");
+            });
+        }else{
+            abortButton.toggle("slow", function(){
+                recommendButton.toggle("slow");
+            });
+        }
+    };
+
     function getRecommendations(data) {
-        var container = $j("#eexcess_container .inside #content");
-        
-        container.html("<div class='eexcess-spinner'></div>");
-        
+        // Hide the resullist. It could be visiable due to prior use
+        resultList.hide("slow");
+
+        toggleButtons();
+        introText.hide("slow", function(){
+            spinner.show("slow");
+        });
+
+        if(request != null){
+            request.abort();
+        }
+
         // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-        $j.post(ajaxurl, data, function(response) {
+        request = $j.post(ajaxurl, data, function(response) {
             if(response) {
+                // no longer needed, since the operation has completed and thus
+                // the abortion is no longer an option.
+                request = null;
+                toggleButtons();
+
                 // parsing the JSON string
                 var o = JSON.parse(response);
 
@@ -216,7 +288,8 @@ $j(document).ready(function() {
                 }
                 
                 // display the list
-                container.html(list);
+                resultList.html(list).show("slow");
+                spinner.hide("slow")
 
                 if(usePagination) {
                     var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
@@ -241,7 +314,7 @@ $j(document).ready(function() {
                     });   
                 }
             } else {
-                container.html(EEXCESS.errorMessages.noRecommandations);
+                resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
             }
         });
     };
