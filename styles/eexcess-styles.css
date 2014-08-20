@@ -35,16 +35,6 @@
     margin: 0 auto;
 }
 
-.displayNone{
-    display: none;
-}
-
-.invisableButton {
-    background: transparent;
-    border: none !important;
-    font-size:0;
-}
-
 #getRecommendations {
     text-align: center;
 }

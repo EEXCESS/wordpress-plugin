@@ -258,7 +258,7 @@ $j(document).ready(function() {
 
         toggleButtons();
         introText.hide("slow", function(){
-            spinner.show("slow");
+            spinner.fadeIn("slow");
         });
 
         if(request != null){
@@ -289,7 +289,7 @@ $j(document).ready(function() {
                 
                 // display the list
                 resultList.html(list).show("slow");
-                spinner.hide("slow")
+                spinner.fadeOut("slow")
 
                 if(usePagination) {
                     var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
