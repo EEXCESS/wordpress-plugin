@@ -84,7 +84,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                               <div class="eexcess-previewPlaceholder"></div>
                            {{/if}}
                            <div class="recommendationTextArea">
-                               <a target="_blank" href="{{uri}}" style="overflow: hidden; white-spaces: nowrap">{{title}}</a>
+                               <a target="_blank" href="{{uri}}">{{title}}</a>
                                </br>
                                Provider: {{facets.provider}}
                                {{#if facets.language}}

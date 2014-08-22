@@ -19,8 +19,10 @@
 .recommendationTextArea{
    margin-top: 0px;
    margin-bottom: 0px;
+   margin-left: 5px;
    overflow: hidden;
-   white-spaces: nowrap   
+   white-spaces: nowrap;
+   float: left;
 }
 
 .eexcess-previewPlaceholder {
