@@ -27,5 +27,9 @@ var EEXCESS = {
     },
     "keyboardBindungs" : {
         "getRecommendations" : 69 // Javascript keyCode for 'e' see http://www.mediaevent.de/javascript/Extras-Javascript-Keycodes.html
+    },
+    "recommendationListSettings" : {
+        "imageWidth" : 75,  //Width of images in the recommendation list
+        "imageHeight" : 55 //Heigth of images in the recommendation list
     }
 };

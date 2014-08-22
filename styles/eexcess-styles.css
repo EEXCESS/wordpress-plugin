@@ -16,22 +16,29 @@
     margin-left: 10px;
 }
 
+.recommendationTextArea{
+   margin-top: 0px;
+   margin-bottom: 0px;
+   overflow: hidden;
+   white-spaces: nowrap   
+}
+
 .eexcess-previewPlaceholder {
-    width: 50px;
-    height: 50px;
+    width: 75px;
+    height: 55px;
     background-color: #e0e0e0;
     float: left;
 }
 
 #eexcess-recommendationList img,
-.eexcess-previewPlaceholder { 
-    margin-bottom: 5px;   
+.eexcess-previewPlaceholder {
+    margin-bottom: 5px;
 }
 
 .eexcess-spinner {
     width: 32px;
     height: 32px;
-    background: url(../images/spinner.gif);   
+    background: url(../images/spinner.gif);
     margin: 0 auto;
 }
 
@@ -47,7 +54,7 @@
     height:34px;
     position:relative;
     color:#a5a5a5;
-    font-size:small;   
+    font-size:small;
     width:100%;
 }
 .jPaginate a{

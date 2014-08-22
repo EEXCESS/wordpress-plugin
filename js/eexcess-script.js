@@ -29,7 +29,7 @@ $j(document).ready(function() {
     spinner.hide();
     resultList.hide();
 
-    // Getting the cursor position 
+    // Getting the cursor position
     $j.fn.getCursorPosition = function() {
         var input = this.get(0);
         if (!input) return; // No (input) element found
@@ -47,7 +47,7 @@ $j(document).ready(function() {
     }
     // Setting the cursor position
     $j.fn.selectRange = function(start, end) {
-        if(!end) end = start; 
+        if(!end) end = start;
         return this.each(function() {
             if (this.setSelectionRange) {
                 this.focus();
@@ -62,13 +62,13 @@ $j(document).ready(function() {
         });
     };
 
-    // Will be called on a keyUp event inside the tinyMCE editor 
+    // Will be called on a keyUp event inside the tinyMCE editor
     EEXCESS.extractTerm = function(ed, e) {
         var text  = ed.getContent();
-        
+
         if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
             var terms = getTerms(text, true, true);
-                        
+
             if(terms != null) {
                 EEXCESS.recommendationData.terms = terms;
                 getRecommendations(EEXCESS.recommendationData);
@@ -86,7 +86,7 @@ $j(document).ready(function() {
     EEXCESS.catchKeystroke = function(ed, e) {
         assessKeystroke(e);
     }
-        
+
     // Triggers the recommendations call by button
     $j(document).on("mousedown", "#getRecommendations", function(event){
         getSelectedTextAndRecommend(event);
@@ -113,26 +113,26 @@ $j(document).ready(function() {
         EEXCESS.recommendationData.terms = [$j(this).val().trim()];
         getRecommendations(EEXCESS.recommendationData);
     });
-    
+
     // Observe the text editor
     $j(document).on("keyup", "textarea#content", function(e) {
         var text  = $j(this).val();
         var regex = eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/");
         if(regex.test(text)) { // Tests if the text contains #eexcess:keywords#
             var terms = getTerms(text, false, true);
-        
+
             if(terms != null) {
-                EEXCESS.recommendationData.terms = terms; 
+                EEXCESS.recommendationData.terms = terms;
                 getRecommendations(EEXCESS.recommendationData);
                 var cursorPosition = $j(this).getCursorPosition();
                 var text = $j(this).val();
-                var match = text.match(regex);    
+                var match = text.match(regex);
                 text = text.replace(match[0], match[0].slice(0, match[0].length - 1));
                 text = text.replace(EEXCESS.trigger.marker, "");
                 $j(this).val(text);
                 // setting the cursor position
                 $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
-            } 
+            }
         }
     })
 
@@ -140,7 +140,6 @@ $j(document).ready(function() {
     function assessKeystroke(keyPressed){
         if (keyPressed.keyCode == EEXCESS.keyboardBindungs.getRecommendations
             && keyPressed.ctrlKey){
-            console.log("test");
             getSelectedTextAndRecommend(keyPressed);
         }
     }
@@ -148,9 +147,9 @@ $j(document).ready(function() {
     function getSelectedTextAndRecommend(event) {
         event.preventDefault();
         var text = "";
-        
+
         // Visual Editor
-        if(text == "" && tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) { 
+        if(text == "" && tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
             text = tinyMCE.activeEditor.selection.getContent( {format : "text"} );
         } else{ // Casual TextEditor
             try {
@@ -160,7 +159,7 @@ $j(document).ready(function() {
                 console.log('Exception during get selection text');
             }
         }
-        
+
         if(text != "") {
             $j('.error').remove();
             EEXCESS.recommendationData.terms = getTerms(text, false, false);
@@ -177,12 +176,12 @@ $j(document).ready(function() {
      * @param element The element after which to display the error.
      */
     function displayError(msg, element) {
-        // Removing previously added error messages       
+        // Removing previously added error messages
         $j(".error").remove();
         var div = $j('<div class="error">' + msg + '</div>');
         $j(element).after(div);
     }
-    
+
     /**
      * Extracting the terms from the text.
      *
@@ -194,20 +193,20 @@ $j(document).ready(function() {
     function getTerms(content, visualEditor, marker) {
         var index = content.lastIndexOf(EEXCESS.trigger.marker);
 
-        if(index != -1 || !marker) { 
+        if(index != -1 || !marker) {
             // Removing multiple whitespaces
             content = content.replace(/\s{2,}/g," ");
-            
+
             // Removing the html tags from the content of the tinyMCE editor
-            if(visualEditor && marker) { 
+            if(visualEditor && marker) {
                 var tmp = document.createElement("DIV");
                 tmp.innerHTML = content;
                 content = tmp.textContent || tmp.innerText || "";
-            } 
-            
+            }
+
             // Split string into words
             var results = content.match(/("[^"]+"|[^"\s]+)/g);
-            
+
 
             if(marker) {
                 // Slicing the results array according to the textSpan option defined in the EEXCESS.trigger object
@@ -215,9 +214,9 @@ $j(document).ready(function() {
                 for(var i = 0; i < results.length; i++) {
                     // removing the marker from the result
                     if(results[i].indexOf(EEXCESS.trigger.marker) > -1) {
-                        results[i] = results[i].substring(EEXCESS.trigger.marker.length);      
+                        results[i] = results[i].substring(EEXCESS.trigger.marker.length);
                     } else if(results[i].indexOf("") > -1) {
-                        results[i] = results[i].substring(0, results[i].length - 1);  
+                        results[i] = results[i].substring(0, results[i].length - 1);
                     }
                 }
             }
@@ -233,7 +232,7 @@ $j(document).ready(function() {
 
             return results;
         }
-        
+
         return null;
     };
 
@@ -280,13 +279,34 @@ $j(document).ready(function() {
                 var template = Handlebars.compile($j("#list-template").html());
                 var list = $j(template(o));
 
+                // experimental
+                // image resizing
+                width = EEXCESS.recommendationListSettings.imageWidth;
+                height = EEXCESS.recommendationListSettings.imageHeight;
+                $j(list).find("img").each(function(index){
+                    if(this.naturalWidth != width){
+                        var tmp = width/this.width;
+                        $j(this).attr('width', width + 'px');
+                        var foo = Math.ceil(this.height*tmp);
+                        $j(this).attr('height', foo + 'px');
+                    }
+                    if(this.height > height){
+                        var tmp = height/this.height;
+                        $j(this).attr('height', height + 'px');
+                        var foo = Math.ceil(this.width*tmp);
+                        $j(this).attr('width', foo + 'px');
+                    }
+
+                });
+
+
                 var usePagination = list.find("#eexcess-recommendationList li").length > 10;
 
                 if(usePagination) {
                     // show only the first x items
-                    list.find("#eexcess-recommendationList li").hide().slice(0, EEXCESS.pagination.items).show();        
+                    list.find("#eexcess-recommendationList li").hide().slice(0, EEXCESS.pagination.items).show();
                 }
-                
+
                 // display the list
                 resultList.html(list).show("slow");
                 spinner.fadeOut("slow")
@@ -295,10 +315,10 @@ $j(document).ready(function() {
                     var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
 
                     $j("#recommandationList-pagination").paginate({
-                        background_color        : 'none',   
-                        background_hover_color  : 'none', 
+                        background_color        : 'none',
+                        background_hover_color  : 'none',
                         border                  : false,
-                        count       : pages, 
+                        count       : pages,
                         display     : EEXCESS.pagination.display,
                         images      : false,
                         mouse       : 'press',
@@ -306,12 +326,12 @@ $j(document).ready(function() {
                         text_color              : EEXCESS.pagination.textColor,
                         text_hover_color        : EEXCESS.pagination.textHoverColor,
                         onChange : function(page) {
-                            var page = page - 1;                      
+                            var page = page - 1;
                             var min = page * EEXCESS.pagination.items;
                             var max = page * EEXCESS.pagination.items + EEXCESS.pagination.items;
                             $j("#eexcess-recommendationList li").hide().slice(min, max).show();
                         }
-                    });   
+                    });
                 }
             } else {
                 resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
@@ -321,7 +341,7 @@ $j(document).ready(function() {
 
     function getCurserPosition(editor) {
         //set a bookmark so we can return to the current position after we reset the content later
-        var bm = editor.selection.getBookmark(0);    
+        var bm = editor.selection.getBookmark(0);
 
         //select the bookmark element
         var selector = "[data-mce-type=bookmark]";
@@ -343,16 +363,16 @@ $j(document).ready(function() {
         var index = content.indexOf(positionString);
 
         //remove my special span from the content
-        editor.dom.remove(elementID, false);            
+        editor.dom.remove(elementID, false);
 
         //move back to the bookmark
         editor.selection.moveToBookmark(bm);
 
         return index;
-    }; 
+    };
 
     function setCursorPosition(editor, index) {
-         //get the content in the editor before we add the bookmark... 
+         //get the content in the editor before we add the bookmark...
         //use the format: html to strip out any existing meta tags
         var content = editor.getContent({format: "html"});
 
