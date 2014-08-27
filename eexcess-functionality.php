@@ -41,6 +41,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
          wp_enqueue_script( 'eexcess-pagination-script', plugins_url( '/js/jquery.paginate.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-templating-script', plugins_url( '/js/handlebars-v1.3.0.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-script', plugins_url( '/js/eexcess-script.js', __FILE__ ), array('jquery') );
+         wp_enqueue_script( 'eexcess-jquery-plugins', plugins_url( '/js/eexcess-jquery-plugins.js', __FILE__ ), array('jquery') );
+         wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( 'js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
       }
@@ -165,10 +167,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
    function tiny_mce_before_init( $initArray ) {
       $initArray['setup'] = "function(ed) {
          ed.onKeyUp.add(function(ed, e) {
-            EEXCESS.extractTerm(ed, e);
+            eexcessMethods.extractTerm(ed);
          });
          ed.onKeyDown.add(function(ed, e) {
-            EEXCESS.catchKeystroke(ed, e);
+            eexcessMethods.catchKeystroke(ed, e);
          });
       }";
       return $initArray;

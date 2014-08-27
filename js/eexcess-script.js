@@ -1,191 +1,73 @@
 // Avoid jQuery conflicts from different plugins
 $j = jQuery.noConflict();
 
-var request = null; // used to store a ajax request in order to be able to abort it.
+var EEXCESS_METHODS = function () {
+   var spinner,
+   resultList,
+   introText,
+   abortRequestButton,
+   request = null; // used to store a ajax request in order to be able to abort it.
 
-$j.fn.setCursorPosition = function(pos) {
-   this.each(function(index, elem) {
-      if (elem.setSelectionRange) {
-         elem.setSelectionRange(pos, pos);
-      } else if (elem.createTextRange) {
-         var range = elem.createTextRange();
-         range.collapse(true);
-         range.moveEnd('character', pos);
-         range.moveStart('character', pos);
-         range.select();
-      }
-   });
-   return this;
-};
+   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton) {
+      this.spinner = mSpinner;
+      this.resultList = mResultList;
+      this.introText = mIntroText;
+      this.abortRequestButton = mAbortRequestButton;
 
-// Use jQuery via $j(...)t
-$j(document).ready(function() {
-
-   // hide some objects for later user
-   $j('#abortRequest').hide();
-   var spinner = $j("#eexcess_container .inside #content .eexcess-spinner");
-   var resultList = $j("#eexcess_container .inside #content #list");
-   var introText = $j("#eexcess_container .inside #content p");
-   spinner.hide();
-   resultList.hide();
-
-   // Getting the cursor position
-   $j.fn.getCursorPosition = function() {
-      var input = this.get(0);
-      if (!input){
-         return; // No (input) element found
-      }
-      if ('selectionStart' in input) {
-         // Standard-compliant browsers
-         return input.selectionStart;
-      } else if (document.selection) {
-         // IE
-         input.focus();
-         var sel = document.selection.createRange();
-         var selLen = document.selection.createRange().text.length;
-         sel.moveStart('character', -input.value.length);
-         return sel.text.length - selLen;
-      }
-   }
-
-   // Setting the cursor position
-   $j.fn.selectRange = function(start, end) {
-      if(!end) {
-         end = start;
-      }
-      return this.each(function() {
-         if (this.setSelectionRange) {
-            this.focus();
-            this.setSelectionRange(start, end);
-         } else if (this.createTextRange) {
-            var range = this.createTextRange();
-            range.collapse(true);
-            range.moveEnd('character', end);
-            range.moveStart('character', start);
-            range.select();
-         }
-      });
-   };
+      this.spinner.hide();
+      this.resultList.hide();
+      this.abortRequestButton.hide();
+   },
 
    // Will be called on a keyUp event inside the tinyMCE editor
-   EEXCESS.extractTerm = function(ed, e) {
+   extractTerm = function(ed) {
       var text  = ed.getContent();
       if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
-         var terms = getTerms(text, true, true);
+         var terms = getTerms.call(this, text, true, true);
 
          if(terms != null) {
             EEXCESS.recommendationData.terms = terms;
-            getRecommendations(EEXCESS.recommendationData);
-            var cursorPosition = getCurserPosition(ed);
+            getRecommendations.call(this, EEXCESS.recommendationData);
+            var cursorPosition = getCurserPosition.call(this, ed);
             var cleanedContent = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition, text.length);
             cleanedContent = cleanedContent.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
             ed.setContent(cleanedContent);
             // setting the cursor position
-            setCursorPosition(ed, cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length - 1);
+            setCursorPosition.call(this, ed, cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length - 1);
          }
       }
-   };
+   },
 
    // Catches keydown events withing the visual editor (i.e. tinyMCE)
-   EEXCESS.catchKeystroke = function(ed, e) {
-       assessKeystroke(e);
-   }
+   catchKeystroke = function(ed, e) {
+      assessKeystroke.call(this, e);
+   },
 
-   // Triggers the recommendations call by button
-   $j(document).on("mousedown", "#getRecommendations", function(event){
-       getSelectedTextAndRecommend(event);
-   });
-
-   // Triggers the recommendations call by keyboard (through ctrl+e)
-   $j(document).on("keydown", "#content", function(e){
-      assessKeystroke(e);
-   });
-
-   // Triggers the abort Request button
-   $j(document).on("mousedown", "#abortRequest", function(event){
-      request.abort();
-      toggleButtons();
-      resultList.hide("slow");
-      spinner.hide("slow", function(){
-         introText.show("slow");
-      });
-   });
-
-   // Observe the post title
-   $j(document).on("change", "input[name='post_title']", function() {
-       // get recommendations from title
-       EEXCESS.recommendationData.terms = [$j(this).val().trim()];
-       getRecommendations(EEXCESS.recommendationData);
-   });
-
-   // Observe the text editor
-   $j(document).on("keyup", "textarea#content", function(e) {
-      var text  = $j(this).val();
-      var regex = eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/");
-      if(regex.test(text)) { // Tests if the text contains #eexcess:keywords#
-         var terms = getTerms(text, false, true);
-
-         if(terms != null) {
-            EEXCESS.recommendationData.terms = terms;
-            getRecommendations(EEXCESS.recommendationData);
-            var cursorPosition = $j(this).getCursorPosition();
-            var text = $j(this).val();
-            var match = text.match(regex);
-            text = text.replace(match[0], match[0].slice(0, match[0].length - 1));
-            text = text.replace(EEXCESS.trigger.marker, "");
-            $j(this).val(text);
-            // setting the cursor position
-            $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
-         }
+   // Checks if a keystroke combo was pressed (e.g. ctrl+e)
+   assessKeystroke = function(keyPressed){
+      if (keyPressed.keyCode == EEXCESS.keyboardBindungs.getRecommendations
+       && keyPressed.ctrlKey){
+      getSelectedTextAndRecommend.call(this, keyPressed);
       }
-   });
-
-   $j(document).on("mousedown", 'input[name="addMatch"]', function(){
-      //die positionierung im falle des visual editors is nicht korrekt.
-      var url = $j($j("input[name='addMatch']")[0]).siblings("a").attr('href');
-      var title = $j($j("input[name='addMatch']")[0]).siblings("a").text();
-      var cursorPosition = "";
-      var text = "";
-      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         cursorPosition = getCurserPosition(tinyMCE.activeEditor);
-         text = tinyMCE.activeEditor.getContent();
-         var newText = pasteLinkToText(text, cursorPosition, url, title, "link");
-         tinyMCE.activeEditor.setContent(newText);
-      } else {
-         var textarea = $j("textarea#content");
-         cursorPosition = textarea.getCursorPosition();
-         text = textarea.val();
-         var newText = pasteLinkToText(text, cursorPosition, url, title, "link");
-         textarea.val(newText);
-      }
-      console.log("test");
-    });
+   },
 
    /**
-    * Inserts a HTML-link (a-tag) composed of url and title at position
-    * cursorPosition into text.
-    * @param text the to insert the link
-    * @param cursorPosition the position to insert the link
-    * @param url the url to link to
-    * @param title the title of the link
-    * @param linkText the text for the link
-    */
-   function pasteLinkToText(text, cursorPosition, url, title, linkText){
+   * Inserts a HTML-link (a-tag) composed of url and title at position
+   * cursorPosition into text.
+   * @param text the to insert the link
+   * @param cursorPosition the position to insert the link
+   * @param url the url to link to
+   * @param title the title of the link
+   * @param linkText the text for the link
+   */
+   pasteLinkToText = function(text, cursorPosition, url, title, linkText){
       var newText = text.substring(0, cursorPosition);
       newText = newText + ' <a href="' + url + '" title="'+ title + '"> link </a> ';
       newText = newText + text.substring(cursorPosition, text.length);
       return newText
-   }
+   },
 
-   // Checks if a keystroke combo was pressed (e.g. ctrl+e)
-   function assessKeystroke(keyPressed){
-      if (keyPressed.keyCode == EEXCESS.keyboardBindungs.getRecommendations
-          && keyPressed.ctrlKey){
-         getSelectedTextAndRecommend(keyPressed);
-      }
-    }
-
-   function getSelectedTextAndRecommend(event) {
+   getSelectedTextAndRecommend = function(event) {
       event.preventDefault();
       var text = "";
 
@@ -203,35 +85,35 @@ $j(document).ready(function() {
 
       if(text != "") {
          $j('.error').remove();
-         EEXCESS.recommendationData.terms = getTerms(text, false, false);
-         getRecommendations(EEXCESS.recommendationData);
+         EEXCESS.recommendationData.terms = getTerms.call(this, text, false, false);
+         getRecommendations.call(this, EEXCESS.recommendationData);
       } else {
          displayError(EEXCESS.errorMessages.noTextSelected, $j("#getRecommendations"));
       }
-   }
+   },
 
    /**
-    * Inserts a div that contains an error message after a given element.
-    *
-    * @param msg The error message to display.
-    * @param element The element after which to display the error.
-    */
-   function displayError(msg, element) {
+   * Inserts a div that contains an error message after a given element.
+   *
+   * @param msg The error message to display.
+   * @param element The element after which to display the error.
+   */
+   displayError = function(msg, element) {
       // Removing previously added error messages
       $j(".error").remove();
       var div = $j('<div class="error">' + msg + '</div>');
       $j(element).after(div);
-   }
+   },
 
    /**
-    * Extracting the terms from the text.
-    *
-    * @param {String} The text written by the user
-    * @param {Boolean} Indicates if the user uses the visual editor
-    *
-    * @return {Array|null} Returns a list of terms or null, if no marker was found
-    */
-   function getTerms(content, visualEditor, marker) {
+   * Extracting the terms from the text.
+   *
+   * @param {String} The text written by the user
+   * @param {Boolean} Indicates if the user uses the visual editor
+   *
+   * @return {Array|null} Returns a list of terms or null, if no marker was found
+   */
+   getTerms = function(content, visualEditor, marker) {
       var index = content.lastIndexOf(EEXCESS.trigger.marker);
 
       if(index != -1 || !marker) {
@@ -299,9 +181,9 @@ $j(document).ready(function() {
          return results;
       }
       return null;
-   };
+   },
 
-   function toggleButtons(){
+   toggleButtons = function(){
       var recommendButton = $j('#getRecommendations');
       var abortButton = $j('#abortRequest')
 
@@ -314,28 +196,29 @@ $j(document).ready(function() {
             recommendButton.toggle("slow");
          });
       }
-   };
+   },
 
-   function getRecommendations(data) {
+   getRecommendations = function(data) {
       // Hide the resullist. It could be visiable due to prior use
-      resultList.hide("slow");
+      this.resultList.hide("slow");
 
-      toggleButtons();
-      introText.hide("slow", function(){
-         spinner.fadeIn("slow");
-      });
+      this.toggleButtons.call(this);
 
-      if(request != null){
-         request.abort();
+      this.introText.hide("slow", function(){
+         this.spinner.fadeIn("slow");
+      }.call(this));
+
+      if(this.request != null){
+         this.request.abort();
       }
 
       // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-      request = $j.post(ajaxurl, data, function(response) {
+      var ajaxCallback = function(response, status, jqXHR) {
          if(response) {
             // no longer needed, since the operation has completed and thus
             // the abortion is no longer an option.
-            request = null;
-            toggleButtons();
+            this.request = null;
+            this.toggleButtons();
 
             // parsing the JSON string
             var o = JSON.parse(response);
@@ -372,7 +255,7 @@ $j(document).ready(function() {
             }
 
             // display the list
-            resultList.html(list).show("slow",function(){
+            this.resultList.html(list).show("slow", function(){
                $j(".recommendationTextArea").each(function(index){
                   var margin = $j($j('[class="recommendationTextArea"]')[0]).css("margin-right").replace("px", "");
                   margin = margin + $j($j('[class="recommendationTextArea"]')[0]).css("margin-left").replace("px", "");
@@ -380,7 +263,7 @@ $j(document).ready(function() {
                   $j(this).css('width', width);
                });
             });
-            spinner.fadeOut("slow")
+            this.spinner.fadeOut("slow")
 
             if(usePagination) {
                var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
@@ -404,13 +287,21 @@ $j(document).ready(function() {
                });
             }
          } else {
-            resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
+            this.resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
          }
+      };
+      this.request = $j.ajax({
+         type: "POST",
+         url: ajaxurl,
+         data: data,
+         success: ajaxCallback,
+         context: this
       });
-    };
+
+   },
 
    // @param: editor is the tinyMCE.activeEditor-Object
-   function getCurserPosition(editor) {
+   getCurserPosition = function(editor) {
       //set a bookmark so we can return to the current position after we reset the content later
       var bm = editor.selection.getBookmark(0);
 
@@ -440,9 +331,9 @@ $j(document).ready(function() {
       editor.selection.moveToBookmark(bm);
 
       return index;
-   };
+   },
 
-   function setCursorPosition(editor, index) {
+   setCursorPosition = function(editor, index) {
       //get the content in the editor before we add the bookmark...
       //use the format: html to strip out any existing meta tags
       var content = editor.getContent({format: "html"});
@@ -470,4 +361,34 @@ $j(document).ready(function() {
       //return the bookmark just because
       return bookmark;
    };
+
+   return {
+      init: init,
+      extractTerm: extractTerm,
+      catchKeystroke: catchKeystroke,
+      assessKeystroke: assessKeystroke,
+      pasteLinkToText: pasteLinkToText,
+      getSelectedTextAndRecommend: getSelectedTextAndRecommend,
+      displayError: displayError,
+      getTerms: getTerms,
+      toggleButtons: toggleButtons,
+      getRecommendations: getRecommendations,
+      getCurserPosition: getCurserPosition,
+      setCursorPosition: setCursorPosition,
+      spinner: spinner,
+      resultList: resultList,
+      introText: introText,
+      abortRequestButton: abortRequestButton,
+      request: request
+   };
+};
+
+
+// Use jQuery via $j(...)t
+$j(document).ready(function() {
+   eexcessMethods = new EEXCESS_METHODS();
+   eexcessMethods.init($j("#eexcess_container .inside #content .eexcess-spinner"),
+             $j("#eexcess_container .inside #content #list"),
+             $j("#eexcess_container .inside #content p"),
+             $j('#abortRequest'));
 });
