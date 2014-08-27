@@ -77,7 +77,7 @@ $j(document).ready(function() {
                 cleanedContent = cleanedContent.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
                 ed.setContent(cleanedContent);
                 // setting the cursor position
-                setCursorPosition(ed, cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
+                setCursorPosition(ed, cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length - 1);
             }
         }
     };
@@ -134,7 +134,44 @@ $j(document).ready(function() {
                 $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
             }
         }
-    })
+    });
+
+    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
+      //die positionierung im falle des visual editors is nicht korrekt.
+      var url = $j($j("input[name='addMatch']")[0]).siblings("a").attr('href');
+      var title = $j($j("input[name='addMatch']")[0]).siblings("a").text();
+      var cursorPosition = "";
+      var text = "";
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         cursorPosition = getCurserPosition(tinyMCE.activeEditor);
+         text = tinyMCE.activeEditor.getContent();
+         var newText = pasteLinkToText(text, cursorPosition, url, title, "link");
+         tinyMCE.activeEditor.setContent(newText);
+      } else {
+         var textarea = $j("textarea#content");
+         cursorPosition = textarea.getCursorPosition();
+         text = textarea.val();
+         var newText = pasteLinkToText(text, cursorPosition, url, title, "link");
+         textarea.val(newText);
+      }
+      console.log("test");
+    });
+
+   /**
+    * Inserts a HTML-link (a-tag) composed of url and title at position
+    * cursorPosition into text.
+    * @param text the to insert the link
+    * @param cursorPosition the position to insert the link
+    * @param url the url to link to
+    * @param title the title of the link
+    * @param linkText the text for the link
+    */
+   function pasteLinkToText(text, cursorPosition, url, title, linkText){
+      var newText = text.substring(0, cursorPosition);
+      newText = newText + ' <a href="' + url + '" title="'+ title + '"> link </a> ';
+      newText = newText + text.substring(cursorPosition, text.length);
+      return newText
+   }
 
     // Checks if a keystroke combo was pressed (e.g. ctrl+e)
     function assessKeystroke(keyPressed){
@@ -207,16 +244,40 @@ $j(document).ready(function() {
             // Split string into words
             var results = content.match(/("[^"]+"|[^"\s]+)/g);
 
+            for(var i = 0; i < results.length; i++){
+               // Marker found
+               if(results[i].indexOf(EEXCESS.trigger.marker) > -1) {
+                  for(var j = i + 1; j < results.length; j++){
+                     // Closingtag found
+                     if(results[j].indexOf(EEXCESS.trigger.closingTag) > -1) {
+                        results[i] = results[i].replace(EEXCESS.trigger.marker, "");
+                        results[j] = results[j].replace(EEXCESS.trigger.closingTag, "");
+
+                        var tmp = [];
+                        for(; i<j; i++){
+                           if(results[i] != ""){
+                              tmp[tmp.length] = results[i];
+                           }
+                        }
+                        results = tmp;
+                        break;
+                     }
+                  }
+                  break;
+               }
+            }
 
             if(marker) {
                 // Slicing the results array according to the textSpan option defined in the EEXCESS.trigger object
-                results = results.slice(results.length - EEXCESS.trigger.textSpan);
+                if(results.length > EEXCESS.trigger.textSpan){
+                   results = results.slice(results.length - EEXCESS.trigger.textSpan);
+                }
                 for(var i = 0; i < results.length; i++) {
                     // removing the marker from the result
                     if(results[i].indexOf(EEXCESS.trigger.marker) > -1) {
                         results[i] = results[i].substring(EEXCESS.trigger.marker.length);
-                    } else if(results[i].indexOf("") > -1) {
-                        results[i] = results[i].substring(0, results[i].length - 1);
+                        if(result[i].indexOf(EEXCESS.trigger.closingTag) > -1)
+                           results[i] = results[i].replace(EEXCESS.trigger.closingTag, "");
                     }
                 }
             }
@@ -306,9 +367,17 @@ $j(document).ready(function() {
                     list.find("#eexcess-recommendationList li").hide().slice(0, EEXCESS.pagination.items).show();
                 }
 
-                // display the list
-                resultList.html(list).show("slow");
-                spinner.fadeOut("slow")
+               // display the list
+               resultList.html(list).show("slow",function(){
+                  $j(".recommendationTextArea").each(function(index){
+                     var margin = $j($j('[class="recommendationTextArea"]')[0]).css("margin-right").replace("px", "");
+                     margin = margin + $j($j('[class="recommendationTextArea"]')[0]).css("margin-left").replace("px", "");
+                     var width = $j('#eexcess-recommendationList').width() - $j($j('.eexcess-previewPlaceholder')[0]).width() - margin;
+                     $j(this).css('width', width);
+                  });
+               });
+               spinner.fadeOut("slow")
+
 
                 if(usePagination) {
                     var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
@@ -338,6 +407,7 @@ $j(document).ready(function() {
         });
     };
 
+    // @param: editor is the tinyMCE.activeEditor-Object
     function getCurserPosition(editor) {
         //set a bookmark so we can return to the current position after we reset the content later
         var bm = editor.selection.getBookmark(0);

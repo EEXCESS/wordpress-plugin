@@ -30,6 +30,6 @@ var EEXCESS = {
     },
     "recommendationListSettings" : {
         "imageWidth" : 75,  //Width of images in the recommendation list
-        "imageHeight" : 55 //Heigth of images in the recommendation list
+        "imageHeight" : 78 //Heigth of images in the recommendation list
     }
 };

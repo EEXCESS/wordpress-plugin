@@ -87,10 +87,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                                <a target="_blank" href="{{uri}}">{{title}}</a>
                                </br>
                                Provider: {{facets.provider}}
+                               <br/>
                                {{#if facets.language}}
-                                   <br/>
                                    Language: {{facets.language}}
                                {{/if}}
+                               <br/>
+                               <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px">
                            </div>
                         </div>
                     </li>
@@ -131,7 +133,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
         // Data for the api call
         $postData = array(
-            "numResults" => 999,
+            "numResults" => 10,
             "contextKeywords" => array()
         );
 

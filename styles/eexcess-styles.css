@@ -21,13 +21,18 @@
    margin-bottom: 0px;
    margin-left: 5px;
    overflow: hidden;
-   white-spaces: nowrap;
+   white-space: nowrap;
    float: left;
+}
+
+.addCheckbox{
+   float: left;
+   vertical-align: middle;
 }
 
 .eexcess-previewPlaceholder {
     width: 75px;
-    height: 55px;
+    height: 78px;
     background-color: #e0e0e0;
     float: left;
 }
