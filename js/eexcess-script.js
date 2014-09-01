@@ -1,13 +1,27 @@
 // Avoid jQuery conflicts from different plugins
 $j = jQuery.noConflict();
-
+/*
+ * The following object contains all custom functions and properties for the EEXCESS-plugin.
+ * It hides the limitations of javascript and behaves to the greates possible extent link
+ * a class in other programming laguages. The "instanziation" and "initialization" of the
+ * "class" can be found at the bottom of this file.
+ */
 var EEXCESS_METHODS = function () {
+   // They hold references to jquery-objects that represent html-objects in the DOM.
    var spinner,
    resultList,
    introText,
    abortRequestButton,
-   request = null; // used to store a ajax request in order to be able to abort it.
 
+   // used to store a ajax request in order to be able to abort it.
+   request = null;
+
+   /*
+    * The Constructor of this class.
+    * All parameters are jquery-objects.
+    * @param mSpinner: reference to a DOM-object representation a spinner that is
+    *                  usen when time-consuming actions take place
+    */
    init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton) {
       this.spinner = mSpinner;
       this.resultList = mResultList;
@@ -19,7 +33,16 @@ var EEXCESS_METHODS = function () {
       this.abortRequestButton.hide();
    },
 
-   // Will be called on a keyUp event inside the tinyMCE editor
+   /*
+    * This function is triggered by the keyup-event in the tinyMCE-editor (visual-editor in
+    * wordpress terminology aka WYSIWYG-Editor). It searches the so far written text for a
+    * pattern defined by EEXCESS.trigger.maker and EEXCESS.trigger.closingTag. If a match is
+    * found, the tokens surrounded by the predefined delimeters are extracted and the delimiters
+    * will be removed. The extracted tokens are used for a recommendation that will also by
+    * displayed by this function.
+    *
+    * @param ed: a reference to the tinyMCE textarea.
+    */
    extractTerm = function(ed) {
       var text  = ed.getContent();
       if(eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/").test(text)) { // Tests if the text contains #eexcess:keywords#
@@ -38,12 +61,16 @@ var EEXCESS_METHODS = function () {
       }
    },
 
-   // Catches keydown events withing the visual editor (i.e. tinyMCE)
-   catchKeystroke = function(ed, e) {
-      assessKeystroke.call(this, e);
-   },
-
-   // Checks if a keystroke combo was pressed (e.g. ctrl+e)
+   /*
+    * This functions is called when a keyup-event occurs either in the visal-editor
+    * or in the text-editor. It checks if a certain keystroke combo was used (e.g.
+    * ctrl+e). If so, the recommendation workflow is triggered. this workflow is
+    * triggered when ctrl and the key defined in
+    * EEXCESS.keyboardBindungs.getRecommendations are used.
+    *
+    *
+    * @param keyPressed: the object that ist passed to an keylistener-eventhandler.
+    */
    assessKeystroke = function(keyPressed){
       if (keyPressed.keyCode == EEXCESS.keyboardBindungs.getRecommendations
        && keyPressed.ctrlKey){
@@ -54,11 +81,12 @@ var EEXCESS_METHODS = function () {
    /**
    * Inserts a HTML-link (a-tag) composed of url and title at position
    * cursorPosition into text.
-   * @param text the to insert the link
-   * @param cursorPosition the position to insert the link
-   * @param url the url to link to
-   * @param title the title of the link
-   * @param linkText the text for the link
+   *
+   * @param text:          the to insert the link
+   * @param cursorPosition:the position to insert the link
+   * @param url:           the url to link to
+   * @param title:         the title of the link
+   * @param linkText:      the text for the link
    */
    pasteLinkToText = function(text, cursorPosition, url, title, linkText){
       var newText = text.substring(0, cursorPosition);
@@ -67,6 +95,15 @@ var EEXCESS_METHODS = function () {
       return newText
    },
 
+   /*
+    * This function is invoked when the "Get Recommendations"-Button is used.
+    * It extracts the marked text in either the visual- oder text editor and
+    * triggers the recommendation workflow.
+    *
+    * @param event: the event, that is associated with the "Get
+    *               Recommendations"-Button. The standard behavior will be
+    *               suppressed.
+    */
    getSelectedTextAndRecommend = function(event) {
       event.preventDefault();
       var text = "";
@@ -95,8 +132,8 @@ var EEXCESS_METHODS = function () {
    /**
    * Inserts a div that contains an error message after a given element.
    *
-   * @param msg The error message to display.
-   * @param element The element after which to display the error.
+   * @param msg:     The error message to display.
+   * @param element: The element after which to display the error.
    */
    displayError = function(msg, element) {
       // Removing previously added error messages
@@ -183,6 +220,9 @@ var EEXCESS_METHODS = function () {
       return null;
    },
 
+   /*
+    * Fades the "Get Recommendations"-Button out an the "abort Request"-Button in and vice versa.
+    */
    toggleButtons = function(){
       var recommendButton = $j('#getRecommendations');
       var abortButton = $j('#abortRequest')
@@ -198,6 +238,12 @@ var EEXCESS_METHODS = function () {
       }
    },
 
+   /*
+    * This functions handles the recommendation workflow. It changes the UI and triggers the
+    * ajax-call to the federated recommender.
+    *
+    * @param data: The query that will be sent to the recommender.
+    */
    getRecommendations = function(data) {
       // Hide the resullist. It could be visiable due to prior use
       this.resultList.hide("slow");
@@ -212,84 +258,6 @@ var EEXCESS_METHODS = function () {
          this.request.abort();
       }
 
-      // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-      var ajaxCallback = function(response, status, jqXHR) {
-         if(response) {
-            // no longer needed, since the operation has completed and thus
-            // the abortion is no longer an option.
-            this.request = null;
-            this.toggleButtons();
-
-            // parsing the JSON string
-            var o = JSON.parse(response);
-
-            // Using Handlebars.js to compile the template. See http://handlebarsjs.com/ for documentation.
-            var template = Handlebars.compile($j("#list-template").html());
-            var list = $j(template(o));
-
-            // image resizing to fit the design
-            width = EEXCESS.recommendationListSettings.imageWidth;
-            height = EEXCESS.recommendationListSettings.imageHeight;
-            $j(list).find("img").each(function(index){
-               if(this.naturalWidth != width){
-                  var tmp = width/this.width;
-                  $j(this).attr('width', width + 'px');
-                  var foo = Math.ceil(this.height*tmp);
-                  $j(this).attr('height', foo + 'px');
-               }
-               if(this.height > height){
-                  var tmp = height/this.height;
-                  $j(this).attr('height', height + 'px');
-                  var foo = Math.ceil(this.width*tmp);
-                  $j(this).attr('width', foo + 'px');
-               }
-
-            });
-
-
-            var usePagination = list.find("#eexcess-recommendationList li").length > 10;
-
-            if(usePagination) {
-               // show only the first x items
-               list.find("#eexcess-recommendationList li").hide().slice(0, EEXCESS.pagination.items).show();
-            }
-
-            // display the list
-            this.resultList.html(list).show("slow", function(){
-               $j(".recommendationTextArea").each(function(index){
-                  var margin = $j($j('[class="recommendationTextArea"]')[0]).css("margin-right").replace("px", "");
-                  margin = margin + $j($j('[class="recommendationTextArea"]')[0]).css("margin-left").replace("px", "");
-                  var width = $j('#eexcess-recommendationList').width() - $j($j('.eexcess-previewPlaceholder')[0]).width() - margin;
-                  $j(this).css('width', width);
-               });
-            });
-            this.spinner.fadeOut("slow")
-
-            if(usePagination) {
-               var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
-               $j("#recommandationList-pagination").paginate({
-                  background_color        : 'none',
-                  background_hover_color  : 'none',
-                  border                  : false,
-                  count       : pages,
-                  display     : EEXCESS.pagination.display,
-                  images      : false,
-                  mouse       : 'press',
-                  start       : EEXCESS.pagination.start,
-                  text_color              : EEXCESS.pagination.textColor,
-                  text_hover_color        : EEXCESS.pagination.textHoverColor,
-                  onChange : function(page) {
-                     var page = page - 1;
-                     var min = page * EEXCESS.pagination.items;
-                     var max = page * EEXCESS.pagination.items + EEXCESS.pagination.items;
-                     $j("#eexcess-recommendationList li").hide().slice(min, max).show();
-                  }
-               });
-            }
-         } else {
-            this.resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
-         }
-      };
       this.request = $j.ajax({
          type: "POST",
          url: ajaxurl,
@@ -300,7 +268,101 @@ var EEXCESS_METHODS = function () {
 
    },
 
-   // @param: editor is the tinyMCE.activeEditor-Object
+   /*
+    * The callback-function that is invoked when the recommenders answer arrives. It
+    * updates the UI and displays the results accordingly. when there are no matches
+    * an errormessage will be displayed.
+    * this functions is private (i.e. it can only by used inside of EEXCESS_METHODS
+    * objects).
+    *
+    * @params: refer to http://api.jquery.com/jquery.ajax/ and look for the success-
+    *          callback method.
+    */
+   ajaxCallback = function(response, status, jqXHR) {
+      if(response) {
+         // no longer needed, since the operation has completed and thus
+         // the abortion is no longer an option.
+         this.request = null;
+         this.toggleButtons();
+
+         // parsing the JSON string
+         var o = JSON.parse(response);
+
+         // Using Handlebars.js to compile the template. See http://handlebarsjs.com/ for documentation.
+         var template = Handlebars.compile($j("#list-template").html());
+         var list = $j(template(o));
+
+         // image resizing to fit the design
+         width = EEXCESS.recommendationListSettings.imageWidth;
+         height = EEXCESS.recommendationListSettings.imageHeight;
+         $j(list).find("img").each(function(index){
+            if(this.naturalWidth != width){
+               var tmp = width/this.width;
+               $j(this).attr('width', width + 'px');
+               var foo = Math.ceil(this.height*tmp);
+               $j(this).attr('height', foo + 'px');
+            }
+            if(this.height > height){
+               var tmp = height/this.height;
+               $j(this).attr('height', height + 'px');
+               var foo = Math.ceil(this.width*tmp);
+               $j(this).attr('width', foo + 'px');
+            }
+
+         });
+
+
+         var usePagination = list.find("#eexcess-recommendationList li").length > 10;
+
+         if(usePagination) {
+            // show only the first x items
+            list.find("#eexcess-recommendationList li").hide().slice(0, EEXCESS.pagination.items).show();
+         }
+
+         // display the list
+         this.resultList.html(list).show("slow", function(){
+            $j(".recommendationTextArea").each(function(index){
+               var margin = $j($j('[class="recommendationTextArea"]')[0]).css("margin-right").replace("px", "");
+               margin = margin + $j($j('[class="recommendationTextArea"]')[0]).css("margin-left").replace("px", "");
+               var width = $j('#eexcess-recommendationList').width() - $j($j('.eexcess-previewPlaceholder')[0]).width() - margin;
+               $j(this).css('width', width);
+            });
+         });
+         this.spinner.fadeOut("slow")
+
+         if(usePagination) {
+            var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
+            $j("#recommandationList-pagination").paginate({
+               background_color        : 'none',
+               background_hover_color  : 'none',
+               border                  : false,
+               count       : pages,
+               display     : EEXCESS.pagination.display,
+               images      : false,
+               mouse       : 'press',
+               start       : EEXCESS.pagination.start,
+               text_color              : EEXCESS.pagination.textColor,
+               text_hover_color        : EEXCESS.pagination.textHoverColor,
+               onChange : function(page) {
+                  var page = page - 1;
+                  var min = page * EEXCESS.pagination.items;
+                  var max = page * EEXCESS.pagination.items + EEXCESS.pagination.items;
+                  $j("#eexcess-recommendationList li").hide().slice(min, max).show();
+               }
+            });
+         }
+      } else {
+         this.resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
+      }
+   };
+
+
+   /*
+    * returns the cursor position. This applies only for the tinyMCE (aka visual) editor.
+    *
+    * @param editor: is the tinyMCE.activeEditor-Object
+    * @return: the position of the cursor
+    */
    getCurserPosition = function(editor) {
       //set a bookmark so we can return to the current position after we reset the content later
       var bm = editor.selection.getBookmark(0);
@@ -333,6 +395,13 @@ var EEXCESS_METHODS = function () {
       return index;
    },
 
+   /*
+   * sets the cursor position. This applies only for the tinyMCE (aka visual) editor.
+   *
+   * @param editor: Is the tinyMCE.activeEditor-Object
+   * @param index:  The new position of the cursor
+   * @return:
+   */
    setCursorPosition = function(editor, index) {
       //get the content in the editor before we add the bookmark...
       //use the format: html to strip out any existing meta tags
@@ -362,10 +431,14 @@ var EEXCESS_METHODS = function () {
       return bookmark;
    };
 
+   /*
+    * The return object exposes elements to the outside world.
+    * In terms of OO-languages supporting classes this mechanism emulates the "public"
+    * modifier whereas objects that are not mentioned in the return object remain "private".
+    */
    return {
       init: init,
       extractTerm: extractTerm,
-      catchKeystroke: catchKeystroke,
       assessKeystroke: assessKeystroke,
       pasteLinkToText: pasteLinkToText,
       getSelectedTextAndRecommend: getSelectedTextAndRecommend,
@@ -384,7 +457,10 @@ var EEXCESS_METHODS = function () {
 };
 
 
-// Use jQuery via $j(...)t
+/*
+ * This code-snippet instanziates and initializes a EEXCESS_METHODS-Object and makes it
+ * globaly available.
+ */
 $j(document).ready(function() {
    eexcessMethods = new EEXCESS_METHODS();
    eexcessMethods.init($j("#eexcess_container .inside #content .eexcess-spinner"),

@@ -38,8 +38,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
          wp_enqueue_script('jquery');
          // init JavaScript
          wp_enqueue_script( 'eexcess-settings', plugins_url( '/js/eexcess-settings.js', __FILE__ ), array('jquery') );
-         wp_enqueue_script( 'eexcess-pagination-script', plugins_url( '/js/jquery.paginate.js', __FILE__), array('jquery') );
-         wp_enqueue_script( 'eexcess-templating-script', plugins_url( '/js/handlebars-v1.3.0.js', __FILE__), array('jquery') );
+         wp_enqueue_script( 'eexcess-pagination-script', plugins_url( '/js/lib/jquery.paginate.js', __FILE__), array('jquery') );
+         wp_enqueue_script( 'eexcess-templating-script', plugins_url( '/js/lib/handlebars-v1.3.0.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-script', plugins_url( '/js/eexcess-script.js', __FILE__ ), array('jquery') );
          wp_enqueue_script( 'eexcess-jquery-plugins', plugins_url( '/js/eexcess-jquery-plugins.js', __FILE__ ), array('jquery') );
          wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( 'js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
@@ -110,7 +110,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
       <div id="content">
          <p>
             Get recommendations for keywords by using "#eexcess:Keyword#" inside the textarea.
-            Furthermore, you can select parts of the text and then click the "Get Recommendations" button.
+            Furthermore, you can select parts of the text and then either click the "Get Recommendations"
+            button or you can use the keyboard shortcut ctrl + e.
          </p>
          <div class='eexcess-spinner'></div>
          <div id='list'></div>
@@ -136,7 +137,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
       // Data for the api call
       $postData = array(
-         "numResults" => 10,
+         "numResults" => 100,
          "contextKeywords" => array()
       );
 
@@ -170,7 +171,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
             eexcessMethods.extractTerm(ed);
          });
          ed.onKeyDown.add(function(ed, e) {
-            eexcessMethods.catchKeystroke(ed, e);
+            eexcessMethods.assessKeystroke(e);
          });
       }";
       return $initArray;

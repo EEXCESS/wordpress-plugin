@@ -16,9 +16,9 @@ $j(document).ready(function() {
    $j(document).on("mousedown", "#abortRequest", function(event){
       eexcessMethods.request.abort();
       eexcessMethods.toggleButtons();
-      resultList.hide("slow");
-      spinner.hide("slow", function(){
-         introText.show("slow");
+      eexcessMethods.resultList.hide("slow");
+      eexcessMethods.spinner.hide("slow", function(){
+         eexcessMethods.introText.show("slow");
       });
    });
 
@@ -51,8 +51,8 @@ $j(document).ready(function() {
       }
    });
 
+   // Handles the "add" buttons in the recommendation area
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
-      //die positionierung im falle des visual editors is nicht korrekt.
       var url = $j($j("input[name='addMatch']")[0]).siblings("a").attr('href');
       var title = $j($j("input[name='addMatch']")[0]).siblings("a").text();
       var cursorPosition = "";

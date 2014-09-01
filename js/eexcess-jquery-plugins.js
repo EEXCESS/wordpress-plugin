@@ -1,6 +1,7 @@
 // Avoid jQuery conflicts from different plugins
 $j = jQuery.noConflict();
 
+// Setting the cursor position
 $j.fn.setCursorPosition = function(pos) {
    this.each(function(index, elem) {
       if (elem.setSelectionRange) {
