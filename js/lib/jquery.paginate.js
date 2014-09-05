@@ -244,6 +244,7 @@
 						}
 						insidewidth += this.offsetWidth;
 					})
+					obj.parent().css('width', _first.parent().width() + outsidewidth_tmp + "px");
 					_ul.css('width',insidewidth+'px');
 	}
 })(jQuery);

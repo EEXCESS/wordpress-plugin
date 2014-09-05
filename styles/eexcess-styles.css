@@ -1,98 +1,112 @@
 #eexcess-recommendationList {
-    overflow: hidden;
+   overflow: hidden;
 }
 
 #eexcess-recommendationList li {
-    margin: 0 0 5px 0;
-    clear: both;
+   margin: 0 0 5px 0;
+   clear: both;
 }
 
 #eexcess-recommendationList p,
 #eexcess-recommendationList img {
-    float: left;
+   float: left;
 }
 
 #eexcess-recommendationList p {
-    margin-left: 10px;
+   margin-left: 10px;
+}
+
+.recommendationTextArea{
+   margin-top: 0px;
+   margin-bottom: 0px;
+   margin-left: 5px;
+   overflow: hidden;
+   white-space: nowrap;
+   float: left;
+}
+
+.addCheckbox{
+   float: left;
+   vertical-align: middle;
 }
 
 .eexcess-previewPlaceholder {
-    width: 50px;
-    height: 50px;
-    background-color: #e0e0e0;
-    float: left;
+   width: 75px;
+   height: 78px;
+   background-color: #e0e0e0;
+   float: left;
 }
 
 #eexcess-recommendationList img,
-.eexcess-previewPlaceholder { 
-    margin-bottom: 5px;   
+.eexcess-previewPlaceholder {
+   margin-bottom: 5px;
 }
 
 .eexcess-spinner {
-    width: 32px;
-    height: 32px;
-    background: url(../images/spinner.gif);   
-    margin: 0 auto;
+   width: 32px;
+   height: 32px;
+   background: url(../images/spinner.gif);
+   margin: 0 auto;
 }
 
 #getRecommendations {
-    text-align: center;
+   text-align: center;
 }
 
 .error {
-    color: #dd4b39;
+   color: #dd4b39;
 }
 
 .jPaginate{
-    height:34px;
-    position:relative;
-    color:#a5a5a5;
-    font-size:small;   
-    width:100%;
+   height:34px;
+   position:relative;
+   color:#a5a5a5;
+   font-size:small;
+   width:100%;
 }
 .jPaginate a{
-    line-height:15px;
-    height:18px;
-    cursor:pointer;
-    padding:2px 5px;
-    margin:2px;
-    float:left;
+   line-height:15px;
+   height:18px;
+   cursor:pointer;
+   padding:2px 5px;
+   margin:2px;
+   float:left;
 }
 .jPag-control-back{
-    position:absolute;
-    left:0px;
+   position:absolute;
+   left:0px;
 }
 .jPag-control-front{
-    position:absolute;
-    top:0px;
+   position:absolute;
+   top:0px;
 }
 .jPaginate span{
-    cursor:pointer;
+   cursor:pointer;
 }
 ul.jPag-pages{
-    float:left;
-    list-style-type:none;
-    margin:0px 0px 0px 0px;
-    padding:0px;
+   float:left;
+   list-style-type:none;
+   margin:0px 0px 0px 0px;
+   padding:0px;
 }
 ul.jPag-pages li{
-    display:inline;
-    float:left;
-    padding:0px;
-    margin:0px;
+   display:inline;
+   float:left;
+   padding:0px;
+   margin:0px;
 }
 ul.jPag-pages li a{
-    float:left;
-    padding:2px 5px;
+   float:left;
+   padding:2px 5px;
 }
 span.jPag-current{
-    cursor:default;
-    font-weight:normal;
-    line-height:15px;
-    height:18px;
-    padding:2px 5px;
-    margin:2px;
-    float:left;
+   cursor:default;
+   font-weight:normal;
+   line-height:15px;
+   height:18px;
+   padding:2px 5px;
+   margin:2px;
+   float:left;
 }
 ul.jPag-pages li span.jPag-previous,
 ul.jPag-pages li span.jPag-next,
@@ -102,56 +116,56 @@ ul.jPag-pages li span.jPag-previous-img,
 ul.jPag-pages li span.jPag-next-img,
 span.jPag-sprevious-img,
 span.jPag-snext-img{
-    height:22px;
-    margin:2px;
-    float:left;
-    line-height:18px;
+   height:22px;
+   margin:2px;
+   float:left;
+   line-height:18px;
 }
 
 ul.jPag-pages li span.jPag-previous,
 ul.jPag-pages li span.jPag-previous-img{
-    margin:2px 0px 2px 2px;
-    font-size:12px;
-    font-weight:bold;
-        width:10px;
+   margin:2px 0px 2px 2px;
+   font-size:12px;
+   font-weight:bold;
+   width:10px;
 
 }
 ul.jPag-pages li span.jPag-next,
 ul.jPag-pages li span.jPag-next-img{
-    margin:2px 2px 2px 0px;
-    font-size:12px;
-    font-weight:bold;
-    width:10px;
+   margin:2px 2px 2px 0px;
+   font-size:12px;
+   font-weight:bold;
+   width:10px;
 }
 span.jPag-sprevious,
 span.jPag-sprevious-img{
-    margin:2px 0px 2px 2px;
-    font-size:18px;
-    width:15px;
-    text-align:right;
+   margin:2px 0px 2px 2px;
+   font-size:18px;
+   width:15px;
+   text-align:right;
 }
 span.jPag-snext,
 span.jPag-snext-img{
-    margin:2px 2px 2px 0px;
-    font-size:18px;
-    width:15px;
-     text-align:right;
+   margin:2px 2px 2px 0px;
+   font-size:18px;
+   width:15px;
+   text-align:right;
 }
 ul.jPag-pages li span.jPag-previous-img{
-    background:transparent url(../images/previous.png) no-repeat center right;
+   background:transparent url(../images/previous.png) no-repeat center right;
 }
 ul.jPag-pages li span.jPag-next-img{
-    background:transparent url(../images/next.png) no-repeat center left;
+   background:transparent url(../images/next.png) no-repeat center left;
 }
 span.jPag-sprevious-img{
-    background:transparent url(../images/sprevious.png) no-repeat center right;
+   background:transparent url(../images/sprevious.png) no-repeat center right;
 }
 span.jPag-snext-img{
-    background:transparent url(../images/snext.png) no-repeat center left;
+   background:transparent url(../images/snext.png) no-repeat center left;
 }
 
 .pagination-container {
-    width: 254px;
-    padding: 10px;
-    margin: 10px auto;
+   width: 254px;
+   padding: 10px;
+   margin: 10px auto;
 }
