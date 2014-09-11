@@ -53,8 +53,8 @@ $j(document).ready(function() {
 
    // Handles the "add" buttons in the recommendation area
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
-      var url = $j($j("input[name='addMatch']")[0]).siblings("a").attr('href');
-      var title = $j($j("input[name='addMatch']")[0]).siblings("a").text();
+      var url =  $j(this).siblings("a").attr('href');
+      var title = $j(this).siblings("a").text();
       var cursorPosition = "";
       var text = "";
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
