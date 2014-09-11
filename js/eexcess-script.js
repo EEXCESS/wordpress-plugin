@@ -292,7 +292,7 @@ var EEXCESS_METHODS = function () {
          var template = Handlebars.compile($j("#list-template").html());
          var list = $j(template(o));
 
-         // image resizing to fit the design
+         // image resizing to fit the layout
          width = EEXCESS.recommendationListSettings.imageWidth;
          height = EEXCESS.recommendationListSettings.imageHeight;
          $j(list).find("img").each(function(index){
