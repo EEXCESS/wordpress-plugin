@@ -47,7 +47,7 @@ $j(document).ready(function() {
             $j(this).val(text);
             // setting the cursor position
             $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
-         }
+         }l
       }
    });
 
@@ -55,19 +55,46 @@ $j(document).ready(function() {
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
       var url =  $j(this).siblings("a").attr('href');
       var title = $j(this).siblings("a").text();
+      var citationStyle = $j('#citationStyleDropDown').val();
       var cursorPosition = "";
       var text = "";
+      
+      // define the operations according to the currently used editor 
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         cursorPosition = eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
-         text = tinyMCE.activeEditor.getContent();
-         var newText = eexcessMethods.pasteLinkToText(text, cursorPosition, url, title, "link");
-         tinyMCE.activeEditor.setContent(newText);
+         var getCursor = function(){
+            return eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
+         }
+         var getContent = function(){
+            return tinyMCE.activeEditor.getContent();
+         }
+         var setContent = function(newText){
+            tinyMCE.activeEditor.setContent(newText);   
+         }
       } else {
          var textarea = $j("textarea#content");
-         cursorPosition = textarea.getCursorPosition();
-         text = textarea.val();
-         var newText = eexcessMethods.pasteLinkToText(text, cursorPosition, url, title, "link");
-         textarea.val(newText);
+         var getCursor = function(){
+            return textarea.getCursorPosition();
+         }
+         var getContent = function(){
+            return textarea.val();
+         }
+         var setContent = function(newText){
+            textarea.val(newText);;   
+         }
       }
+      cursorPosition = getCursor();
+      text = getContent();
+      if(citationStyle == "default"){
+         var newText = eexcessMethods.pasteLinkToText(text, cursorPosition, url, title, "link");  
+      }else{
+         var foo = eexcessMethods.readMetadata(this);
+         var aal = JSON.parse(foo);
+         citationProcessor = new CITATION_PROCESSOR();
+         citationProcessor.init(EEXCESS.citeproc.localsDir + 'locales-en-US.xml', 
+            EEXCESS.citeproc.stylesDir + citationStyle + '.csl', 
+            JSON.parse(eexcessMethods.readMetadata(this)));            
+         newText = getContent() + citationProcessor.renderCitations();
+      }
+      setContent(newText);
    });
 });

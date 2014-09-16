@@ -1,6 +1,6 @@
 // Avoid jQuery conflicts from different plugins
 $j = jQuery.noConflict();
-/*
+/**
  * The following object contains all custom functions and properties for the EEXCESS-plugin.
  * It hides the limitations of javascript and behaves to the greates possible extent link
  * a class in other programming laguages. The "instanziation" and "initialization" of the
@@ -12,28 +12,31 @@ var EEXCESS_METHODS = function () {
    resultList,
    introText,
    abortRequestButton,
+   CitationStyleDropDown,
 
    // used to store a ajax request in order to be able to abort it.
    request = null;
 
-   /*
+   /**
     * The Constructor of this class.
     * All parameters are jquery-objects.
     * @param mSpinner: reference to a DOM-object representation a spinner that is
     *                  usen when time-consuming actions take place
     */
-   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton) {
+   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton, mCitationStyleDropDown) {
       this.spinner = mSpinner;
       this.resultList = mResultList;
       this.introText = mIntroText;
       this.abortRequestButton = mAbortRequestButton;
+      this.CitationStyleDropDown = mCitationStyleDropDown;
 
       this.spinner.hide();
       this.resultList.hide();
       this.abortRequestButton.hide();
+      //this.CitationStyleDropDown.hide();
    },
 
-   /*
+   /**
     * This function is triggered by the keyup-event in the tinyMCE-editor (visual-editor in
     * wordpress terminology aka WYSIWYG-Editor). It searches the so far written text for a
     * pattern defined by EEXCESS.trigger.maker and EEXCESS.trigger.closingTag. If a match is
@@ -61,7 +64,7 @@ var EEXCESS_METHODS = function () {
       }
    },
 
-   /*
+   /**
     * This functions is called when a keyup-event occurs either in the visal-editor
     * or in the text-editor. It checks if a certain keystroke combo was used (e.g.
     * ctrl+e). If so, the recommendation workflow is triggered. this workflow is
@@ -89,13 +92,17 @@ var EEXCESS_METHODS = function () {
    * @param linkText:      the text for the link
    */
    pasteLinkToText = function(text, cursorPosition, url, title, linkText){
+      return insertIntoText(text, cursorPosition, ' <a href="' + url + '" title="'+ title + '"> link </a> ');
+   },
+
+   insertIntoText = function(text, cursorPosition, snippet){
       var newText = text.substring(0, cursorPosition);
-      newText = newText + ' <a href="' + url + '" title="'+ title + '"> link </a> ';
+      newText = newText + snippet;
       newText = newText + text.substring(cursorPosition, text.length);
       return newText
    },
 
-   /*
+   /**
     * This function is invoked when the "Get Recommendations"-Button is used.
     * It extracts the marked text in either the visual- oder text editor and
     * triggers the recommendation workflow.
@@ -220,7 +227,7 @@ var EEXCESS_METHODS = function () {
       return null;
    },
 
-   /*
+   /**
     * Fades the "Get Recommendations"-Button out an the "abort Request"-Button in and vice versa.
     */
    toggleButtons = function(){
@@ -238,7 +245,7 @@ var EEXCESS_METHODS = function () {
       }
    },
 
-   /*
+   /**
     * This functions handles the recommendation workflow. It changes the UI and triggers the
     * ajax-call to the federated recommender.
     *
@@ -268,7 +275,7 @@ var EEXCESS_METHODS = function () {
 
    },
 
-   /*
+   /**
     * The callback-function that is invoked when the recommenders answer arrives. It
     * updates the UI and displays the results accordingly. when there are no matches
     * an errormessage will be displayed.
@@ -357,7 +364,7 @@ var EEXCESS_METHODS = function () {
    };
 
 
-   /*
+   /**
     * returns the cursor position. This applies only for the tinyMCE (aka visual) editor.
     *
     * @param editor: is the tinyMCE.activeEditor-Object
@@ -395,13 +402,13 @@ var EEXCESS_METHODS = function () {
       return index;
    },
 
-   /*
-   * sets the cursor position. This applies only for the tinyMCE (aka visual) editor.
-   *
-   * @param editor: Is the tinyMCE.activeEditor-Object
-   * @param index:  The new position of the cursor
-   * @return:
-   */
+   /**
+    * sets the cursor position. This applies only for the tinyMCE (aka visual) editor.
+    *
+    * @param editor: Is the tinyMCE.activeEditor-Object
+    * @param index:  The new position of the cursor
+    * @return:
+    */
    setCursorPosition = function(editor, index) {
       //get the content in the editor before we add the bookmark...
       //use the format: html to strip out any existing meta tags
@@ -429,9 +436,44 @@ var EEXCESS_METHODS = function () {
 
       //return the bookmark just because
       return bookmark;
+   },
+   
+   /**
+    * comments
+    */
+   readMetadata = function(context){
+      var creator = $j(context).siblings("input[name='creator']").val();
+      var collectionName = $j(context).siblings("input[name='collectionName']").val();
+      var year = $j(context).siblings("input[name='facets.year']").val();
+      var id = $j(context).siblings("input[name='id']").val();
+      var title = $j(context).siblings("a").text();
+      var uri = $j(context).siblings("input[name='eexcessURI']").val();
+            
+            
+      var json = '{ \
+         "' + id + '": { \
+            "id": "' + id + '", \
+            "container-title": "' + collectionName + '", \
+            "URL": "' + uri + '", \
+            "title": "' + title + '", \
+            "author": [ \
+              { \
+                "family": "' + creator + '" \
+              } \
+            ], \
+            "issued": { \
+              "date-parts": [ \
+                [ \
+                  "' + year + '" \
+                ] \
+              ] \
+            } \
+         } \
+      }'
+      return json;
    };
 
-   /*
+   /**
     * The return object exposes elements to the outside world.
     * In terms of OO-languages supporting classes this mechanism emulates the "public"
     * modifier whereas objects that are not mentioned in the return object remain "private".
@@ -448,6 +490,7 @@ var EEXCESS_METHODS = function () {
       getRecommendations: getRecommendations,
       getCurserPosition: getCurserPosition,
       setCursorPosition: setCursorPosition,
+      readMetadata: readMetadata,
       spinner: spinner,
       resultList: resultList,
       introText: introText,
@@ -457,14 +500,15 @@ var EEXCESS_METHODS = function () {
 };
 
 
-/*
+/**
  * This code-snippet instanziates and initializes a EEXCESS_METHODS-Object and makes it
  * globaly available.
  */
 $j(document).ready(function() {
    eexcessMethods = new EEXCESS_METHODS();
    eexcessMethods.init($j("#eexcess_container .inside #content .eexcess-spinner"),
-             $j("#eexcess_container .inside #content #list"),
-             $j("#eexcess_container .inside #content p"),
-             $j('#abortRequest'));
+            $j("#eexcess_container .inside #content #list"),
+            $j("#eexcess_container .inside #content p"),
+            $j('#abortRequest'),
+            $j('#citationStyleDropDown'));      
 });

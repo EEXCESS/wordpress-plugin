@@ -31,5 +31,9 @@ var EEXCESS = {
    "recommendationListSettings" : {
       "imageWidth" : 75,  //Width of images in the recommendation list
       "imageHeight" : 78 //Heigth of images in the recommendation list
+   },
+   "citeproc" : {
+      "stylesDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/citionStyles/",
+      "localsDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/locales/"
    }
 };

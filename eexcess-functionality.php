@@ -42,7 +42,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
          wp_enqueue_script( 'eexcess-templating-script', plugins_url( '/js/lib/handlebars-v1.3.0.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-script', plugins_url( '/js/eexcess-script.js', __FILE__ ), array('jquery') );
          wp_enqueue_script( 'eexcess-jquery-plugins', plugins_url( '/js/eexcess-jquery-plugins.js', __FILE__ ), array('jquery') );
-         wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( 'js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
+         wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
+         //for citeproc
+         wp_enqueue_script( 'CLSWrapper', plugins_url( '/js/CLSWrapper.js', __FILE__ ), array('jquery', 'eexcess-xmldom', 'eexcess-citeproc') );
+         wp_enqueue_script( 'eexcess-citeproc', plugins_url( '/js/lib/citeproc.js', __FILE__ ));
+         wp_enqueue_script( 'eexcess-xmldom', plugins_url( '/js/lib/xmldom.js', __FILE__ ));
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
       }
@@ -92,7 +96,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                            {{#if facets.language}}
                               Language: {{facets.language}}
                            {{/if}}
-                           <br/>
+                           <br/>                   
+                           {{#if collectionName}}
+                              <input type="hidden" name="collectionName" value="{{collectionName}}"> 
+                           {{/if}}
+                           {{#if creator}}
+                              <input type="hidden" name="creator" value="{{creator}}"> 
+                           {{/if}}
+                           {{#if description}}
+                              <input type="hidden" name="description" value="{{description}}">
+                           {{/if}}
+                           {{#if eexcessURI}}
+                              <input type="hidden" name="eexcessURI" value="{{eexcessURI}}">
+                           {{/if}}
+                           {{#if facets.year}}
+                              <input type="hidden" name="facets.year" value="{{facets.year}}">
+                           {{/if}}
+                           {{#if facets.language}}
+                              <input type="hidden" name="facets.language" value="{{facets.language}}">
+                           {{/if}}
+                           {{#if id}}
+                              <input type="hidden" name="id" value="{{id}}">
+                           {{/if}}                           
                            <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px">
                         </div>
                      </div>
@@ -107,6 +132,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
       <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations">
       <input name="abortRequest" class="button button-primary" id="abortRequest" value="Abort Request">
+      <select name="citationStyleDropDown" id="citationStyleDropDown" style="float: right">
+         <option value="default" selected="selected">Citation Style (default Hyperlink)</option>
+         <?php
+            // corresponds to EEXCESS.citeproc.stylesDir from eexcess-settings.js.
+            // unfortunatley there is no way to share that variable. At least AFAIK.
+            $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citeproc-js/citionStyles';
+            if ($handle = opendir($citeprocStylesPath)) {
+               while (false !== ($entry = readdir($handle))) {
+                  if ($entry != "." && $entry != "..") {
+                     $entry = str_replace(".csl", "", $entry);
+                     echo '<option value="' . $entry . '">' . $entry . '</option>';
+                  }
+               }
+               closedir($handle);
+            }
+         ?>
+      </select>
       <div id="content">
          <p>
             Get recommendations for keywords by using "#eexcess:Keyword#" inside the textarea.
