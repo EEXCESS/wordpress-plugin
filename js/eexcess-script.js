@@ -95,6 +95,13 @@ var EEXCESS_METHODS = function () {
       return insertIntoText(text, cursorPosition, ' <a href="' + url + '" title="'+ title + '"> link </a> ');
    },
 
+   /**
+   * Inserts an arbitrary string (snippet) at cursorPosition into text.
+   *
+   * @param text:          the to insert the link
+   * @param cursorPosition:the position to insert the link
+   * @param snippet:       the text to insert
+   */
    insertIntoText = function(text, cursorPosition, snippet){
       var newText = text.substring(0, cursorPosition);
       newText = newText + snippet;
@@ -440,7 +447,7 @@ var EEXCESS_METHODS = function () {
       //return the bookmark just because
       return bookmark;
    },
-   
+
    /**
     * comments
     */
@@ -451,7 +458,7 @@ var EEXCESS_METHODS = function () {
       id = $j(context).siblings("input[name='id']").val(),
       title = $j(context).siblings("a").text(),
       uri = $j(context).siblings("input[name='eexcessURI']").val(),
-            
+
       json = '{ \
          "' + id + '": { \
             "id": "' + id + '", \
@@ -512,5 +519,5 @@ $j(document).ready(function() {
             $j("#eexcess_container .inside #content #list"),
             $j("#eexcess_container .inside #content p"),
             $j('#abortRequest'),
-            $j('#citationStyleDropDown'));      
+            $j('#citationStyleDropDown'));
 });

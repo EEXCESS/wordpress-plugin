@@ -53,13 +53,13 @@ $j(document).ready(function() {
 
    // Handles the "add" buttons in the recommendation area
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
-      var url =  $j(this).siblings("a").attr('href');
-      var title = $j(this).siblings("a").text();
-      var citationStyle = $j('#citationStyleDropDown').val();
-      var cursorPosition = "";
-      var text = "";
-      
-      // define the operations according to the currently used editor 
+      var url =  $j(this).siblings("a").attr('href'),
+      title = $j(this).siblings("a").text(),
+      citationStyle = $j('#citationStyleDropDown').val(),
+      cursorPosition = "",
+      text = "";
+
+      // define the operations according to the currently used editor
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
          var getCursor = function(){
             return eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
@@ -68,7 +68,7 @@ $j(document).ready(function() {
             return tinyMCE.activeEditor.getContent();
          }
          var setContent = function(newText){
-            tinyMCE.activeEditor.setContent(newText);   
+            tinyMCE.activeEditor.setContent(newText);
          }
       } else {
          var textarea = $j("textarea#content");
@@ -79,21 +79,29 @@ $j(document).ready(function() {
             return textarea.val();
          }
          var setContent = function(newText){
-            textarea.val(newText);;   
+            textarea.val(newText);;
          }
       }
-      cursorPosition = getCursor();
-      text = getContent();
       if(citationStyle == "default"){
-         var newText = eexcessMethods.pasteLinkToText(text, cursorPosition, url, title, "link");  
+         var newText = eexcessMethods.pasteLinkToText(getContent(), getCursor(), url, title, "link");
       }else{
-         var foo = eexcessMethods.readMetadata(this);
-         var aal = JSON.parse(foo);
          citationProcessor = new CITATION_PROCESSOR();
-         citationProcessor.init(EEXCESS.citeproc.localsDir + 'locales-en-US.xml', 
-            EEXCESS.citeproc.stylesDir + citationStyle + '.csl', 
-            JSON.parse(eexcessMethods.readMetadata(this)));            
-         newText = getContent() + citationProcessor.renderCitations();
+         citationProcessor.init(EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
+            EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
+            JSON.parse(eexcessMethods.readMetadata(this)));
+         var citationText = citationProcessor.renderCitations();
+         var re = /<div class=\"csl-entry\">/g
+         var array = getContent().match(re);
+         var citations = "";
+         if(array != null){
+            citations = array.length;
+         }else{
+            citations = 0;
+         }
+         re.exec(citationText);
+         var referenceNumber = "[" + (citations+1).toString() + "] ";
+         var newText = insertIntoText(getContent(), getCursor(), referenceNumber);
+         newText = newText + insertIntoText(citationText, re.lastIndex, "<br>" + referenceNumber);
       }
       setContent(newText);
    });

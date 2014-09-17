@@ -16,6 +16,11 @@
    margin-left: 10px;
 }
 
+.csl-entry{
+   float:left;
+   clear:both;
+}
+
 .recommendationTextArea{
    margin-top: 0px;
    margin-bottom: 0px;
