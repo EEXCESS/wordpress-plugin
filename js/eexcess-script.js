@@ -33,7 +33,7 @@ var EEXCESS_METHODS = function () {
       this.spinner.hide();
       this.resultList.hide();
       this.abortRequestButton.hide();
-      //this.CitationStyleDropDown.hide();
+      this.CitationStyleDropDown.hide();
    },
 
    /**
@@ -132,7 +132,7 @@ var EEXCESS_METHODS = function () {
          EEXCESS.recommendationData.terms = getTerms.call(this, text, false, false);
          getRecommendations.call(this, EEXCESS.recommendationData);
       } else {
-         displayError(EEXCESS.errorMessages.noTextSelected, $j("#getRecommendations"));
+         displayError(EEXCESS.errorMessages.noTextSelected, $j("#citationStyleDropDown"));
       }
    },
 
@@ -235,12 +235,12 @@ var EEXCESS_METHODS = function () {
       var abortButton = $j('#abortRequest')
 
       if(recommendButton.is(":visible")){
-         recommendButton.toggle("slow", function(){
-            abortButton.toggle("slow");
+         recommendButton.toggle("fast", function(){
+            abortButton.toggle("fast");
          });
       }else{
-         abortButton.toggle("slow", function(){
-            recommendButton.toggle("slow");
+         abortButton.toggle("fast", function(){
+            recommendButton.toggle("fast");
          });
       }
    },
@@ -254,6 +254,8 @@ var EEXCESS_METHODS = function () {
    getRecommendations = function(data) {
       // Hide the resullist. It could be visiable due to prior use
       this.resultList.hide("slow");
+
+      this.CitationStyleDropDown.hide("slow");
 
       this.toggleButtons.call(this);
 
@@ -291,6 +293,7 @@ var EEXCESS_METHODS = function () {
          // the abortion is no longer an option.
          this.request = null;
          this.toggleButtons();
+         this.CitationStyleDropDown.show("slow");
 
          // parsing the JSON string
          var o = JSON.parse(response);
@@ -442,15 +445,14 @@ var EEXCESS_METHODS = function () {
     * comments
     */
    readMetadata = function(context){
-      var creator = $j(context).siblings("input[name='creator']").val();
-      var collectionName = $j(context).siblings("input[name='collectionName']").val();
-      var year = $j(context).siblings("input[name='facets.year']").val();
-      var id = $j(context).siblings("input[name='id']").val();
-      var title = $j(context).siblings("a").text();
-      var uri = $j(context).siblings("input[name='eexcessURI']").val();
+      var creator = $j(context).siblings("input[name='creator']").val(),
+      collectionName = $j(context).siblings("input[name='collectionName']").val(),
+      year = $j(context).siblings("input[name='facets.year']").val(),
+      id = $j(context).siblings("input[name='id']").val(),
+      title = $j(context).siblings("a").text(),
+      uri = $j(context).siblings("input[name='eexcessURI']").val(),
             
-            
-      var json = '{ \
+      json = '{ \
          "' + id + '": { \
             "id": "' + id + '", \
             "container-title": "' + collectionName + '", \
@@ -469,7 +471,7 @@ var EEXCESS_METHODS = function () {
               ] \
             } \
          } \
-      }'
+      }';
       return json;
    };
 
