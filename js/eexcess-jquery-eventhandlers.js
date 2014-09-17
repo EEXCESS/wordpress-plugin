@@ -51,7 +51,11 @@ $j(document).ready(function() {
       }
    });
 
-   // Handles the "add" buttons in the recommendation area
+   /*
+    * Handles the "add" buttons in the recommendation area. It adds citations
+    * to the text, depending on the value of the citation style drop down element
+    */
+
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
       var url =  $j(this).siblings("a").attr('href'),
       title = $j(this).siblings("a").text(),
@@ -90,18 +94,25 @@ $j(document).ready(function() {
             EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
             JSON.parse(eexcessMethods.readMetadata(this)));
          var citationText = citationProcessor.renderCitations();
-         var re = /<div class=\"csl-entry\">/g
-         var array = getContent().match(re);
+         var pattern = /<div class=\"csl-entry\">/g
+
+         // how many citations are already included in the text?
+         var array = getContent().match(pattern);
          var citations = "";
          if(array != null){
             citations = array.length;
          }else{
             citations = 0;
          }
-         re.exec(citationText);
+         // ah, okay, citations citaions are in the text at the moment
+
+         // the following is required, in order to be able to call lastIndex
+         // on the object in the future.
+         pattern.exec(citationText);
+
          var referenceNumber = "[" + (citations+1).toString() + "] ";
          var newText = insertIntoText(getContent(), getCursor(), referenceNumber);
-         newText = newText + insertIntoText(citationText, re.lastIndex, "<br>" + referenceNumber);
+         newText = newText + insertIntoText(citationText, pattern.lastIndex, "<br>" + referenceNumber);
       }
       setContent(newText);
    });
