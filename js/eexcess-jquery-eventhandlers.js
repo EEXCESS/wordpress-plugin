@@ -94,10 +94,10 @@ $j(document).ready(function() {
             EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
             JSON.parse(eexcessMethods.readMetadata(this)));
          var citationText = citationProcessor.renderCitations();
-         var pattern = /<div class=\"csl-entry\">/g
+         var citationsPattern = /<div class=\"csl-entry\">/g
 
          // how many citations are already included in the text?
-         var array = getContent().match(pattern);
+         var array = getContent().match(citationsPattern);
          var citations = "";
          if(array != null){
             citations = array.length;
@@ -108,11 +108,42 @@ $j(document).ready(function() {
 
          // the following is required, in order to be able to call lastIndex
          // on the object in the future.
-         pattern.exec(citationText);
+         citationsPattern.exec(citationText);
 
          var referenceNumber = "[" + (citations+1).toString() + "] ";
-         var newText = insertIntoText(getContent(), getCursor(), referenceNumber);
-         newText = newText + insertIntoText(citationText, pattern.lastIndex, "<br>" + referenceNumber);
+         var position = getCursor();
+         var content = getContent();
+         // find html tags
+         var htmlTagPattern = /<{1}\/{0,1}[A-Za-z0-9_\-"=\s]*[/]{0,1}>{1}/g;
+         var htmlTagPositions = [];
+         while ((match = htmlTagPattern.exec(content)) != null) {
+            for(var i = 0; i < match[0].length; i++){
+               htmlTagPositions.push(match.index + i);
+            }
+         }
+
+         // find whitespaces
+         var whitespacePattern = /\s/g;
+         var whitespaces = [];
+         while ((match = whitespacePattern.exec(content)) != null) {
+            whitespaces.push(match);
+         }
+
+         for(var i = 0; i < whitespaces.length; i++){
+            if(whitespaces[i].index >= position){
+               // set cursor to the closest whitespace
+               position = whitespaces[i].index
+               // is this whitespace within a html-tag?
+               while(htmlTagPositions.lastIndexOf(position) != -1){
+                  // we've hit html tag. increase position until we left the tag
+                  position++;
+               }
+               break;
+            }
+         }
+
+         var newText = insertIntoText(content, position, referenceNumber);
+         newText = newText + insertIntoText(citationText, citationsPattern.lastIndex, "<br>" + referenceNumber);
       }
       setContent(newText);
    });
