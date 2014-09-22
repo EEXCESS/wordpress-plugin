@@ -113,37 +113,38 @@ $j(document).ready(function() {
          var referenceNumber = "[" + (citations+1).toString() + "] ";
          var position = getCursor();
          var content = getContent();
+
          // find html tags
-         var htmlTagPattern = /<{1}\/{0,1}[A-Za-z0-9_\-"=\s]*[/]{0,1}>{1}/g;
-         var htmlTagPositions = [];
-         while ((match = htmlTagPattern.exec(content)) != null) {
-            for(var i = 0; i < match[0].length; i++){
-               htmlTagPositions.push(match.index + i);
-            }
-         }
+         var htmlTagPositions = eexcessMethods.findHtmlTagPositions(content);
 
          // find whitespaces
-         var whitespacePattern = /\s/g;
-         var whitespaces = [];
-         while ((match = whitespacePattern.exec(content)) != null) {
-            whitespaces.push(match);
-         }
+         var whitespaces = eexcessMethods.findWhitespaces(content);
 
-         for(var i = 0; i < whitespaces.length; i++){
-            if(whitespaces[i].index >= position){
-               // set cursor to the closest whitespace
-               position = whitespaces[i].index
-               // is this whitespace within a html-tag?
-               while(htmlTagPositions.lastIndexOf(position) != -1){
-                  // we've hit html tag. increase position until we left the tag
-                  position++;
+         // if there is no convenient insertionpoint (i.e. whitespace) between the
+         // cursorposition and the end of the document...
+         if(whitespaces[whitespaces.length-1].index <= position){
+            position = eexcessMethods.determineArticlesEnd(content, htmlTagPositions);
+         }else{
+            for(var i = 0; i < whitespaces.length; i++){
+               if(whitespaces[i].index >= position){
+                  // set cursor to the closest whitespace
+                  position = whitespaces[i].index;
+                  // is this whitespace within a html-tag?
+                  while(htmlTagPositions.lastIndexOf(position) != -1
+                        && htmlTagPositions.lastIndexOf(position - 1) != -1){
+                     // we've found a html tag. decrease position until we left the tag
+                     position--;
+                  }
+                  break;
                }
-               break;
             }
          }
 
          var newText = insertIntoText(content, position, referenceNumber);
-         newText = newText + insertIntoText(citationText, citationsPattern.lastIndex, "<br>" + referenceNumber);
+         citationText = insertIntoText(citationText, citationsPattern.lastIndex, referenceNumber);
+         newText = insertIntoText(newText,
+                                  eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
+                                  citationText);
       }
       setContent(newText);
    });

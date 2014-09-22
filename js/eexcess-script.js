@@ -449,7 +449,11 @@ var EEXCESS_METHODS = function () {
    },
 
    /**
-    * comments
+    * Collects the information of a resultlist entry and puts them in a json-object.
+    * The format of the json-object is as required by citeproc-js in order to process
+    * accordingly.
+    *
+    * @param context: is the DOM element holding the required information.
     */
    readMetadata = function(context){
       var creator = $j(context).siblings("input[name='creator']").val(),
@@ -483,6 +487,57 @@ var EEXCESS_METHODS = function () {
    };
 
    /**
+    * Return the last position of an article that can be used to insert text. Usually
+    * it's not the end of the textbox since there is HTML included (i.e. mostly the <p>-tag)
+    * and the text shouldn't be inserted outside of the last HTML-tag.
+    *
+    * @param content: A string containing text and HTML.
+    * @param htmlTagPOsitions: An array containing information where HTML-tags are found in
+                               content. For example, if content start with a <p>-tag this array
+                               should look like this: [0, 1, 2, ...]. The interpretation is, that
+                               the first three characters belong to a HTML-tag.
+    */
+   determineArticlesEnd = function(content, htmlTagPositions){
+      position = content.length;
+      while(htmlTagPositions.lastIndexOf(position - 1) != - 1){
+         position--;
+      }
+      return position;
+   }
+
+   /**
+    * Determines the positions of html tag in content.
+    *
+    * @param content: The text that shall be inspected.
+    * @return: An array containing the positions of html-tags in content.
+    */
+   var findHtmlTagPositions = function(content){
+      var htmlTagPattern = /<{1}\/{0,1}[A-Za-z0-9_\-"=\s]*[/]{0,1}>{1}/g;
+      var htmlTagPositions = [];
+      while ((match = htmlTagPattern.exec(content)) != null) {
+         for(var i = 0; i < match[0].length; i++){
+            htmlTagPositions.push(match.index + i);
+         }
+      }
+      return htmlTagPositions;
+   }
+
+   /**
+   * Determines the positions of whitespaces in content.
+   *
+   * @param content: The text that shall be inspected.
+   * @return: An array containing the positions the whitespaces in content.
+   */
+   var findWhitespaces = function(content){
+      var whitespacePattern = /\s/g;
+      var whitespaces = [];
+      while ((match = whitespacePattern.exec(content)) != null) {
+         whitespaces.push(match);
+      }
+      return whitespaces;
+   }
+
+   /**
     * The return object exposes elements to the outside world.
     * In terms of OO-languages supporting classes this mechanism emulates the "public"
     * modifier whereas objects that are not mentioned in the return object remain "private".
@@ -504,7 +559,10 @@ var EEXCESS_METHODS = function () {
       resultList: resultList,
       introText: introText,
       abortRequestButton: abortRequestButton,
-      request: request
+      request: request,
+      determineArticlesEnd: determineArticlesEnd,
+      findHtmlTagPositions: findHtmlTagPositions,
+      findWhitespaces: findWhitespaces
    };
 };
 

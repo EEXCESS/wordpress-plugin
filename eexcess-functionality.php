@@ -96,12 +96,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                            {{#if facets.language}}
                               Language: {{facets.language}}
                            {{/if}}
-                           <br/>                   
+                           <br/>
                            {{#if collectionName}}
-                              <input type="hidden" name="collectionName" value="{{collectionName}}"> 
+                              <input type="hidden" name="collectionName" value="{{collectionName}}">
                            {{/if}}
                            {{#if creator}}
-                              <input type="hidden" name="creator" value="{{creator}}"> 
+                              <input type="hidden" name="creator" value="{{creator}}">
                            {{/if}}
                            {{#if description}}
                               <input type="hidden" name="description" value="{{description}}">
@@ -117,8 +117,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                            {{/if}}
                            {{#if id}}
                               <input type="hidden" name="id" value="{{id}}">
-                           {{/if}}                           
-                           <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px">
+                           {{/if}}
+                           <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px" onfocus="this.blur();" readonly>
                         </div>
                      </div>
                   </li>
