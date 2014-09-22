@@ -461,7 +461,14 @@ var EEXCESS_METHODS = function () {
       year = $j(context).siblings("input[name='facets.year']").val(),
       id = $j(context).siblings("input[name='id']").val(),
       title = $j(context).siblings("a").text(),
-      uri = $j(context).siblings("input[name='eexcessURI']").val(),
+      uri = $j(context).siblings("input[name='eexcessURI']").val();
+
+      if(creator == undefined){ creator = "";}
+      if(collectionName == undefined){ collectionName = "";}
+      if(year == undefined){ year = "";}
+      if(id == undefined){ id = "";}
+      if(title == undefined){ title = "";}
+      if(uri == undefined){ uri = "";}
 
       json = '{ \
          "' + id + '": { \
