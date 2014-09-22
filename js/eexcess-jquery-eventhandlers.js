@@ -140,8 +140,15 @@ $j(document).ready(function() {
             }
          }
 
-         var newText = insertIntoText(content, position, referenceNumber);
          citationText = insertIntoText(citationText, citationsPattern.lastIndex, referenceNumber);
+         var url = citationText.match(/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/g);
+         for(var i=0; i<url.length; i++){
+            citationText = citationText.replace(url[i], '<a href="' + url[i] + '">' + url[i] + '</a>');
+         }
+
+         // insert reference # into text (at cursor position)
+         var newText = insertIntoText(content, position, referenceNumber);
+         // append the reference itself
          newText = insertIntoText(newText,
                                   eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
                                   citationText);

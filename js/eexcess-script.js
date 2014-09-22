@@ -470,11 +470,11 @@ var EEXCESS_METHODS = function () {
       if(title == undefined){ title = "";}
       if(uri == undefined){ uri = "";}
 
-      json = '{ \
+      var json = '{ \
          "' + id + '": { \
             "id": "' + id + '", \
             "container-title": "' + collectionName + '", \
-            "URL": "' + uri + '", \
+            "URL": "' + uri + ' ", \
             "title": "' + title + '", \
             "author": [ \
               { \
