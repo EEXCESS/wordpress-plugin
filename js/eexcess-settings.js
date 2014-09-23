@@ -34,6 +34,7 @@ var EEXCESS = {
    },
    "citeproc" : {
       "stylesDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/citionStyles/",
-      "localsDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/locales/"
+      "localsDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/locales/",
+      "errorMsg"  : "Insertion into the citationarea is prohibited"
    }
 };

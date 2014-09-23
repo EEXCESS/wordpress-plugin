@@ -89,6 +89,8 @@ $j(document).ready(function() {
       if(citationStyle == "default"){
          var newText = eexcessMethods.pasteLinkToText(getContent(), getCursor(), url, title, "link");
       }else{
+         var position = getCursor();
+         var content = getContent();
          citationProcessor = new CITATION_PROCESSOR();
          citationProcessor.init(EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
             EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
@@ -97,22 +99,23 @@ $j(document).ready(function() {
          var citationsPattern = /<div class=\"csl-entry\">/g
 
          // how many citations are already included in the text?
-         var array = getContent().match(citationsPattern);
+         var array = content.match(citationsPattern);
          var citations = "";
          if(array != null){
             citations = array.length;
          }else{
             citations = 0;
          }
-         // ah, okay, citations citaions are in the text at the moment
+         // ah, okay, citations citations are in the text at the moment
+
+         var posFirstCitation = content.search(citationsPattern);
+
 
          // the following is required, in order to be able to call lastIndex
          // on the object in the future.
          citationsPattern.exec(citationText);
 
          var referenceNumber = "[" + (citations+1).toString() + "] ";
-         var position = getCursor();
-         var content = getContent();
 
          // find html tags
          var htmlTagPositions = eexcessMethods.findHtmlTagPositions(content);
@@ -146,12 +149,17 @@ $j(document).ready(function() {
             citationText = citationText.replace(url[i], '<a href="' + url[i] + '">' + url[i] + '</a>');
          }
 
-         // insert reference # into text (at cursor position)
-         var newText = insertIntoText(content, position, referenceNumber);
-         // append the reference itself
-         newText = insertIntoText(newText,
-                                  eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
-                                  citationText);
+         // -1 is the value of posFirstCitation, if no citation has been inserted.
+         if(position > posFirstCitation && posFirstCitation != -1){
+            alert(EEXCESS.citeproc.errorMsg);
+         } else {
+            // insert reference # into text (at cursor position)
+            var newText = insertIntoText(content, position, referenceNumber);
+            // append the reference itself
+            newText = insertIntoText(newText,
+                                     eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
+                                     citationText);
+         }
       }
       setContent(newText);
    });
