@@ -32,6 +32,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
    function init_eexcess_plugin() {
       global $pagenow;
 
+      // Register the script first.
+      wp_register_script( 'some_handle', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ) );
+      // Now we can localize the script with our data.
+      $translation_array = array( 'pluginsPath' => plugins_url() );
+      wp_localize_script( 'some_handle', 'pluginURL', $translation_array );
+      // The script can be enqueued now or later.
+      wp_enqueue_script( 'some_handle' );
+
       // Load the scripts for the post creation / editing page
       if($pagenow == 'post-new.php' || $pagenow == 'post.php') {
          // init jQuery
@@ -42,7 +50,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
          wp_enqueue_script( 'eexcess-templating-script', plugins_url( '/js/lib/handlebars-v1.3.0.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-script', plugins_url( '/js/eexcess-script.js', __FILE__ ), array('jquery') );
          wp_enqueue_script( 'eexcess-jquery-plugins', plugins_url( '/js/eexcess-jquery-plugins.js', __FILE__ ), array('jquery') );
-         wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
+         //wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
          //for citeproc
          wp_enqueue_script( 'CLSWrapper', plugins_url( '/js/CLSWrapper.js', __FILE__ ), array('jquery', 'eexcess-xmldom', 'eexcess-citeproc') );
          wp_enqueue_script( 'eexcess-citeproc', plugins_url( '/js/lib/citeproc.js', __FILE__ ));

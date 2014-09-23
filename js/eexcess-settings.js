@@ -33,8 +33,8 @@ var EEXCESS = {
       "imageHeight" : 78 //Heigth of images in the recommendation list
    },
    "citeproc" : {
-      "stylesDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/citionStyles/",
-      "localsDir" : "../wp-content/plugins/eexcess/js/lib/citeproc-js/locales/",
+      "stylesDir" : "/eexcess/js/lib/citeproc-js/citionStyles/",
+      "localsDir" : "/eexcess/js/lib/citeproc-js/locales/",
       "errorMsg"  : "Insertion into the citationarea is prohibited"
    }
 };

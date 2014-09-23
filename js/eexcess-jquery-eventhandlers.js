@@ -92,8 +92,8 @@ $j(document).ready(function() {
          var position = getCursor();
          var content = getContent();
          citationProcessor = new CITATION_PROCESSOR();
-         citationProcessor.init(EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
-            EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
+         citationProcessor.init(pluginURL.pluginsPath + EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
+            pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
             JSON.parse(eexcessMethods.readMetadata(this)));
          var citationText = citationProcessor.renderCitations();
          var citationsPattern = /<div class=\"csl-entry\">/g
