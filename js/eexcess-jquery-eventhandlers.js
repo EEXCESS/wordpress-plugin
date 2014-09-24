@@ -96,7 +96,11 @@ $j(document).ready(function() {
             pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
             JSON.parse(eexcessMethods.readMetadata(this)));
          var citationText = citationProcessor.renderCitations();
-         var citationsPattern = /<div class=\"csl-entry\">/g
+         // citeproc delivers its output within a <div>-tag. due to some weired transformation that
+         // tinyMCE applies on these tags, they are replaced by <p>-tags.
+         citationText = citationText.replace("<div", "<p");
+         citationText = citationText.replace("</div>", "</p>");
+         var citationsPattern = /<p class=\"csl-entry\">/g
 
          // how many citations are already included in the text?
          var array = content.match(citationsPattern);
