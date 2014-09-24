@@ -23,17 +23,19 @@ var EEXCESS_METHODS = function () {
     * @param mSpinner: reference to a DOM-object representation a spinner that is
     *                  usen when time-consuming actions take place
     */
-   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton, mCitationStyleDropDown) {
+   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton, mCitationStyleDropDown, mSearchQueryReflection) {
       this.spinner = mSpinner;
       this.resultList = mResultList;
       this.introText = mIntroText;
       this.abortRequestButton = mAbortRequestButton;
       this.CitationStyleDropDown = mCitationStyleDropDown;
+      this.searchQueryReflection = mSearchQueryReflection;
 
       this.spinner.hide();
       this.resultList.hide();
       this.abortRequestButton.hide();
       this.CitationStyleDropDown.hide();
+      this.searchQueryReflection.hide();
    },
 
    /**
@@ -133,6 +135,8 @@ var EEXCESS_METHODS = function () {
             console.log('Exception during get selection text');
          }
       }
+      // In order to display the search query to the user
+      setSearchQueryReflection(this, text);
 
       if(text != "") {
          $j('.error').remove();
@@ -261,11 +265,9 @@ var EEXCESS_METHODS = function () {
    getRecommendations = function(data) {
       // Hide the resullist. It could be visiable due to prior use
       this.resultList.hide("slow");
-
+      this.searchQueryReflection.hide("slow");
       this.CitationStyleDropDown.hide("slow");
-
       this.toggleButtons.call(this);
-
       this.introText.hide("slow", function(){
          this.spinner.fadeIn("slow");
       }.call(this));
@@ -301,6 +303,7 @@ var EEXCESS_METHODS = function () {
          this.request = null;
          this.toggleButtons();
          this.CitationStyleDropDown.show("slow");
+         this.searchQueryReflection.show("slow");
 
          // parsing the JSON string
          var o = JSON.parse(response);
@@ -545,6 +548,16 @@ var EEXCESS_METHODS = function () {
    }
 
    /**
+    *
+    */
+   var setSearchQueryReflection = function(context, text){
+      var foo = context.searchQueryReflection.find('#searchQuery')
+      if(foo != null){
+         foo.text(text);
+      }
+   }
+
+   /**
     * The return object exposes elements to the outside world.
     * In terms of OO-languages supporting classes this mechanism emulates the "public"
     * modifier whereas objects that are not mentioned in the return object remain "private".
@@ -569,7 +582,8 @@ var EEXCESS_METHODS = function () {
       request: request,
       determineArticlesEnd: determineArticlesEnd,
       findHtmlTagPositions: findHtmlTagPositions,
-      findWhitespaces: findWhitespaces
+      findWhitespaces: findWhitespaces,
+      searchQueryReflection: searchQueryReflection
    };
 };
 
@@ -584,5 +598,6 @@ $j(document).ready(function() {
             $j("#eexcess_container .inside #content #list"),
             $j("#eexcess_container .inside #content p"),
             $j('#abortRequest'),
-            $j('#citationStyleDropDown'));
+            $j('#citationStyleDropDown'),
+            $j('#searchQueryReflection'));
 });

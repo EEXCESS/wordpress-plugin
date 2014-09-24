@@ -17,6 +17,7 @@ $j(document).ready(function() {
       eexcessMethods.request.abort();
       eexcessMethods.toggleButtons();
       eexcessMethods.resultList.hide("slow");
+      eexcessMethods.searchQueryReflection.hide("slow");
       eexcessMethods.spinner.hide("slow", function(){
          eexcessMethods.introText.show("slow");
       });

@@ -157,6 +157,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
             }
          ?>
       </select>
+      <div id="searchQueryReflection" class="searchQueryReflection">
+         Results on:<br>
+         <span id="searchQuery" style="color: #000000"></span>
+      </div>
       <div id="content">
          <p>
             Get recommendations for keywords by using "#eexcess:Keyword#" inside the textarea.

@@ -174,3 +174,14 @@ span.jPag-snext-img{
    padding: 10px;
    margin: 10px auto;
 }
+
+.searchQueryReflection {
+   font-size: 14px;
+   margin: 5px 0px 15px 0px;
+   padding: 1px 12px 1px 12px;
+   border-left: 4px solid #1e8cbe;
+   border-left-width: 4px;
+   border-left-style: solid;
+   box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+   color: #797b7d;
+}
