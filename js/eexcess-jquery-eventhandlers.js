@@ -64,34 +64,11 @@ $j(document).ready(function() {
       cursorPosition = "",
       text = "";
 
-      // define the operations according to the currently used editor
-      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         var getCursor = function(){
-            return eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
-         }
-         var getContent = function(){
-            return tinyMCE.activeEditor.getContent();
-         }
-         var setContent = function(newText){
-            tinyMCE.activeEditor.setContent(newText);
-         }
-      } else {
-         var textarea = $j("textarea#content");
-         var getCursor = function(){
-            return textarea.getCursorPosition();
-         }
-         var getContent = function(){
-            return textarea.val();
-         }
-         var setContent = function(newText){
-            textarea.val(newText);;
-         }
-      }
+      var position = eexcessMethods.getCursor();
+      var content = eexcessMethods.getContent();
       if(citationStyle == "default"){
-         var newText = eexcessMethods.pasteLinkToText(getContent(), getCursor(), url, title, "link");
+         var newText = eexcessMethods.pasteLinkToText(content, position, url, title, "link");
       }else{
-         var position = getCursor();
-         var content = getContent();
          citationProcessor = new CITATION_PROCESSOR();
          citationProcessor.init(pluginURL.pluginsPath + EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
             pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
@@ -164,8 +141,12 @@ $j(document).ready(function() {
             newText = insertIntoText(newText,
                                      eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
                                      citationText);
+            // Change the appearance of the row to make clear to the user,
+            // that this object has already been inserted.
+            $j(this).parent().addClass('eexcess-alreadyCited');
+            $j(this).hide();
          }
       }
-      setContent(newText);
+      eexcessMethods.setContent(newText);
    });
 });

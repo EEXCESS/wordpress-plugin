@@ -54,6 +54,10 @@
    margin: 0 auto;
 }
 
+.eexcess-alreadyCited{
+   background-color: #f5f5f5;
+}
+
 #getRecommendations {
    text-align: center;
 }

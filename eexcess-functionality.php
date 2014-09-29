@@ -126,7 +126,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
                            {{#if id}}
                               <input type="hidden" name="id" value="{{id}}">
                            {{/if}}
-                           <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px" onfocus="this.blur();" readonly>
+                           <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px" onfocus="this.blur();">
                         </div>
                      </div>
                   </li>

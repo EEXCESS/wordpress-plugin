@@ -331,6 +331,11 @@ var EEXCESS_METHODS = function () {
 
          });
 
+         var content = getContent();
+         var resourceURLs = [];
+         $j(content).filter('[class=csl-entry]').find('a').each(function() {
+            resourceURLs.push($j(this).attr('href'));
+         });
 
          var usePagination = list.find("#eexcess-recommendationList li").length > 10;
 
@@ -345,7 +350,12 @@ var EEXCESS_METHODS = function () {
                var margin = $j($j('[class="recommendationTextArea"]')[0]).css("margin-right").replace("px", "");
                margin = margin + $j($j('[class="recommendationTextArea"]')[0]).css("margin-left").replace("px", "");
                var width = $j('#eexcess-recommendationList').width() - $j($j('.eexcess-previewPlaceholder')[0]).width() - margin;
-               $j(this).css('width', width);
+               var obj = $j(this);
+               obj.css('width', width);
+               // mark the already cited entries
+               if(resourceURLs.indexOf(obj.find('input[name="eexcessURI"]').attr('value')) != -1){
+                  obj.addClass("eexcess-alreadyCited");
+               }
             });
          });
          this.spinner.fadeOut("slow")
@@ -494,7 +504,7 @@ var EEXCESS_METHODS = function () {
          } \
       }';
       return json;
-   };
+   },
 
    /**
     * Return the last position of an article that can be used to insert text. Usually
@@ -513,7 +523,7 @@ var EEXCESS_METHODS = function () {
          position--;
       }
       return position;
-   }
+   },
 
    /**
     * Determines the positions of html tag in content.
@@ -521,7 +531,7 @@ var EEXCESS_METHODS = function () {
     * @param content: The text that shall be inspected.
     * @return: An array containing the positions of html-tags in content.
     */
-   var findHtmlTagPositions = function(content){
+   findHtmlTagPositions = function(content){
       var htmlTagPattern = /<{1}\/{0,1}[A-Za-z0-9_\-"=\s]*[/]{0,1}>{1}/g;
       var htmlTagPositions = [];
       while ((match = htmlTagPattern.exec(content)) != null) {
@@ -530,7 +540,7 @@ var EEXCESS_METHODS = function () {
          }
       }
       return htmlTagPositions;
-   }
+   },
 
    /**
    * Determines the positions of whitespaces in content.
@@ -538,24 +548,55 @@ var EEXCESS_METHODS = function () {
    * @param content: The text that shall be inspected.
    * @return: An array containing the positions the whitespaces in content.
    */
-   var findWhitespaces = function(content){
+   findWhitespaces = function(content){
       var whitespacePattern = /\s/g;
       var whitespaces = [];
       while ((match = whitespacePattern.exec(content)) != null) {
          whitespaces.push(match);
       }
       return whitespaces;
-   }
+   },
 
    /**
+    * Sets the text for the "Results on:" display.
     *
+    * @param context: An instance of this object (i.e. EEXCESS_METHODS)
+    * @param text: The new text.
     */
-   var setSearchQueryReflection = function(context, text){
+   setSearchQueryReflection = function(context, text){
       var foo = context.searchQueryReflection.find('#searchQuery')
       if(foo != null){
          foo.text(text);
       }
-   }
+   },
+
+   getCursor = function(){
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         return eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
+      } else {
+         var textarea = $j("textarea#content");
+         return textarea.getCursorPosition();
+      }
+   },
+
+   getContent = function(){
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         return tinyMCE.activeEditor.getContent();
+      } else {
+         var textarea = $j("textarea#content");
+         return textarea.val();
+      }
+   },
+
+   setContent = function(newText){
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         return tinyMCE.activeEditor.setContent(newText);
+      } else {
+         var textarea = $j("textarea#content");
+         return textarea.val(newText);
+      }
+   };
+
 
    /**
     * The return object exposes elements to the outside world.
@@ -583,7 +624,10 @@ var EEXCESS_METHODS = function () {
       determineArticlesEnd: determineArticlesEnd,
       findHtmlTagPositions: findHtmlTagPositions,
       findWhitespaces: findWhitespaces,
-      searchQueryReflection: searchQueryReflection
+      searchQueryReflection: searchQueryReflection,
+      getCursor: getCursor,
+      getContent: getContent,
+      setContent: setContent
    };
 };
 
