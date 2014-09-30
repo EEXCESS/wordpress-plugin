@@ -8,7 +8,8 @@ $j = jQuery.noConflict();
  */
 var EEXCESS_METHODS = function () {
    // They hold references to jquery-objects that represent html-objects in the DOM.
-   var spinner,
+   var that,
+   spinner,
    resultList,
    introText,
    abortRequestButton,
@@ -24,6 +25,7 @@ var EEXCESS_METHODS = function () {
     *                  usen when time-consuming actions take place
     */
    init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton, mCitationStyleDropDown, mSearchQueryReflection) {
+      this.that = this;
       this.spinner = mSpinner;
       this.resultList = mResultList;
       this.introText = mIntroText;
@@ -353,8 +355,8 @@ var EEXCESS_METHODS = function () {
                var obj = $j(this);
                obj.css('width', width);
                // mark the already cited entries
-               if(resourceURLs.indexOf(obj.find('input[name="eexcessURI"]').attr('value')) != -1){
-                  obj.addClass("eexcess-alreadyCited");
+               if((referenceNumber = resourceURLs.indexOf(obj.find('input[name="eexcessURI"]').attr('value'))) != -1){
+                  obj.addClass("eexcess-alreadyCited").attr("data-refnumb", referenceNumber + 1);
                }
             });
          });
@@ -595,8 +597,37 @@ var EEXCESS_METHODS = function () {
          var textarea = $j("textarea#content");
          return textarea.val(newText);
       }
-   };
+   },
 
+   determineDecentInsertPosition = function(content, mPosition){
+      var position = mPosition;
+      // find html tags
+      var htmlTagPositions = this.findHtmlTagPositions(content);
+
+      // find whitespaces
+      var whitespaces = this.findWhitespaces(content);
+
+      // if there is no convenient insertionpoint (i.e. whitespace) between the
+      // cursorposition and the end of the document...
+      if(whitespaces[whitespaces.length-1].index <= position){
+         position = this.determineArticlesEnd(content, htmlTagPositions);
+      }else{
+         for(var i = 0; i < whitespaces.length; i++){
+            if(whitespaces[i].index >= position){
+               // set cursor to the closest whitespace
+               position = whitespaces[i].index;
+               // is this whitespace within a html-tag?
+               while(htmlTagPositions.lastIndexOf(position) != -1
+                     && htmlTagPositions.lastIndexOf(position - 1) != -1){
+                  // we've found a html tag. decrease position until we left the tag
+                  position--;
+               }
+               break;
+            }
+         }
+      }
+      return position;
+   };
 
    /**
     * The return object exposes elements to the outside world.
@@ -627,7 +658,8 @@ var EEXCESS_METHODS = function () {
       searchQueryReflection: searchQueryReflection,
       getCursor: getCursor,
       getContent: getContent,
-      setContent: setContent
+      setContent: setContent,
+      determineDecentInsertPosition: determineDecentInsertPosition
    };
 };
 

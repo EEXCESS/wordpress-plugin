@@ -8,7 +8,6 @@
             image: url + '/../images/EEXCESS_Icon.png',
             onclick: function(event) {
                eexcessMethods.getSelectedTextAndRecommend(event);
-               console.log("aal");
             }
 
         } );

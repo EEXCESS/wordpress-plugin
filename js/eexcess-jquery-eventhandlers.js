@@ -62,10 +62,33 @@ $j(document).ready(function() {
       title = $j(this).siblings("a").text(),
       citationStyle = $j('#citationStyleDropDown').val(),
       cursorPosition = "",
-      text = "";
+      text = "",
+      alreadyCited = -1;
+      var referenceNumber = "";
 
       var position = eexcessMethods.getCursor();
       var content = eexcessMethods.getContent();
+
+      // if this entry has already been cited. warn the user
+      if($j(this).parent().hasClass("eexcess-alreadyCited")){
+            if (confirm(EEXCESS.errorMessages.resourceAlreadyInserted) == true) {
+               // okay, i'll carry on
+               alreadyCited = $j(this).parent().attr("data-refnumb");
+               position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
+                                                                            content,
+                                                                            position);
+               referenceNumber = "[" + $j(this).parent().attr("data-refnumb") + "]";
+               var newText = insertIntoText(content,
+                                            position,
+                                            referenceNumber);
+               eexcessMethods.setContent(newText);
+               console.log("aal");
+               return;
+            } else {
+               return;
+            }
+      }
+
       if(citationStyle == "default"){
          var newText = eexcessMethods.pasteLinkToText(content, position, url, title, "link");
       }else{
@@ -74,6 +97,7 @@ $j(document).ready(function() {
             pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
             JSON.parse(eexcessMethods.readMetadata(this)));
          var citationText = citationProcessor.renderCitations();
+
          // citeproc delivers its output within a <div>-tag. due to some weired transformation that
          // tinyMCE applies on these tags, they are replaced by <p>-tags.
          citationText = citationText.replace("<div", "<p");
@@ -97,33 +121,9 @@ $j(document).ready(function() {
          // on the object in the future.
          citationsPattern.exec(citationText);
 
-         var referenceNumber = "[" + (citations+1).toString() + "] ";
+         referenceNumber = "[" + (citations + 1).toString() + "] ";
 
-         // find html tags
-         var htmlTagPositions = eexcessMethods.findHtmlTagPositions(content);
-
-         // find whitespaces
-         var whitespaces = eexcessMethods.findWhitespaces(content);
-
-         // if there is no convenient insertionpoint (i.e. whitespace) between the
-         // cursorposition and the end of the document...
-         if(whitespaces[whitespaces.length-1].index <= position){
-            position = eexcessMethods.determineArticlesEnd(content, htmlTagPositions);
-         }else{
-            for(var i = 0; i < whitespaces.length; i++){
-               if(whitespaces[i].index >= position){
-                  // set cursor to the closest whitespace
-                  position = whitespaces[i].index;
-                  // is this whitespace within a html-tag?
-                  while(htmlTagPositions.lastIndexOf(position) != -1
-                        && htmlTagPositions.lastIndexOf(position - 1) != -1){
-                     // we've found a html tag. decrease position until we left the tag
-                     position--;
-                  }
-                  break;
-               }
-            }
-         }
+         position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
 
          citationText = insertIntoText(citationText, citationsPattern.lastIndex, referenceNumber);
          var url = citationText.match(/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/g);
@@ -143,8 +143,7 @@ $j(document).ready(function() {
                                      citationText);
             // Change the appearance of the row to make clear to the user,
             // that this object has already been inserted.
-            $j(this).parent().addClass('eexcess-alreadyCited');
-            $j(this).hide();
+            $j(this).parent().addClass('eexcess-alreadyCited').attr("data-refnumb", citations + 1);
          }
       }
       eexcessMethods.setContent(newText);
