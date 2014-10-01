@@ -23,7 +23,8 @@ var EEXCESS = {
    },
    "errorMessages" : {
       "noRecommandations" : "No Recommendations found.",
-      "noTextSelected" : "Please select some text."
+      "noTextSelected" : "Please select some text.",
+      "resourceAlreadyInserted" : "This Resource has already been cited. Do you want to cite it again?"
    },
    "keyboardBindungs" : {
       "getRecommendations" : 69 // Javascript keyCode for 'e' see http://www.mediaevent.de/javascript/Extras-Javascript-Keycodes.html
@@ -31,5 +32,10 @@ var EEXCESS = {
    "recommendationListSettings" : {
       "imageWidth" : 75,  //Width of images in the recommendation list
       "imageHeight" : 78 //Heigth of images in the recommendation list
+   },
+   "citeproc" : {
+      "stylesDir" : "/eexcess/js/lib/citeproc-js/citionStyles/",
+      "localsDir" : "/eexcess/js/lib/citeproc-js/locales/",
+      "errorMsg"  : "Insertion into the citationarea is prohibited"
    }
 };

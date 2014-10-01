@@ -17,6 +17,7 @@ $j(document).ready(function() {
       eexcessMethods.request.abort();
       eexcessMethods.toggleButtons();
       eexcessMethods.resultList.hide("slow");
+      eexcessMethods.searchQueryReflection.hide("slow");
       eexcessMethods.spinner.hide("slow", function(){
          eexcessMethods.introText.show("slow");
       });
@@ -47,27 +48,109 @@ $j(document).ready(function() {
             $j(this).val(text);
             // setting the cursor position
             $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
-         }
+         }l
       }
    });
 
-   // Handles the "add" buttons in the recommendation area
+   /*
+    * Handles the "add" buttons in the recommendation area. It adds citations
+    * to the text, depending on the value of the citation style drop down element
+    */
+
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
-      var url =  $j(this).siblings("a").attr('href');
-      var title = $j(this).siblings("a").text();
-      var cursorPosition = "";
-      var text = "";
-      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         cursorPosition = eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
-         text = tinyMCE.activeEditor.getContent();
-         var newText = eexcessMethods.pasteLinkToText(text, cursorPosition, url, title, "link");
-         tinyMCE.activeEditor.setContent(newText);
+      var url =  $j(this).siblings("a").attr('href'),
+      title = $j(this).siblings("a").text(),
+      citationStyle = $j('#citationStyleDropDown').val(),
+      cursorPosition = "",
+      text = "",
+      alreadyCited = -1,
+      referenceNumber = "",
+      position = eexcessMethods.getCursor(),
+      content = eexcessMethods.getContent(),
+      citationsPattern = /<p class=\"csl-entry\">/g,
+      posFirstCitation = content.search(citationsPattern),
+      newText = content,
+      citationsArray = [],
+      citations = "",
+      citationText = "",
+      url = "";
+
+      if(citationStyle == "default"){
+         var newText = eexcessMethods.pasteLinkToText(content, position, url, title, "link");
       } else {
-         var textarea = $j("textarea#content");
-         cursorPosition = textarea.getCursorPosition();
-         text = textarea.val();
-         var newText = eexcessMethods.pasteLinkToText(text, cursorPosition, url, title, "link");
-         textarea.val(newText);
+         // if this entry has already been cited. warn the user, ask if he/she wants to continue
+         // and act accordingly
+         if($j(this).parent().hasClass("eexcess-alreadyCited")){
+            if (confirm(EEXCESS.errorMessages.resourceAlreadyInserted) == true) {
+               // carry on, as the user ordered
+               alreadyCited = $j(this).parent().attr("data-refnumb");
+               position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
+                                                                            content,
+                                                                            position);
+               referenceNumber = "[" + alreadyCited + "]";
+
+               // -1 is the value of posFirstCitation, if no citation has been inserted.
+               if(position > posFirstCitation && posFirstCitation != -1){
+                  alert(EEXCESS.citeproc.errorMsg);
+               } else {
+                  newText = insertIntoText(content, position, referenceNumber);
+               }
+            } else {
+               // insertion rejected
+               return;
+            }
+         }else{
+            var citationProcessor = new CITATION_PROCESSOR();
+            citationProcessor.init(pluginURL.pluginsPath + EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
+               pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
+               JSON.parse(eexcessMethods.readMetadata(this)));
+            citationText = citationProcessor.renderCitations();
+
+            // citeproc delivers its output within a <div>-tag. due to some weired transformation that
+            // tinyMCE applies on these tags, they are replaced by <p>-tags.
+            citationText = citationText.replace("<div", "<p");
+            citationText = citationText.replace("</div>", "</p>");
+
+            // how many citations are already included in the text?
+            citationsArray = content.match(citationsPattern);
+            citations = "";
+            if(citationsArray != null){
+               citations = citationsArray.length;
+            } else {
+               citations = 0;
+            }
+            // ah, okay, citations citations are in the text at the moment
+
+            // the following is required, in order to be able to call lastIndex
+            // on the object in the future.
+            citationsPattern.exec(citationText);
+
+            referenceNumber = "[" + (citations + 1).toString() + "] ";
+
+            position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
+
+            citationText = insertIntoText(citationText, citationsPattern.lastIndex, referenceNumber);
+            url = citationText.match(/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/g);
+            for(var i=0; i<url.length; i++){
+               citationText = citationText.replace(url[i], '<a href="' + url[i] + '">' + url[i] + '</a>');
+            }
+
+            // -1 is the value of posFirstCitation, if no citation has been inserted.
+            if(position > posFirstCitation && posFirstCitation != -1){
+               alert(EEXCESS.citeproc.errorMsg);
+            } else {
+               // insert reference # into text (at cursor position)
+               newText = insertIntoText(content, position, referenceNumber);
+               // append the reference itself
+               newText = insertIntoText(newText,
+                                        eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
+                                        citationText);
+               // Change the appearance of the row to make clear to the user,
+               // that this object has already been inserted.
+               $j(this).parent().addClass('eexcess-alreadyCited').attr("data-refnumb", citations + 1);
+            }
+         }
       }
+      eexcessMethods.setContent(newText);
    });
 });

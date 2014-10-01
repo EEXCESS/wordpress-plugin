@@ -1,0 +1,22 @@
+{
+  "Item-2": {
+    "id": "Item-2",
+    "type": "book",
+    "title": "Digital Typography",
+    "author": [
+      {
+        "family": "Knuth",
+        "given": "Donald E."
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          "1998",
+          6,
+          1
+        ]
+      ]
+    }
+  }
+}
