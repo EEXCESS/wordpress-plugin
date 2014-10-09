@@ -1,0 +1,16 @@
+id : {
+   "id": id,
+   "title": title,
+   "container-title": "collectionName",
+   "URL": url,
+   "author": [
+      {
+         "family": creator
+      }
+   ],
+   "issued": {
+      "date-parts": [
+         year
+      ]
+   }
+}

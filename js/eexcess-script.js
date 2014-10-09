@@ -1,6 +1,6 @@
 // Avoid jQuery conflicts from different plugins
 $j = jQuery.noConflict();
-/*
+/**
  * The following object contains all custom functions and properties for the EEXCESS-plugin.
  * It hides the limitations of javascript and behaves to the greates possible extent link
  * a class in other programming laguages. The "instanziation" and "initialization" of the
@@ -8,32 +8,39 @@ $j = jQuery.noConflict();
  */
 var EEXCESS_METHODS = function () {
    // They hold references to jquery-objects that represent html-objects in the DOM.
-   var spinner,
+   var that,
+   spinner,
    resultList,
    introText,
    abortRequestButton,
+   CitationStyleDropDown,
 
    // used to store a ajax request in order to be able to abort it.
    request = null;
 
-   /*
+   /**
     * The Constructor of this class.
     * All parameters are jquery-objects.
     * @param mSpinner: reference to a DOM-object representation a spinner that is
     *                  usen when time-consuming actions take place
     */
-   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton) {
+   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton, mCitationStyleDropDown, mSearchQueryReflection) {
+      this.that = this;
       this.spinner = mSpinner;
       this.resultList = mResultList;
       this.introText = mIntroText;
       this.abortRequestButton = mAbortRequestButton;
+      this.CitationStyleDropDown = mCitationStyleDropDown;
+      this.searchQueryReflection = mSearchQueryReflection;
 
       this.spinner.hide();
       this.resultList.hide();
       this.abortRequestButton.hide();
+      this.CitationStyleDropDown.hide();
+      this.searchQueryReflection.hide();
    },
 
-   /*
+   /**
     * This function is triggered by the keyup-event in the tinyMCE-editor (visual-editor in
     * wordpress terminology aka WYSIWYG-Editor). It searches the so far written text for a
     * pattern defined by EEXCESS.trigger.maker and EEXCESS.trigger.closingTag. If a match is
@@ -61,7 +68,7 @@ var EEXCESS_METHODS = function () {
       }
    },
 
-   /*
+   /**
     * This functions is called when a keyup-event occurs either in the visal-editor
     * or in the text-editor. It checks if a certain keystroke combo was used (e.g.
     * ctrl+e). If so, the recommendation workflow is triggered. this workflow is
@@ -89,13 +96,24 @@ var EEXCESS_METHODS = function () {
    * @param linkText:      the text for the link
    */
    pasteLinkToText = function(text, cursorPosition, url, title, linkText){
+      return insertIntoText(text, cursorPosition, ' <a href="' + url + '" title="'+ title + '"> link </a> ');
+   },
+
+   /**
+   * Inserts an arbitrary string (snippet) at cursorPosition into text.
+   *
+   * @param text:          the to insert the link
+   * @param cursorPosition:the position to insert the link
+   * @param snippet:       the text to insert
+   */
+   insertIntoText = function(text, cursorPosition, snippet){
       var newText = text.substring(0, cursorPosition);
-      newText = newText + ' <a href="' + url + '" title="'+ title + '"> link </a> ';
+      newText = newText + snippet;
       newText = newText + text.substring(cursorPosition, text.length);
       return newText
    },
 
-   /*
+   /**
     * This function is invoked when the "Get Recommendations"-Button is used.
     * It extracts the marked text in either the visual- oder text editor and
     * triggers the recommendation workflow.
@@ -119,13 +137,15 @@ var EEXCESS_METHODS = function () {
             console.log('Exception during get selection text');
          }
       }
+      // In order to display the search query to the user
+      setSearchQueryReflection(this, text);
 
       if(text != "") {
          $j('.error').remove();
          EEXCESS.recommendationData.terms = getTerms.call(this, text, false, false);
          getRecommendations.call(this, EEXCESS.recommendationData);
       } else {
-         displayError(EEXCESS.errorMessages.noTextSelected, $j("#getRecommendations"));
+         displayError(EEXCESS.errorMessages.noTextSelected, $j("#citationStyleDropDown"));
       }
    },
 
@@ -220,7 +240,7 @@ var EEXCESS_METHODS = function () {
       return null;
    },
 
-   /*
+   /**
     * Fades the "Get Recommendations"-Button out an the "abort Request"-Button in and vice versa.
     */
    toggleButtons = function(){
@@ -228,17 +248,17 @@ var EEXCESS_METHODS = function () {
       var abortButton = $j('#abortRequest')
 
       if(recommendButton.is(":visible")){
-         recommendButton.toggle("slow", function(){
-            abortButton.toggle("slow");
+         recommendButton.toggle("fast", function(){
+            abortButton.toggle("fast");
          });
       }else{
-         abortButton.toggle("slow", function(){
-            recommendButton.toggle("slow");
+         abortButton.toggle("fast", function(){
+            recommendButton.toggle("fast");
          });
       }
    },
 
-   /*
+   /**
     * This functions handles the recommendation workflow. It changes the UI and triggers the
     * ajax-call to the federated recommender.
     *
@@ -247,9 +267,9 @@ var EEXCESS_METHODS = function () {
    getRecommendations = function(data) {
       // Hide the resullist. It could be visiable due to prior use
       this.resultList.hide("slow");
-
+      this.searchQueryReflection.hide("slow");
+      this.CitationStyleDropDown.hide("slow");
       this.toggleButtons.call(this);
-
       this.introText.hide("slow", function(){
          this.spinner.fadeIn("slow");
       }.call(this));
@@ -268,7 +288,7 @@ var EEXCESS_METHODS = function () {
 
    },
 
-   /*
+   /**
     * The callback-function that is invoked when the recommenders answer arrives. It
     * updates the UI and displays the results accordingly. when there are no matches
     * an errormessage will be displayed.
@@ -284,6 +304,8 @@ var EEXCESS_METHODS = function () {
          // the abortion is no longer an option.
          this.request = null;
          this.toggleButtons();
+         this.CitationStyleDropDown.show("slow");
+         this.searchQueryReflection.show("slow");
 
          // parsing the JSON string
          var o = JSON.parse(response);
@@ -311,6 +333,11 @@ var EEXCESS_METHODS = function () {
 
          });
 
+         var content = getContent();
+         var resourceURLs = [];
+         $j(content).filter('[class=csl-entry]').find('a').each(function() {
+            resourceURLs.push($j(this).attr('href'));
+         });
 
          var usePagination = list.find("#eexcess-recommendationList li").length > 10;
 
@@ -325,7 +352,12 @@ var EEXCESS_METHODS = function () {
                var margin = $j($j('[class="recommendationTextArea"]')[0]).css("margin-right").replace("px", "");
                margin = margin + $j($j('[class="recommendationTextArea"]')[0]).css("margin-left").replace("px", "");
                var width = $j('#eexcess-recommendationList').width() - $j($j('.eexcess-previewPlaceholder')[0]).width() - margin;
-               $j(this).css('width', width);
+               var obj = $j(this);
+               obj.css('width', width);
+               // mark the already cited entries
+               if((referenceNumber = resourceURLs.indexOf(obj.find('input[name="eexcessURI"]').attr('value'))) != -1){
+                  obj.addClass("eexcess-alreadyCited").attr("data-refnumb", referenceNumber + 1);
+               }
             });
          });
          this.spinner.fadeOut("slow")
@@ -357,7 +389,7 @@ var EEXCESS_METHODS = function () {
    };
 
 
-   /*
+   /**
     * returns the cursor position. This applies only for the tinyMCE (aka visual) editor.
     *
     * @param editor: is the tinyMCE.activeEditor-Object
@@ -395,13 +427,13 @@ var EEXCESS_METHODS = function () {
       return index;
    },
 
-   /*
-   * sets the cursor position. This applies only for the tinyMCE (aka visual) editor.
-   *
-   * @param editor: Is the tinyMCE.activeEditor-Object
-   * @param index:  The new position of the cursor
-   * @return:
-   */
+   /**
+    * sets the cursor position. This applies only for the tinyMCE (aka visual) editor.
+    *
+    * @param editor: Is the tinyMCE.activeEditor-Object
+    * @param index:  The new position of the cursor
+    * @return:
+    */
    setCursorPosition = function(editor, index) {
       //get the content in the editor before we add the bookmark...
       //use the format: html to strip out any existing meta tags
@@ -429,9 +461,175 @@ var EEXCESS_METHODS = function () {
 
       //return the bookmark just because
       return bookmark;
+   },
+
+   /**
+    * Collects the information of a resultlist entry and puts them in a json-object.
+    * The format of the json-object is as required by citeproc-js in order to process
+    * accordingly.
+    *
+    * @param context: is the DOM element holding the required information.
+    */
+   readMetadata = function(context){
+      var creator = $j(context).siblings("input[name='creator']").val(),
+      collectionName = $j(context).siblings("input[name='collectionName']").val(),
+      year = $j(context).siblings("input[name='facets.year']").val(),
+      id = $j(context).siblings("input[name='id']").val(),
+      title = $j(context).siblings("a").text(),
+      uri = $j(context).siblings("input[name='eexcessURI']").val();
+
+      if(creator == undefined){ creator = "";}
+      if(collectionName == undefined){ collectionName = "";}
+      if(year == undefined){ year = "";}
+      if(id == undefined){ id = "";}
+      if(title == undefined){ title = "";}
+      if(uri == undefined){ uri = "";}
+
+      var json = '{ \
+         "' + id + '": { \
+            "id": "' + id + '", \
+            "container-title": "' + collectionName + '", \
+            "URL": "' + uri + ' ", \
+            "title": "' + title + '", \
+            "author": [ \
+              { \
+                "family": "' + creator + '" \
+              } \
+            ], \
+            "issued": { \
+              "date-parts": [ \
+                [ \
+                  "' + year + '" \
+                ] \
+              ] \
+            } \
+         } \
+      }';
+      return json;
+   },
+
+   /**
+    * Return the last position of an article that can be used to insert text. Usually
+    * it's not the end of the textbox since there is HTML included (i.e. mostly the <p>-tag)
+    * and the text shouldn't be inserted outside of the last HTML-tag.
+    *
+    * @param content: A string containing text and HTML.
+    * @param htmlTagPOsitions: An array containing information where HTML-tags are found in
+                               content. For example, if content start with a <p>-tag this array
+                               should look like this: [0, 1, 2, ...]. The interpretation is, that
+                               the first three characters belong to a HTML-tag.
+    */
+   determineArticlesEnd = function(content, htmlTagPositions){
+      position = content.length;
+      while(htmlTagPositions.lastIndexOf(position - 1) != - 1){
+         position--;
+      }
+      return position;
+   },
+
+   /**
+    * Determines the positions of html tag in content.
+    *
+    * @param content: The text that shall be inspected.
+    * @return: An array containing the positions of html-tags in content.
+    */
+   findHtmlTagPositions = function(content){
+      var htmlTagPattern = /<{1}\/{0,1}[A-Za-z0-9_\-"=\s]*[/]{0,1}>{1}/g;
+      var htmlTagPositions = [];
+      while ((match = htmlTagPattern.exec(content)) != null) {
+         for(var i = 0; i < match[0].length; i++){
+            htmlTagPositions.push(match.index + i);
+         }
+      }
+      return htmlTagPositions;
+   },
+
+   /**
+   * Determines the positions of whitespaces in content.
+   *
+   * @param content: The text that shall be inspected.
+   * @return: An array containing the positions the whitespaces in content.
+   */
+   findWhitespaces = function(content){
+      var whitespacePattern = /\s/g;
+      var whitespaces = [];
+      while ((match = whitespacePattern.exec(content)) != null) {
+         whitespaces.push(match);
+      }
+      return whitespaces;
+   },
+
+   /**
+    * Sets the text for the "Results on:" display.
+    *
+    * @param context: An instance of this object (i.e. EEXCESS_METHODS)
+    * @param text: The new text.
+    */
+   setSearchQueryReflection = function(context, text){
+      var foo = context.searchQueryReflection.find('#searchQuery')
+      if(foo != null){
+         foo.text(text);
+      }
+   },
+
+   getCursor = function(){
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         return eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
+      } else {
+         var textarea = $j("textarea#content");
+         return textarea.getCursorPosition();
+      }
+   },
+
+   getContent = function(){
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         return tinyMCE.activeEditor.getContent();
+      } else {
+         var textarea = $j("textarea#content");
+         return textarea.val();
+      }
+   },
+
+   setContent = function(newText){
+      if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         return tinyMCE.activeEditor.setContent(newText);
+      } else {
+         var textarea = $j("textarea#content");
+         return textarea.val(newText);
+      }
+   },
+
+   determineDecentInsertPosition = function(content, mPosition){
+      var position = mPosition;
+      // find html tags
+      var htmlTagPositions = this.findHtmlTagPositions(content);
+
+      // find whitespaces
+      var whitespaces = this.findWhitespaces(content);
+
+      // if there is no convenient insertionpoint (i.e. whitespace) between the
+      // cursorposition and the end of the document...
+      if(whitespaces[whitespaces.length-1].index <= position){
+         position = this.determineArticlesEnd(content, htmlTagPositions);
+      }else{
+         for(var i = 0; i < whitespaces.length; i++){
+            if(whitespaces[i].index >= position){
+               // set cursor to the closest whitespace
+               position = whitespaces[i].index;
+               // is this whitespace within a html-tag?
+               while(htmlTagPositions.lastIndexOf(position) != -1
+                     && htmlTagPositions.lastIndexOf(position - 1) != -1){
+                  // we've found a html tag. decrease position until we left the tag
+                  position--;
+               }
+               break;
+            }
+         }
+      }
+      return position;
    };
 
-   /*
+   /**
     * The return object exposes elements to the outside world.
     * In terms of OO-languages supporting classes this mechanism emulates the "public"
     * modifier whereas objects that are not mentioned in the return object remain "private".
@@ -448,23 +646,34 @@ var EEXCESS_METHODS = function () {
       getRecommendations: getRecommendations,
       getCurserPosition: getCurserPosition,
       setCursorPosition: setCursorPosition,
+      readMetadata: readMetadata,
       spinner: spinner,
       resultList: resultList,
       introText: introText,
       abortRequestButton: abortRequestButton,
-      request: request
+      request: request,
+      determineArticlesEnd: determineArticlesEnd,
+      findHtmlTagPositions: findHtmlTagPositions,
+      findWhitespaces: findWhitespaces,
+      searchQueryReflection: searchQueryReflection,
+      getCursor: getCursor,
+      getContent: getContent,
+      setContent: setContent,
+      determineDecentInsertPosition: determineDecentInsertPosition
    };
 };
 
 
-/*
+/**
  * This code-snippet instanziates and initializes a EEXCESS_METHODS-Object and makes it
  * globaly available.
  */
 $j(document).ready(function() {
    eexcessMethods = new EEXCESS_METHODS();
    eexcessMethods.init($j("#eexcess_container .inside #content .eexcess-spinner"),
-             $j("#eexcess_container .inside #content #list"),
-             $j("#eexcess_container .inside #content p"),
-             $j('#abortRequest'));
+            $j("#eexcess_container .inside #content #list"),
+            $j("#eexcess_container .inside #content p"),
+            $j('#abortRequest'),
+            $j('#citationStyleDropDown'),
+            $j('#searchQueryReflection'));
 });
