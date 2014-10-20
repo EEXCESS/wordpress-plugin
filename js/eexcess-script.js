@@ -360,7 +360,7 @@ var EEXCESS_METHODS = function () {
                }
             });
          });
-         this.spinner.fadeOut("slow")
+         this.spinner.fadeOut("slow");
 
          if(usePagination) {
             var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
@@ -385,6 +385,9 @@ var EEXCESS_METHODS = function () {
          }
       } else {
          this.resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
+         this.spinner.fadeOut("slow");
+         this.toggleButtons();
+
       }
    };
 
