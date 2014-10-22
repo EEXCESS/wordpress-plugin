@@ -7,7 +7,8 @@ var EEXCESS = {
    },
    "recommendationData" : { // The object for the ajax call
       "action" : "get_recommendations", // serverside function
-      "terms" : [] // the keywords
+      "terms" : [], // the keywords
+      "trigger" : "default" //the trigger that started the recommendation workflow
    },
    "pagination" : { // Settings for the paginaton
       "items" : 10, // The amount of items per page,

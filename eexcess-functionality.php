@@ -196,7 +196,6 @@ limitations under the License.
          "numResults" => 100,
          "contextKeywords" => array(),
          "origin" => "WP",
-         "queryID" => "hardcoded"
       );
 
       // Creating the context list for the api call
