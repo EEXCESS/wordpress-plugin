@@ -2,10 +2,11 @@
 /**
  * Plugin Name: EEXCESS
  * Plugin URI: https://github.com/EEXCESS/eexcess
- * Description: TBD
- * Version: 1.0
- * Author: Andreas Eisenkolb
+ * Description: Gives you the ability to enrich your blog with well-selected and high quality content
+ * Version: 0.3
+ * Author: Andreas Eisenkolb and Nils Witt
  * Author URI: https://github.com/AEisenkolb
+ * Author URI: https://github.com/n-witt
  * License: Apache 2.0
  */
 /*  Copyright 2014 University of Passau
