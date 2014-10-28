@@ -57,6 +57,7 @@ var EEXCESS_METHODS = function () {
 
          if(terms != null) {
             EEXCESS.recommendationData.terms = terms;
+            EEXCESS.recommendationData.trigger = "tag";
             getRecommendations.call(this, EEXCESS.recommendationData);
             var cursorPosition = getCurserPosition.call(this, ed);
             var cleanedContent = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition, text.length);
@@ -114,7 +115,8 @@ var EEXCESS_METHODS = function () {
    },
 
    /**
-    * This function is invoked when the "Get Recommendations"-Button is used.
+    * This function is invoked when the "Get Recommendations"-Button or the
+    * keybord shortcut is used.
     * It extracts the marked text in either the visual- oder text editor and
     * triggers the recommendation workflow.
     *
@@ -143,6 +145,17 @@ var EEXCESS_METHODS = function () {
       if(text != "") {
          $j('.error').remove();
          EEXCESS.recommendationData.terms = getTerms.call(this, text, false, false);
+         // determine the trigger that let to the invocation of this event
+         if(event.type == "keydown"){
+            EEXCESS.recommendationData.trigger = "keydown";
+         } else {
+            if(event.type == "mousedown"){
+               EEXCESS.recommendationData.trigger = "mousedown";
+            } else {
+               EEXCESS.recommendationData.trigger = "unknown";
+            }
+         }
+
          getRecommendations.call(this, EEXCESS.recommendationData);
       } else {
          displayError(EEXCESS.errorMessages.noTextSelected, $j("#citationStyleDropDown"));
@@ -274,6 +287,7 @@ var EEXCESS_METHODS = function () {
          this.spinner.fadeIn("slow");
       }.call(this));
 
+      // this kills a previous request
       if(this.request != null){
          this.request.abort();
       }
@@ -301,7 +315,7 @@ var EEXCESS_METHODS = function () {
    ajaxCallback = function(response, status, jqXHR) {
       if(response) {
          // no longer needed, since the operation has completed and thus
-         // the abortion is no longer an option.
+         // the abortion is no longer an option and the button can be faded away.
          this.request = null;
          this.toggleButtons();
          this.CitationStyleDropDown.show("slow");
@@ -360,7 +374,7 @@ var EEXCESS_METHODS = function () {
                }
             });
          });
-         this.spinner.fadeOut("slow")
+         this.spinner.fadeOut("slow");
 
          if(usePagination) {
             var pages = Math.ceil(o.result.length / EEXCESS.pagination.items); // the number of pages
@@ -385,6 +399,9 @@ var EEXCESS_METHODS = function () {
          }
       } else {
          this.resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
+         this.spinner.fadeOut("slow");
+         this.toggleButtons();
+
       }
    };
 

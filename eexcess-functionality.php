@@ -185,12 +185,17 @@ limitations under the License.
        * DEV: http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend
        * Privacy Proxy
        */
-      $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
+      //dev
+      //$proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
+
+      //stable
+      $proxyURL = "http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
 
       // Data for the api call
       $postData = array(
          "numResults" => 100,
-         "contextKeywords" => array()
+         "contextKeywords" => array(),
+         "origin" => "WP",
       );
 
       // Creating the context list for the api call
