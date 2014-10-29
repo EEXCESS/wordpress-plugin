@@ -1,0 +1,3 @@
+- No information about the author(s) are passed to the plugin (see https://digital-jira.joanneum.at/browse/EEX-213)
+- Language for ZBW entries is always "de". Irrespective of the actual language of the recommended item. (see https://digital-jira.joanneum.at/browse/EEX-216)
+
