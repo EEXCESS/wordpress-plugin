@@ -34,7 +34,7 @@ limitations under the License.
       // Register the script first.
       wp_register_script( 'some_handle', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ) );
       // Now we can localize the script with our data.
-      $translation_array = array( 'pluginsPath' => plugins_url() );
+      $translation_array = array( 'pluginsPath' => plugin_dir_url( __FILE__ ) );
       wp_localize_script( 'some_handle', 'pluginURL', $translation_array );
       // The script can be enqueued now or later.
       wp_enqueue_script( 'some_handle' );
