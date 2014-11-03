@@ -2,10 +2,11 @@
 /**
  * Plugin Name: EEXCESS
  * Plugin URI: https://github.com/EEXCESS/eexcess
- * Description: TBD
- * Version: 1.0
- * Author: Andreas Eisenkolb
+ * Description: Gives you the ability to enrich your blog with well-selected and high quality content
+ * Version: 0.3
+ * Author: Andreas Eisenkolb and Nils Witt
  * Author URI: https://github.com/AEisenkolb
+ * Author URI: https://github.com/n-witt
  * License: Apache 2.0
  */
 /*  Copyright 2014 University of Passau
@@ -177,6 +178,7 @@ limitations under the License.
    function get_recommendations() {
       // Read the term form the POST variable
       $items = $_POST['terms'];
+      $context = $_POST['trigger'];
 
       /**
        * URL: http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend
@@ -196,12 +198,15 @@ limitations under the License.
          "numResults" => 100,
          "contextKeywords" => array(),
          "origin" => "WP",
+         "context" => array("reason" => $context, "value" => "")
       );
 
       // Creating the context list for the api call
       foreach($items as $term) {
          array_push($postData["contextKeywords"], array( "weight" => strval (1.0 / sizeof($items)), "text" => $term ));
       }
+
+      //array_push($postData["context"], );
 
       // Create context for the API call
       $context = stream_context_create(array(

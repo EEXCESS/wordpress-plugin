@@ -149,7 +149,7 @@ var EEXCESS_METHODS = function () {
          if(event.type == "keydown"){
             EEXCESS.recommendationData.trigger = "keydown";
          } else {
-            if(event.type == "mousedown"){
+            if(event.type == "mousedown" || event.type == "click"){
                EEXCESS.recommendationData.trigger = "mousedown";
             } else {
                EEXCESS.recommendationData.trigger = "unknown";
