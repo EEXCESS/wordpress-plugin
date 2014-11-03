@@ -72,8 +72,7 @@ $j(document).ready(function() {
       newText = content,
       citationsArray = [],
       citations = "",
-      citationText = "",
-      url = "";
+      citationText = "";
 
       if(citationStyle == "default"){
          var newText = eexcessMethods.pasteLinkToText(content, position, url, title, "link");
