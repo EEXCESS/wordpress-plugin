@@ -3,3 +3,5 @@
 - Vagrantfile doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
 - There is no descent way to remove citations from the blogentry.
 - The "Results on" field is not filled when the tag-method (i.e. #exceess: keyword #) is used
+- errorhandling should be enhanced. especially when the recommender doesn't answer!
+- number of results should be displayed

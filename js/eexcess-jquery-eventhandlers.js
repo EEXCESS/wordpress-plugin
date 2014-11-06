@@ -2,6 +2,11 @@
 $j = jQuery.noConflict();
 
 $j(document).ready(function() {
+
+   $j(document).on("keydown", ".story-body-text", function(e){
+      alert("aale");
+   });
+
    // Triggers the recommendations call by button
    $j(document).on("mousedown", "#getRecommendations", function(event){
       eexcessMethods.getSelectedTextAndRecommend(event);
@@ -67,7 +72,8 @@ $j(document).ready(function() {
       referenceNumber = "",
       position = eexcessMethods.getCursor(),
       content = eexcessMethods.getContent(),
-      citationsPattern = /<p class=\"csl-entry\">/g,
+      citationsPattern = citationsPattern = /<p\s?\S*\s?class=\"csl-entry\"\s?\S*\s?>/g,
+      //citationsPattern = citationsPattern = /<p class=\"csl-entry\">/g,
       posFirstCitation = content.search(citationsPattern),
       newText = content,
       citationsArray = [],
@@ -107,7 +113,8 @@ $j(document).ready(function() {
 
             // citeproc delivers its output within a <div>-tag. due to some weired transformation that
             // tinyMCE applies on these tags, they are replaced by <p>-tags.
-            citationText = citationText.replace("<div", "<p");
+            citationText = citationText.replace("<div", "<p contenteditable='false'");
+            //citationText = citationText.replace("<div", "<p");
             citationText = citationText.replace("</div>", "</p>");
 
             // how many citations are already included in the text?

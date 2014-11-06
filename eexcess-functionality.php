@@ -239,7 +239,7 @@ limitations under the License.
       return $initArray;
    }
 
-   //ADDING A BUTTON TO tinyMCE
+   //adding a button to  tinyMCE
    add_action( 'admin_head', 'EEXCESS_add_tinymce' );
    function EEXCESS_add_tinymce() {
        global $typenow;
