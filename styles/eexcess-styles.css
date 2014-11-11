@@ -189,3 +189,29 @@ span.jPag-snext-img{
    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
    color: #797b7d;
 }
+
+table#citation-table{
+   width: 100%;
+   table-layout: fixed
+}
+
+table#citation-table td{
+   padding: 3px
+}
+
+table#citation-table td:nth-child(1){
+   width: 16px;
+}
+
+table#citation-table td:nth-child(2){
+   overflow: hidden;
+   white-space: nowrap;
+}
+
+table#citation-table td:nth-child(3){
+   width: 38px;
+}
+
+table#citation-table td button{
+   padding-top: 3px;
+}

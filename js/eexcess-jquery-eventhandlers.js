@@ -69,11 +69,11 @@ $j(document).ready(function() {
       cursorPosition = "",
       text = "",
       alreadyCited = -1,
-      referenceNumber = "",
+      referenceNumberText = "",
+      referenceNumberDestination = "",
       position = eexcessMethods.getCursor(),
       content = eexcessMethods.getContent(),
-      citationsPattern = citationsPattern = /<p\s?\S*\s?class=\"csl-entry\"\s?\S*\s?>/g,
-      //citationsPattern = citationsPattern = /<p class=\"csl-entry\">/g,
+      citationsPattern = /<p(\s?\S*\s?){0,5}class=\"csl-entry\"(\s?\S*\s?){0,5}>/g,
       posFirstCitation = content.search(citationsPattern),
       newText = content,
       citationsArray = [],
@@ -92,13 +92,13 @@ $j(document).ready(function() {
                position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
                                                                             content,
                                                                             position);
-               referenceNumber = "[" + alreadyCited + "]";
+               referenceNumberText = "<span class=\"eexcessRef\" contenteditable=\"false\">[" + alreadyCited + "]</span>";
 
                // -1 is the value of posFirstCitation, if no citation has been inserted.
                if(position > posFirstCitation && posFirstCitation != -1){
                   alert(EEXCESS.citeproc.errorMsg);
                } else {
-                  newText = insertIntoText(content, position, referenceNumber);
+                  newText = insertIntoText(content, position, referenceNumberText);
                }
             } else {
                // insertion rejected
@@ -113,9 +113,10 @@ $j(document).ready(function() {
 
             // citeproc delivers its output within a <div>-tag. due to some weired transformation that
             // tinyMCE applies on these tags, they are replaced by <p>-tags.
-            citationText = citationText.replace("<div", "<p contenteditable='false'");
-            //citationText = citationText.replace("<div", "<p");
+            //citationText = citationText.replace("<div", "<p contenteditable=\"false\"");
+            citationText = citationText.replace("<div", "<p");
             citationText = citationText.replace("</div>", "</p>");
+            citationText = $j(citationText).attr("contenteditable", "false")[0].outerHTML;
 
             // how many citations are already included in the text?
             citationsArray = content.match(citationsPattern);
@@ -131,11 +132,14 @@ $j(document).ready(function() {
             // on the object in the future.
             citationsPattern.exec(citationText);
 
-            referenceNumber = "[" + (citations + 1).toString() + "] ";
+            referenceNumberSource = "<span class=\"eexcessRef\" contenteditable=\"false\" data-id=\"" +
+               (citations + 1) + "\">[" + (citations + 1).toString() + "]</span>";
+            citationText = $j(citationText).attr("data-id", citations + 1)[0].outerHTML;
+            referenceNumberDestination = "[" + (citations + 1).toString() + "] ";
 
             position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
 
-            citationText = insertIntoText(citationText, citationsPattern.lastIndex, referenceNumber);
+            citationText = $j(citationText).html(referenceNumberDestination + $j(citationText).html())[0].outerHTML;
             url = citationText.match(/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/g);
             for(var i=0; i<url.length; i++){
                citationText = citationText.replace(url[i], '<a href="' + url[i] + '">' + url[i] + '</a>');
@@ -146,7 +150,7 @@ $j(document).ready(function() {
                alert(EEXCESS.citeproc.errorMsg);
             } else {
                // insert reference # into text (at cursor position)
-               newText = insertIntoText(content, position, referenceNumber);
+               newText = insertIntoText(content, position, referenceNumberSource);
                // append the reference itself
                newText = insertIntoText(newText,
                                         eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),

@@ -1,5 +1,5 @@
 (function() {
-    tinymce.PluginManager.add( 'fb_test', function( editor, url ) {
+    tinymce.PluginManager.add( 'EEXCESS_get_recommendations', function( editor, url ) {
 
         // Add a button that opens a window
         editor.addButton( 'Get_Recommendations_Button', {
