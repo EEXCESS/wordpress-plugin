@@ -9,6 +9,7 @@
 			image : url + '/../images/wheel.png',  // path to the button's image
 			onclick : function() {
 				// triggers the thickbox
+				updateList();
 				var width = $j(window).width(),
 				H = $j(window).height(),
 				W = ( 750 < width ) ? 750 : width;
@@ -17,8 +18,8 @@
 		});
 	});
 
-	// executes this when the Pageload ist complete
-	$j(window).load(function(){
+	var updateList = function(){
+		// empty the page
 		var links = $j(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
 		references = $j(tinyMCE.activeEditor.getBody()).find('.csl-entry');
 		// creates a form to be displayed everytime the button is clicked
@@ -27,7 +28,7 @@
 			var form = '<div id="alterCitationsForm"><table id="citation-table" class="form-table">';
 			for(var i = 0; i<references.length; i++){
 				form = form + '<tr> \
-						<td><input type="checkbox" name="deletionIndicator"></td> \
+						<td><input type="checkbox" class="deletionIndicator"></td> \
 						<td>' + references[i].outerHTML + '</td> \
 						<td><button name="delete" class="button-secondary remove"><img src="' + pluginURL.pluginsPath + 'images/cross.png"</button></td> \
 					</tr>';
@@ -39,6 +40,8 @@
 			</div>';
 		}
 
+		//removes a possibly existing expired version of the table
+		$j("#alterCitationsForm").remove()
 
 		form = $j(form);
 		var table = form.find('table');
@@ -46,12 +49,48 @@
 
 		// handles the click event of the submit button
 		form.find('.remove').click(function(){
-			var links = $j(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
-			references = $j(tinyMCE.activeEditor.getBody()).find('.csl-entry'),
-			idToRemove = $j($j(this).parents()[1]).find("p").attr("data-id");
-			$j("#content_ifr").contents().find("[data-id='" + idToRemove + "']").remove();
+			var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid");
+			$j("#content_ifr").contents().find("[data-eexcessrefid='" + idToRemove + "']").remove();
 			// closes Thickbox
 			tb_remove();
 		});
-	});
+
+		form.find('#deletion-submit').click(function(){
+			// remove the selected citations and there respective references
+			$j(".deletionIndicator").each(function(){
+				if($j(this).is(":checked")){
+					var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid");
+
+					//remove citation
+					$j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + idToRemove + "']").remove();
+
+					// remove reference
+					$j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove()
+				}
+			// update the remaining citations and references
+			}).each(function(){
+				if($j(this).is(":checked") === false){
+					var prevRemovedItems = $j($j(this).parents()[1]).prevUntil().find(".deletionIndicator:checked").length;
+					var refNumber = $j($j(this).parents()[1]).find(".csl-entry").attr("data-eexcessrefid");
+					var citation = $j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + refNumber + "']");
+
+					// update the attribute
+					citation.attr("data-eexcessrefid", citation.attr("data-eexcessrefid") - prevRemovedItems);
+
+					// update the text enclosed by the span-tag
+					$j("span", citation).text($j("span", citation).text() - prevRemovedItems);
+
+					// collect the references which are to be updated
+					var references = $j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid=" + refNumber + "]");
+					for(i=0; i<references.length; i++){
+						$j(references[i]).attr("data-eexcessrefid", $j(references[i]).attr("data-eexcessrefid") - prevRemovedItems);
+						var text = $j(references[i]).text();
+						//$j(references[i]).innertext = "[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]";
+						references.text($j(references[i]).innertext = "[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]");
+					}
+				}
+			});
+			tb_remove();
+		});
+	};
 })();

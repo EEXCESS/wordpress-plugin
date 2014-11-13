@@ -92,7 +92,8 @@ $j(document).ready(function() {
                position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
                                                                             content,
                                                                             position);
-               referenceNumberText = "<span class=\"eexcessRef\" contenteditable=\"false\">[" + alreadyCited + "]</span>";
+               referenceNumberText = "<span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\""
+                  + alreadyCited + "\">[" + alreadyCited + "]</span>";
 
                // -1 is the value of posFirstCitation, if no citation has been inserted.
                if(position > posFirstCitation && posFirstCitation != -1){
@@ -132,10 +133,10 @@ $j(document).ready(function() {
             // on the object in the future.
             citationsPattern.exec(citationText);
 
-            referenceNumberSource = "<span class=\"eexcessRef\" contenteditable=\"false\" data-id=\"" +
+            referenceNumberSource = "<span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
                (citations + 1) + "\">[" + (citations + 1).toString() + "]</span>";
-            citationText = $j(citationText).attr("data-id", citations + 1)[0].outerHTML;
-            referenceNumberDestination = "[" + (citations + 1).toString() + "] ";
+            citationText = $j(citationText).attr("data-eexcessrefid", citations + 1)[0].outerHTML;
+            referenceNumberDestination = "[<span class=\"refid\">" + (citations + 1).toString() + "</span>] ";
 
             position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
 
