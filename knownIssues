@@ -1,10 +1,9 @@
-- No information about the author(s) are passed to the plugin (see https://digital-jira.joanneum.at/browse/EEX-213)
 - Language for ZBW entries is always "de". Irrespective of the actual language of the recommended item. (see https://digital-jira.joanneum.at/browse/EEX-216)
 - Vagrantfile doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
-- There is no descent way to remove citations from the blogentry.
 - The "Results on" field is not filled when the tag-method (i.e. #exceess: keyword #) is used
 - errorhandling should be enhanced. especially when the recommender doesn't answer!
 - number of results should be displayed
 - filteroptions for the resultslist
 - dynamic change of the citationstyle
 - links in the citationarea should be open in a different windows
+- removed citations are still marked "already cited" in the result list
