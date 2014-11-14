@@ -18,12 +18,50 @@
 		});
 	});
 
+	/**
+	*
+	*
+	* @param ifToRemove:
+	*/
 	var removeCitationById = function(idToRemove){
 		//remove citation
 		$j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + idToRemove + "']").remove();
 
 		// remove reference
-		$j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove()
+		$j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove();
+
+		// update citations
+		$j("#content_ifr")
+		.contents()
+		.find(".csl-entry[data-eexcessrefid]")
+		.filter(function(index){
+			// only those citations that are "behind" the one removed
+			return $j(this).attr("data-eexcessrefid") > removeCitationById.arguments[0];
+		})
+		.each(function(){
+			var citation = $j(this);
+			// update the attribute
+			citation.attr("data-eexcessrefid", citation.attr("data-eexcessrefid") - 1);
+			// update the text enclosed by the span-tag
+			$j("span", citation).text($j("span", citation).text() - 1);
+		});
+
+		// update references
+		$j("#content_ifr")
+		.contents()
+		.find(".eexcessRef")
+		.filter(function(index){
+			// only those citations that are "behind" the one removed
+			return $j(this).attr("data-eexcessrefid") > removeCitationById.arguments[0];
+		})
+		.each(function(){
+			var citation = $j(this);
+			// update the attribute
+			citation.attr("data-eexcessrefid", citation.attr("data-eexcessrefid") - 1);
+			// update the text enclosed by the span-tag
+			var text = $j(this).text();
+			$j(this).text("[" + (text.slice(1, text.length-1) - 1) + "]");
+		});
 	}
 
 	var updateList = function(){
@@ -64,33 +102,14 @@
 		});
 
 		form.find('#deletion-submit').click(function(){
+			var alreadyRemoved = 0;
 			// remove the selected citations and there respective references
 			$j(".deletionIndicator").each(function(){
 				if($j(this).is(":checked")){
-					var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid");
+					var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid") - alreadyRemoved;
 					removeCitationById(idToRemove);
-				}
-			// update the remaining citations and references
-			}).each(function(){
-				if($j(this).is(":checked") === false){
-					var prevRemovedItems = $j($j(this).parents()[1]).prevUntil().find(".deletionIndicator:checked").length;
-					var refNumber = $j($j(this).parents()[1]).find(".csl-entry").attr("data-eexcessrefid");
-					var citation = $j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + refNumber + "']");
-
-					// update the attribute
-					citation.attr("data-eexcessrefid", citation.attr("data-eexcessrefid") - prevRemovedItems);
-
-					// update the text enclosed by the span-tag
-					$j("span", citation).text($j("span", citation).text() - prevRemovedItems);
-
-					// collect the references which are to be updated
-					var references = $j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid=" + refNumber + "]");
-					references.each(function(){
-						$j(this).attr("data-eexcessrefid", $j(this).attr("data-eexcessrefid") - prevRemovedItems);
-						var text = $j(this).text();
-						//$j(this).innertext = "[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]";
-						$j(this).text("[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]");
-					});
+					$j($j(this).parents()[1]).remove();
+					alreadyRemoved += 1;
 				}
 			});
 			tb_remove();
