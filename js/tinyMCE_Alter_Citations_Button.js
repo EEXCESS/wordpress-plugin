@@ -18,6 +18,14 @@
 		});
 	});
 
+	var removeCitationById = function(idToRemove){
+		//remove citation
+		$j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + idToRemove + "']").remove();
+
+		// remove reference
+		$j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove()
+	}
+
 	var updateList = function(){
 		// empty the page
 		var links = $j(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
@@ -50,7 +58,7 @@
 		// handles the click event of the submit button
 		form.find('.remove').click(function(){
 			var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid");
-			$j("#content_ifr").contents().find("[data-eexcessrefid='" + idToRemove + "']").remove();
+			removeCitationById(idToRemove);
 			// closes Thickbox
 			tb_remove();
 		});
@@ -60,12 +68,7 @@
 			$j(".deletionIndicator").each(function(){
 				if($j(this).is(":checked")){
 					var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid");
-
-					//remove citation
-					$j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + idToRemove + "']").remove();
-
-					// remove reference
-					$j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove()
+					removeCitationById(idToRemove);
 				}
 			// update the remaining citations and references
 			}).each(function(){
@@ -82,12 +85,12 @@
 
 					// collect the references which are to be updated
 					var references = $j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid=" + refNumber + "]");
-					for(i=0; i<references.length; i++){
-						$j(references[i]).attr("data-eexcessrefid", $j(references[i]).attr("data-eexcessrefid") - prevRemovedItems);
-						var text = $j(references[i]).text();
-						//$j(references[i]).innertext = "[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]";
-						references.text($j(references[i]).innertext = "[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]");
-					}
+					references.each(function(){
+						$j(this).attr("data-eexcessrefid", $j(this).attr("data-eexcessrefid") - prevRemovedItems);
+						var text = $j(this).text();
+						//$j(this).innertext = "[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]";
+						$j(this).text("[" + (text.slice(1,text.length-1)-prevRemovedItems) + "]");
+					});
 				}
 			});
 			tb_remove();
