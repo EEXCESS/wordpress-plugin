@@ -23,7 +23,7 @@ var EEXCESS = {
       "mouse" : "press" //  With value “press” the user can keep the mouse button pressed and the page numbers will keep on sliding. With value “slide” the page numbers will slide once with each click.
    },
    "errorMessages" : {
-      "noRecommandations" : "No Recommendations found.",
+      "noRecommandations" : "An error has occured.",
       "noTextSelected" : "Please select some text.",
       "resourceAlreadyInserted" : "This Resource has already been cited. Do you want to cite it again?"
    },

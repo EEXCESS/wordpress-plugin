@@ -3,10 +3,6 @@ $j = jQuery.noConflict();
 
 $j(document).ready(function() {
 
-   $j(document).on("keydown", ".story-body-text", function(e){
-      alert("aale");
-   });
-
    // Triggers the recommendations call by button
    $j(document).on("mousedown", "#getRecommendations", function(event){
       eexcessMethods.getSelectedTextAndRecommend(event);

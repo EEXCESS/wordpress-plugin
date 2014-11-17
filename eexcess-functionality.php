@@ -157,7 +157,7 @@ limitations under the License.
          ?>
       </select>
       <div id="searchQueryReflection" class="searchQueryReflection">
-         Results on:<br>
+         <span id="numResults"></span> Results on:
          <span id="searchQuery" style="color: #000000"></span>
       </div>
       <div id="content">
