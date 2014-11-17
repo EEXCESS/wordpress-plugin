@@ -62,6 +62,13 @@
 			var text = $j(this).text();
 			$j(this).text("[" + (text.slice(1, text.length-1) - 1) + "]");
 		});
+
+		//removing the "already cited"-flag from resultlist
+		$j(".eexcess-alreadyCited[data-refnumb=" + idToRemove + "]")
+		.each(function(){
+			$j(this).removeClass("eexcess-alreadyCited");
+			$j(this).removeAttr("data-refnumb");
+		});
 	}
 
 	var updateList = function(){
@@ -69,7 +76,6 @@
 		var links = $j(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
 		references = $j(tinyMCE.activeEditor.getBody()).find('.csl-entry');
 		// creates a form to be displayed everytime the button is clicked
-		// you should achieve this using AJAX instead of direct html code like this
 		if(references != null){
 			var form = '<div id="alterCitationsForm"><table id="citation-table" class="form-table">';
 			for(var i = 0; i<references.length; i++){
