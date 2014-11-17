@@ -1,7 +1,8 @@
 // closure to avoid namespace collision
 (function(){
-
-	// registers the plugin. DON'T MISS THIS STEP!!!
+	/*
+	* The following feunction registers the plugin.
+	*/
 	tinymce.PluginManager.add('EEXCESS_alter_citations', function(editor, url) {
 		// creates the button
 		editor.addButton( 'Alter_Citations_Button', {
@@ -19,9 +20,9 @@
 	});
 
 	/**
-	*
-	*
-	* @param ifToRemove:
+	* This method removes a citations and all asociated objects (like references to citations
+	* and markers in the resultlist indication that an object has already been cited).
+	* @param ifToRemove: The id of the object to be removed
 	*/
 	var removeCitationById = function(idToRemove){
 		//remove citation
@@ -71,6 +72,10 @@
 		});
 	}
 
+	/*
+	 * This function creates the content of the thickbox shown when the "alter citations"-dialog
+	 * is requested.
+	 */
 	var updateList = function(){
 		// empty the page
 		var links = $j(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
