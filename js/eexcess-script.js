@@ -173,6 +173,7 @@ var EEXCESS_METHODS = function () {
       $j(".error").remove();
       var div = $j('<div class="error">' + msg + '</div>');
       $j(element).after(div);
+      div.show("slow");
    },
 
    /**
@@ -296,10 +297,9 @@ var EEXCESS_METHODS = function () {
          type: "POST",
          url: ajaxurl,
          data: data,
-         success: ajaxCallback,
+         success: ajaxCallbackSuccess,
          context: this
       });
-
    },
 
    /**
@@ -312,8 +312,8 @@ var EEXCESS_METHODS = function () {
     * @params: refer to http://api.jquery.com/jquery.ajax/ and look for the success-
     *          callback method.
     */
-   ajaxCallback = function(response, status, jqXHR) {
-      if(response) {
+   ajaxCallbackSuccess = function(response, status, jqXHR) {
+      if(response != "") {
          // no longer needed, since the operation has completed and thus
          // the abortion is no longer an option and the button can be faded away.
          this.request = null;
@@ -323,6 +323,7 @@ var EEXCESS_METHODS = function () {
 
          // parsing the JSON string
          var o = JSON.parse(response);
+         $j("#numResults").text(o["totalResults"]);
 
          // Using Handlebars.js to compile the template. See http://handlebarsjs.com/ for documentation.
          var template = Handlebars.compile($j("#list-template").html());
@@ -398,7 +399,7 @@ var EEXCESS_METHODS = function () {
             });
          }
       } else {
-         this.resultList.html(EEXCESS.errorMessages.noRecommandations).show("slow");
+         displayError(EEXCESS.errorMessages.noRecommandations, $j("#citationStyleDropDown"));
          this.spinner.fadeOut("slow");
          this.toggleButtons();
 

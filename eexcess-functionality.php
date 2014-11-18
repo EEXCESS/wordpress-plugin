@@ -34,7 +34,7 @@ limitations under the License.
       // Register the script first.
       wp_register_script( 'some_handle', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ) );
       // Now we can localize the script with our data.
-      $translation_array = array( 'pluginsPath' => plugins_url() );
+      $translation_array = array( 'pluginsPath' => plugin_dir_url( __FILE__ ) );
       wp_localize_script( 'some_handle', 'pluginURL', $translation_array );
       // The script can be enqueued now or later.
       wp_enqueue_script( 'some_handle' );
@@ -157,7 +157,7 @@ limitations under the License.
          ?>
       </select>
       <div id="searchQueryReflection" class="searchQueryReflection">
-         Results on:<br>
+         <span id="numResults"></span> Results on:
          <span id="searchQuery" style="color: #000000"></span>
       </div>
       <div id="content">
@@ -239,31 +239,33 @@ limitations under the License.
       return $initArray;
    }
 
-   //ADDING A BUTTON TO tinyMCE
+   //adding a button to  tinyMCE
    add_action( 'admin_head', 'EEXCESS_add_tinymce' );
    function EEXCESS_add_tinymce() {
-       global $typenow;
+      global $typenow;
 
-       // only on Post Type: post and page
-       if( ! in_array( $typenow, array( 'post', 'page' ) ) )
+      // only on Post Type: post and page
+      if( ! in_array( $typenow, array( 'post', 'page' ) ) )
            return ;
 
-       add_filter( 'mce_external_plugins', 'EEXCESS_add_tinymce_plugin' );
-       // Add to line 1 form WP TinyMCE
-       add_filter( 'mce_buttons', 'EEXCESS_add_tinymce_button' );
+      // registers the method that registers our javascript file that implements our button
+      add_filter( 'mce_external_plugins', 'EEXCESS_add_tinymce_plugin' );
+      // registers the method that registers our button
+      add_filter( 'mce_buttons', 'EEXCESS_add_tinymce_button' );
    }
 
    // inlcude the js for tinymce
    function EEXCESS_add_tinymce_plugin( $plugin_array ) {
-
-       $plugin_array['fb_test'] = plugins_url( 'js/tinyMCE_Custom_Button.js', __FILE__ );
-       return $plugin_array;
+      $plugin_array['EEXCESS_get_recommendations'] = plugins_url( 'js/tinyMCE_Get_Recommendations_Button.js', __FILE__ );
+      $plugin_array['EEXCESS_alter_citations'] = plugins_url( 'js/tinyMCE_Alter_Citations_Button.js', __FILE__ );
+      return $plugin_array;
    }
 
    // Add the button key for address via JS
    function EEXCESS_add_tinymce_button( $buttons ) {
 
-       array_push( $buttons, 'Get_Recommendations_Button');
-       return $buttons;
+      array_push( $buttons, 'Get_Recommendations_Button');
+      array_push( $buttons, 'Alter_Citations_Button');
+      return $buttons;
    }
 ?>

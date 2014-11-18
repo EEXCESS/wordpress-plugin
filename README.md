@@ -57,8 +57,8 @@ var EEXCESS = {
       "imageHeight" : 78 //Heigth of images in the recommendation list
    },
    "citeproc" : {
-      "stylesDir" : "/eexcess/js/lib/citeproc-js/citionStyles/",
-      "localsDir" : "/eexcess/js/lib/citeproc-js/locales/",
+      "stylesDir" : "js/lib/citeproc-js/citionStyles/",
+      "localsDir" : "js/lib/citeproc-js/locales/",
       "errorMsg"  : "Insertion into the citationarea is prohibited"
    }
 ```
