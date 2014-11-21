@@ -53,11 +53,17 @@ $j(document).ready(function() {
       }
    });
 
+
+   var generateReference = function(number){
+      number = number.toString();
+      return "<a href=\"#eexcess" + number + "\"><span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
+         number + "\">[" + number + "]</span></a>"
+   }
+
    /*
     * Handles the "add" buttons in the recommendation area. It adds citations
     * to the text, depending on the value of the citation style drop down element
     */
-
    $j(document).on("mousedown", 'input[name="addMatch"]', function(){
       var url =  $j(this).siblings("a").attr('href'),
       title = $j(this).siblings("a").text(),
@@ -88,8 +94,7 @@ $j(document).ready(function() {
                position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
                                                                             content,
                                                                             position);
-               referenceNumberText = "<span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\""
-                  + alreadyCited + "\">[" + alreadyCited + "]</span>";
+               referenceNumberText = generateReference(alreadyCited);
 
                // -1 is the value of posFirstCitation, if no citation has been inserted.
                if(position > posFirstCitation && posFirstCitation != -1){
@@ -129,10 +134,9 @@ $j(document).ready(function() {
             // on the object in the future.
             citationsPattern.exec(citationText);
 
-            referenceNumberSource = "<span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
-               (citations + 1) + "\">[" + (citations + 1).toString() + "]</span>";
+            referenceNumberSource = generateReference(citations + 1);
             citationText = $j(citationText).attr("data-eexcessrefid", citations + 1)[0].outerHTML;
-            referenceNumberDestination = "[<span class=\"refid\">" + (citations + 1).toString() + "</span>] ";
+            referenceNumberDestination = "[<span id=\"eexcess" + (citations + 1).toString() + "\" class=\"refid\">" + (citations + 1).toString() + "</span>]";
 
             position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
 
