@@ -98,11 +98,18 @@ limitations under the License.
                         <div class="recommendationTextArea">
                            <a target="_blank" href="{{uri}}">{{title}}</a>
                            </br>
-                           Provider: {{facets.provider}}
+                           {{#if creator}}
+                              Creator: {{creator}}
+                           {{else}}
+                              Provider: {{facets.provider}}
+                           {{/if}}
                            <br/>
-                           {{#if facets.language}}
+                           {{#if facets.year}}
+                              Published: {{facets.year}}
+                           {{else}}
                               Language: {{facets.language}}
                            {{/if}}
+
                            <br/>
                            {{#if collectionName}}
                               <input type="hidden" name="collectionName" value="{{collectionName}}">

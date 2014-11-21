@@ -22,7 +22,7 @@
 	/**
 	* This method removes a citations and all asociated objects (like references to citations
 	* and markers in the resultlist indication that an object has already been cited).
-	* @param ifToRemove: The id of the object to be removed
+	* @param idToRemove: The id of the object to be removed
 	*/
 	var removeCitationById = function(idToRemove){
 		//remove citation
