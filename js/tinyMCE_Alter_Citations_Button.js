@@ -7,7 +7,7 @@
 		// creates the button
 		editor.addButton( 'Alter_Citations_Button', {
 			title : 'Alter Citations', // title of the button
-			image : url + '/../images/wheel.png',  // path to the button's image
+			image : url + '/../images/delete.png',  // path to the button's image
 			onclick : function() {
 				// triggers the thickbox
 				updateList();

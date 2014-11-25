@@ -97,7 +97,7 @@ var EEXCESS_METHODS = function () {
    * @param linkText:      the text for the link
    */
    pasteLinkToText = function(text, cursorPosition, url, title, linkText){
-      return insertIntoText(text, cursorPosition, ' <a href="' + url + '" title="'+ title + '"> link </a> ');
+      return insertIntoText(text, cursorPosition, ' <a href="' + url + '" title="'+ title + '">' + linkText + '</a> ');
    },
 
    /**
@@ -114,6 +114,22 @@ var EEXCESS_METHODS = function () {
       return newText
    },
 
+   getSelectedText = function(){
+      var text = "";
+      // Visual Editor
+      if(text == "" && tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
+         text = tinyMCE.activeEditor.selection.getContent( {format : "text"} );
+      } else { // Casual TextEditor
+         try {
+            var ta = $j('.wp-editor-area').get(0);
+               text = ta.value.substring(ta.selectionStart, ta.selectionEnd);
+         } catch (e) {
+            console.log('Exception during get selection text');
+         }
+      }
+      return text;
+   },
+
    /**
     * This function is invoked when the "Get Recommendations"-Button or the
     * keybord shortcut is used.
@@ -126,19 +142,8 @@ var EEXCESS_METHODS = function () {
     */
    getSelectedTextAndRecommend = function(event) {
       event.preventDefault();
-      var text = "";
+      var text = getSelectedText();
 
-      // Visual Editor
-      if(text == "" && tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         text = tinyMCE.activeEditor.selection.getContent( {format : "text"} );
-      } else { // Casual TextEditor
-         try {
-            var ta = $j('.wp-editor-area').get(0);
-               text = ta.value.substring(ta.selectionStart, ta.selectionEnd);
-         } catch (e) {
-            console.log('Exception during get selection text');
-         }
-      }
       // In order to display the search query to the user
       setSearchQueryReflection(this, text);
 
@@ -658,6 +663,7 @@ var EEXCESS_METHODS = function () {
       assessKeystroke: assessKeystroke,
       pasteLinkToText: pasteLinkToText,
       getSelectedTextAndRecommend: getSelectedTextAndRecommend,
+      getSelectedText: getSelectedText,
       displayError: displayError,
       getTerms: getTerms,
       toggleButtons: toggleButtons,

@@ -83,7 +83,8 @@ $j(document).ready(function() {
       citationText = "";
 
       if(citationStyle == "default"){
-         var newText = eexcessMethods.pasteLinkToText(content, position, url, title, "link");
+         var searchQuery = $j("#searchQuery").text();
+         var newText = eexcessMethods.pasteLinkToText(content, position, url, title, searchQuery);
       } else {
          // if this entry has already been cited. warn the user, ask if he/she wants to continue
          // and act accordingly
