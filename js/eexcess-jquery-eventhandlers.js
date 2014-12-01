@@ -143,8 +143,10 @@ $j(document).ready(function() {
 
             citationText = $j(citationText).html(referenceNumberDestination + $j(citationText).html())[0].outerHTML;
             url = citationText.match(/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/g);
-            for(var i=0; i<url.length; i++){
-               citationText = citationText.replace(url[i], '<a href="' + url[i] + '" target=\"_blank\">' + url[i] + '</a>');
+            if(url != null){
+               for(var i=0; i<url.length; i++){
+                  citationText = citationText.replace(url[i], '<a href="' + url[i] + '" target=\"_blank\">' + url[i] + '</a>');
+               }
             }
 
             // -1 is the value of posFirstCitation, if no citation has been inserted.
