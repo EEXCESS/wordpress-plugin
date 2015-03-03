@@ -61,10 +61,10 @@ $j(document).ready(function() {
    }
 
    /*
-    * Handles the "add" buttons in the recommendation area. It adds citations
+    * Handles the "Add as Citation" buttons in the recommendation area. It adds citations
     * to the text, depending on the value of the citation style drop down element
     */
-   $j(document).on("mousedown", 'input[name="addMatch"]', function(){
+   $j(document).on("mousedown", 'input[name="addAsCitation"]', function(){
       var url =  $j(this).siblings("a").attr('href'),
       title = $j(this).siblings("a").text(),
       citationStyle = $j('#citationStyleDropDown').val(),
@@ -165,6 +165,22 @@ $j(document).ready(function() {
             }
          }
       }
+      eexcessMethods.setContent(newText);
+   });
+
+   /*
+    * Handles the "Add as Image" buttons in the recommendation area. It adds Images
+    * to the blogpost.
+    */
+   $j(document).on("mousedown", 'input[name="addAsImage"]', function(){
+      var imageURL = $j(this).parent().prev().find("a").attr("href"),
+      title = $j(this).parent().find("a").text(),
+      snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
+      position = eexcessMethods.getCursor(),
+      content = eexcessMethods.getContent();
+
+      var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
+      var newText = insertIntoText(content, insertionPosition, snippet);
       eexcessMethods.setContent(newText);
    });
 });

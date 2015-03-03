@@ -59,7 +59,7 @@ var EEXCESS_METHODS = function () {
             EEXCESS.recommendationData.terms = terms;
             EEXCESS.recommendationData.trigger = "tag";
             getRecommendations.call(this, EEXCESS.recommendationData);
-            var cursorPosition = getCurserPosition.call(this, ed);
+            var cursorPosition = getCursorPosition.call(this, ed);
             var cleanedContent = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition, text.length);
             cleanedContent = cleanedContent.replace(EEXCESS.trigger.marker, "").replace('<p>', "").replace("</p>", "");
             ed.setContent(cleanedContent);
@@ -103,9 +103,9 @@ var EEXCESS_METHODS = function () {
    /**
    * Inserts an arbitrary string (snippet) at cursorPosition into text.
    *
-   * @param text:          the to insert the link
-   * @param cursorPosition:the position to insert the link
-   * @param snippet:       the text to insert
+   * @param text:          the text in which the snippet is to be inserted
+   * @param cursorPosition:the position at which the snippet is so be inserted
+   * @param snippet:       the snippet to be inserted
    */
    insertIntoText = function(text, cursorPosition, snippet){
       var newText = text.substring(0, cursorPosition);
@@ -418,7 +418,7 @@ var EEXCESS_METHODS = function () {
     * @param editor: is the tinyMCE.activeEditor-Object
     * @return: the position of the cursor
     */
-   getCurserPosition = function(editor) {
+   getCursorPosition = function(editor) {
       //set a bookmark so we can return to the current position after we reset the content later
       var bm = editor.selection.getBookmark(0);
 
@@ -597,7 +597,7 @@ var EEXCESS_METHODS = function () {
 
    getCursor = function(){
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         return eexcessMethods.getCurserPosition(tinyMCE.activeEditor);
+         return eexcessMethods.getCursorPosition(tinyMCE.activeEditor);
       } else {
          var textarea = $j("textarea#content");
          return textarea.getCursorPosition();
@@ -630,24 +630,29 @@ var EEXCESS_METHODS = function () {
       // find whitespaces
       var whitespaces = this.findWhitespaces(content);
 
-      // if there is no convenient insertionpoint (i.e. whitespace) between the
-      // cursorposition and the end of the document...
-      if(whitespaces[whitespaces.length-1].index <= position){
-         position = this.determineArticlesEnd(content, htmlTagPositions);
-      }else{
-         for(var i = 0; i < whitespaces.length; i++){
-            if(whitespaces[i].index >= position){
-               // set cursor to the closest whitespace
-               position = whitespaces[i].index;
-               // is this whitespace within a html-tag?
-               while(htmlTagPositions.lastIndexOf(position) != -1
-                     && htmlTagPositions.lastIndexOf(position - 1) != -1){
-                  // we've found a html tag. decrease position until we left the tag
-                  position--;
+      // if there is are no whitespaces, insert at the end of the blogpost
+      if(whitespaces.length > 0){
+         // if there is no convenient insertionpoint (i.e. whitespace) between the
+         // cursorposition and the end of the document...
+         if(whitespaces[whitespaces.length-1].index <= position){
+            position = this.determineArticlesEnd(content, htmlTagPositions);
+         }else{
+            for(var i = 0; i < whitespaces.length; i++){
+               if(whitespaces[i].index >= position){
+                  // set cursor to the closest whitespace
+                  position = whitespaces[i].index;
+                  // is this whitespace within a html-tag?
+                  while(htmlTagPositions.lastIndexOf(position) != -1
+                        && htmlTagPositions.lastIndexOf(position - 1) != -1){
+                     // we've found a html tag. decrease position until we left the tag
+                     position--;
+                  }
+                  break;
                }
-               break;
             }
          }
+      }else{
+         position = this.determineArticlesEnd(content, htmlTagPositions);
       }
       return position;
    };
@@ -668,7 +673,7 @@ var EEXCESS_METHODS = function () {
       getTerms: getTerms,
       toggleButtons: toggleButtons,
       getRecommendations: getRecommendations,
-      getCurserPosition: getCurserPosition,
+      getCursorPosition: getCursorPosition,
       setCursorPosition: setCursorPosition,
       readMetadata: readMetadata,
       spinner: spinner,

@@ -132,7 +132,10 @@ limitations under the License.
                            {{#if id}}
                               <input type="hidden" name="id" value="{{id}}">
                            {{/if}}
-                           <input name="addMatch" class="button button-small" id="addMatch" value="add" style="width: 40px" onfocus="this.blur();">
+                           <input name="addAsCitation" class="button button-small" value="Add as Citation" style="width: 95px" onfocus="this.blur();">
+                           {{#if previewImage}}
+                              <input name="addAsImage" class="button button-small" value="Add as Image" style="width: 88px" onfocus="this.blur();">
+                           {{/if}}
                         </div>
                      </div>
                   </li>
