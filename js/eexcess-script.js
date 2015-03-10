@@ -553,11 +553,11 @@ var EEXCESS_METHODS = function () {
    /**
     * Determines the positions of html tag in content.
     *
-    * @param content: The text that shall be inspected.
+    * @param content: The text that is to be inspected.
     * @return: An array containing the positions of html-tags in content.
     */
    findHtmlTagPositions = function(content){
-      var htmlTagPattern = /<{1}\/{0,1}[A-Za-z0-9_\-"=\s]*[/]{0,1}>{1}/g;
+      var htmlTagPattern = /<[^>]*>/g;
       var htmlTagPositions = [];
       while ((match = htmlTagPattern.exec(content)) != null) {
          for(var i = 0; i < match[0].length; i++){
@@ -630,7 +630,6 @@ var EEXCESS_METHODS = function () {
       // find whitespaces
       var whitespaces = this.findWhitespaces(content);
 
-      // if there is are no whitespaces, insert at the end of the blogpost
       if(whitespaces.length > 0){
          // if there is no convenient insertionpoint (i.e. whitespace) between the
          // cursorposition and the end of the document...
@@ -638,7 +637,9 @@ var EEXCESS_METHODS = function () {
             position = this.determineArticlesEnd(content, htmlTagPositions);
          }else{
             for(var i = 0; i < whitespaces.length; i++){
-               if(whitespaces[i].index >= position){
+               // if there is a whitespace left to the current cursor position or somewhere ahead of
+               // the current cursor position, insert the text there.
+               if(whitespaces[i].index >= position || whitespaces[i].index == position - 1){
                   // set cursor to the closest whitespace
                   position = whitespaces[i].index;
                   // is this whitespace within a html-tag?
@@ -652,6 +653,7 @@ var EEXCESS_METHODS = function () {
             }
          }
       }else{
+         // if there is are no whitespaces, insert at the end of the blogpost
          position = this.determineArticlesEnd(content, htmlTagPositions);
       }
       return position;
