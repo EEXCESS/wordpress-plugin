@@ -56,6 +56,7 @@ limitations under the License.
          wp_enqueue_script( 'eexcess-xmldom', plugins_url( '/js/lib/xmldom.js', __FILE__ ));
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
+         wp_enqueue_style( 'onOffSwitch', plugins_url( '/styles/toggle-switch.css', __FILE__ ) );
       }
    }
 
@@ -179,6 +180,29 @@ limitations under the License.
          <div class='eexcess-spinner'></div>
          <div id='list'></div>
       </div>
+      <div id="privacySettings">
+         <hr>
+         <!-- privacy settings thickbox-->
+         <?php add_thickbox(); ?>
+         <div id="privacyThickbox" style="display:none;">
+            <br>
+            <!-- tooglebutton-->
+            <table class="privacySettings">
+               <tr>
+                  <td>Enable extended logging</td>
+                  <td>
+                     <input id="extendedLogging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                     <label for="extendedLogging"></label>
+                  </td>
+               </tr>
+            </table>
+            <!-- /tooglebutton-->
+         </div>
+         <a href="#TB_inline?width=600&height=550&inlineId=privacyThickbox" title="Privacy Settings" class="thickbox">
+            <input id="privacySettings"  style="width: 100px;" name="privacySettings" class="button button-small" value="Privacy Settings">
+         </a>
+      </div>
+      <!-- /privacy settings thickbox-->
    <?php }
 
    // Ajax action handler
@@ -207,7 +231,6 @@ limitations under the License.
       $postData = array(
          "numResults" => 100,
          "contextKeywords" => array(),
-         "origin" => "WP",
          "context" => array("reason" => $context, "value" => "")
       );
 
@@ -216,13 +239,11 @@ limitations under the License.
          array_push($postData["contextKeywords"], array( "weight" => strval (1.0 / sizeof($items)), "text" => $term ));
       }
 
-      //array_push($postData["context"], );
-
       // Create context for the API call
       $context = stream_context_create(array(
          'http' => array(
             'method' => 'POST',
-            'header' => "Content-Type: application/json\r\n",
+            'header' => array("Content-Type: application/json", "Origin: WP"),
             'content' => json_encode($postData)
          )
       ));
@@ -232,6 +253,66 @@ limitations under the License.
 
 	   die(); // this is required to return a proper result
    }
+
+///////////advanced logging///////////////
+
+add_action( 'wp_ajax_advanced_logging', 'advanced_logging' );
+
+// Callback function for the Ajax call
+function advanced_logging() {
+   // Read the term form the POST variable
+   $resource = $_POST['resource'];
+   $query = $_POST['query'];
+   $type = $_POST['type'];
+   $timestamp = $_POST['timestamp'];
+   $beenRecommended = $_POST['beenRecommended'];
+   $action_taken = $_POST['action-taken'];
+   $uuid = $_POST['uuid'];
+
+   /**
+    * URL: http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend
+    * Alternative URL: http://132.231.111.197:8080/eexcess-privacy-proxy/api/v1/recommend
+    * METHOD: POST
+    * DEV: http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend
+    * Privacy Proxy
+    */
+   //dev
+   $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/log/rview";
+
+   //stable
+   //$proxyURL = "http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/log/rview";
+
+   // Data for the api call
+   $postData = array(
+      "resource" => $resource,
+      "timestamp" => $timestamp,
+      "type" => $type,
+      "context" => array("query" => $query),
+      "beenRecommended" => $beenRecommended,
+      "action" => $action_taken,
+      "uuid" => $uuid
+   );
+
+
+   // Create context for the API call
+   $context = stream_context_create(array(
+      'http' => array(
+         'method' => 'POST',
+         'header' => array("Content-Type: application/json", "Origin: WP"),
+         'content' => json_encode($postData)
+      )
+   ));
+
+   // Send the request and return the result
+   echo @file_get_contents($proxyURL, FALSE, $context);
+   //return HTTP-status to client
+   echo($http_response_header[0]);
+
+   die(); // this is required to return a proper result
+}
+
+///////////////////////
+
 
    // Hook for the WYSIWYG editor
    add_filter( 'tiny_mce_before_init', 'tiny_mce_before_init' );

@@ -53,7 +53,6 @@ $j(document).ready(function() {
       }
    });
 
-
    var generateReference = function(number){
       number = number.toString();
       return "<a href=\"#eexcess" + number + "\"><span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
@@ -81,6 +80,10 @@ $j(document).ready(function() {
       citationsArray = [],
       citations = "",
       citationText = "";
+
+      if(eexcessMethods.extendedLoggingEnabled()){
+         sendUsersActivitiesSignal("cited", this);
+      }
 
       if(citationStyle == "default"){
          var searchQuery = $j("#searchQuery").text();
@@ -179,8 +182,21 @@ $j(document).ready(function() {
       position = eexcessMethods.getCursor(),
       content = eexcessMethods.getContent();
 
+      if(eexcessMethods.extendedLoggingEnabled()){
+         sendUsersActivitiesSignal("image_embedded", this);
+      }
+
       var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
       var newText = insertIntoText(content, insertionPosition, snippet);
       eexcessMethods.setContent(newText);
+   });
+
+   /*
+    *
+    */
+   $j(document).on("mousedown", ".recommendationTextArea a", function(){
+      if(eexcessMethods.extendedLoggingEnabled()){
+         sendUsersActivitiesSignal("detail_view", this);
+      }
    });
 });

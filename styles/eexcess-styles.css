@@ -216,3 +216,17 @@ table#citation-table td:nth-child(3){
 table#citation-table td button{
    padding-top: 3px;
 }
+
+table.privacySettings {
+   width: 300px;
+   margin-left:auto;
+   margin-right:auto;
+}
+
+table.privacySettings td:nth-child(1) {
+   text-align: left;
+}
+
+table.privacySettings td:nth-child(2) {
+   text-align: right;
+}

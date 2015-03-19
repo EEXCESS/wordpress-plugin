@@ -264,18 +264,26 @@ var EEXCESS_METHODS = function () {
     */
    toggleButtons = function(){
       var recommendButton = $j('#getRecommendations');
-      var abortButton = $j('#abortRequest')
+      var abortButton = $j('#abortRequest');
+      var privacyButton = $j('#privacySettings');
 
       if(recommendButton.is(":visible")){
+         privacyButton.toggle("fast");
          recommendButton.toggle("fast", function(){
             abortButton.toggle("fast");
          });
       }else{
+         privacyButton.toggle("fast");
          abortButton.toggle("fast", function(){
             recommendButton.toggle("fast");
          });
       }
    },
+
+   extendedLoggingEnabled = function(){
+      // did the user opt in to logging his/her activities?
+      return $j("#extendedLogging:checked").length == 1;
+   }
 
    /**
     * This functions handles the recommendation workflow. It changes the UI and triggers the
@@ -410,6 +418,63 @@ var EEXCESS_METHODS = function () {
 
       }
    };
+
+   /**
+    * This method deals with certain actions that the user can perform, namely:
+    *    1. Cite a resource.
+    *    2. Embed an image.
+    *    3. Look at the detail page of a resource.
+    * It than sends an AJAX-request to the privacy proxy in order to inform him
+    * about the action that has just been taken.
+    *
+    * @param action: A string reprentating the action. Valid strings are:
+    *                "cited", "image_embedded" and "detail_view".
+    * @param trigger: The object(button or link) that was used to trigger the
+    *                 action.
+    *
+    */
+   sendUsersActivitiesSignal = function(action, trigger){
+      switch(action) {
+         case "cited":
+            var resource = $j(trigger).parent().find("a").attr("href");
+            break;
+         case "image_embedded":
+            var resource = $j(trigger).parent().find("a").attr("href");
+            break;
+         case "detail_view":
+            var resource = $j(trigger).attr("href");
+            break;
+         default:
+            throw new Error("Unknkown action");
+      }
+
+      var timestamp = Date.now().toString(),
+      query = $j("#searchQuery").text(),
+      uuid = $j($j(trigger).parents()[2]).attr("data-id");
+
+      var data = {
+         "action": "advanced_logging",//this is required for selecting the a server-side php method
+         "resource": resource,
+         "timestamp": timestamp,
+         "type": "view",
+         "query": query,
+         "beenRecommended": "true",
+         "action-taken": action,
+         "uuid": uuid
+      };
+
+      $j.ajax({
+         type: "POST",
+         url: ajaxurl,
+         data: data,
+         context: trigger,
+         success: function(response, status, jqXHR){
+            if(response.search("200 OK") === -1){
+               console.log("Processing advanced logs failed");
+            }
+         }
+      });
+   }
 
 
    /**
@@ -690,7 +755,9 @@ var EEXCESS_METHODS = function () {
       getCursor: getCursor,
       getContent: getContent,
       setContent: setContent,
-      determineDecentInsertPosition: determineDecentInsertPosition
+      determineDecentInsertPosition: determineDecentInsertPosition,
+      extendedLoggingEnabled: extendedLoggingEnabled,
+      sendUsersActivitiesSignal: sendUsersActivitiesSignal
    };
 };
 

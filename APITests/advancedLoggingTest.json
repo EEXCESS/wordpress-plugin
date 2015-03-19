@@ -1,0 +1,12 @@
+{
+    "origin": "WP",
+    "resource" : "http://www.econbiz.de/Record/10009492734",
+    "timestamp" : 1404209607918,
+    "type" : "view",
+    "context" : {
+        "query" : "loom"
+    },
+    "beenRecommended" : true,
+    "action" : "result-view",
+    "uuid" : "E993A29B-A063-426D-896E-131F85193EB7"
+}
