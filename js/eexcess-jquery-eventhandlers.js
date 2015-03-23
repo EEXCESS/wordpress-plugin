@@ -82,7 +82,12 @@ $j(document).ready(function() {
       citationText = "";
 
       if(eexcessMethods.extendedLoggingEnabled()){
-         sendUsersActivitiesSignal("cited", this);
+         try{
+            sendUsersActivitiesSignal("cited", this);
+         }catch(e){
+            console.log("Logging failed. Message was: " + e.message);
+         }
+
       }
 
       if(citationStyle == "default"){
@@ -183,7 +188,11 @@ $j(document).ready(function() {
       content = eexcessMethods.getContent();
 
       if(eexcessMethods.extendedLoggingEnabled()){
-         sendUsersActivitiesSignal("image_embedded", this);
+         try{
+            sendUsersActivitiesSignal("image_embedded", this);
+         }catch(e){
+            console.log("Logging failed. Message was: " + e.message);
+         }
       }
 
       var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
@@ -196,7 +205,11 @@ $j(document).ready(function() {
     */
    $j(document).on("mousedown", ".recommendationTextArea a", function(){
       if(eexcessMethods.extendedLoggingEnabled()){
-         sendUsersActivitiesSignal("detail_view", this);
+         try{
+            sendUsersActivitiesSignal("detail_view", this);
+         }catch(e){
+            console.log("Logging failed. Message was: " + e.message);
+         }
       }
    });
 });
