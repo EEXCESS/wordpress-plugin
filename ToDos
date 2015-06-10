@@ -1,3 +1,4 @@
+KNOWN ISSUES
 - Language for ZBW entries is always "de". Irrespective of the actual language of the recommended item. (see https://digital-jira.joanneum.at/browse/EEX-216)
 - Vagrantfile doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
 - The "Results on" field is not filled when the tag-method (i.e. #exceess: keyword #) is used
@@ -5,3 +6,14 @@
 - number of results should be displayed
 - filteroptions for the resultslist
 - dynamic change of the citationstyle
+
+
+TODOS/Upcoming improvements
+- Incorporating EEXCESS modules
+   - Recommendation dashboard
+   - Result list (optional)
+- Polish the plug-in up, to make it available in the plug-in market at wordpress.com
+- Implement the latest exchange format (https://github.com/EEXCESS/documentation/blob/master/result-format-proposal.md)
+- Make use if the new citation module (https://github.com/EEXCESS/c4/tree/master/CitationBuilder)
+- Implement user profiles
+- Make use of citeproc-js' localization skills
