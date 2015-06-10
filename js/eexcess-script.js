@@ -40,6 +40,19 @@ var EEXCESS_METHODS = function () {
       this.searchQueryReflection.hide();
    },
 
+   getFile = function(path){
+      var request = $j.ajax({
+         type: "GET",
+         url: path,
+         async: false,
+      });
+      if(request.status == 200){
+         return request.responseText;
+      }else{
+         return null;
+      }
+   },
+
    /**
     * This function is triggered by the keyup-event in the tinyMCE-editor (visual-editor in
     * wordpress terminology aka WYSIWYG-Editor). It searches the so far written text for a
@@ -730,6 +743,7 @@ var EEXCESS_METHODS = function () {
     * modifier whereas objects that are not mentioned in the return object remain "private".
     */
    return {
+      getFile: getFile,
       init: init,
       extractTerm: extractTerm,
       assessKeystroke: assessKeystroke,

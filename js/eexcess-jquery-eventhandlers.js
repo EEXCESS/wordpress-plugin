@@ -116,17 +116,16 @@ $j(document).ready(function() {
                return;
             }
          }else{
-            var citationProcessor = new CITATION_PROCESSOR();
-            citationProcessor.init(pluginURL.pluginsPath + EEXCESS.citeproc.localsDir + 'locales-en-US.xml',
-               pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl',
-               JSON.parse(eexcessMethods.readMetadata(this)));
-            citationText = citationProcessor.renderCitations();
+            citationText = CitationProcessor(JSON.parse(eexcessMethods.readMetadata(this)),
+               eexcessMethods.getFile(pluginURL.pluginsPath + EEXCESS.citeproc.localsDir + 'locales-en-US.xml'),
+               eexcessMethods.getFile(pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl'));
+            if(citationText.hasOwnProperty("length")){
+               if(citationText.length > 0){
+                  citationText = citationText[0];
+               }
+            }
 
-            // citeproc delivers its output within a <div>-tag. due to some weired transformation that
-            // tinyMCE applies on these tags, they are replaced by <p>-tags.
-            //citationText = citationText.replace("<div", "<p contenteditable=\"false\"");
-            citationText = citationText.replace("<div", "<p");
-            citationText = citationText.replace("</div>", "</p>");
+            citationText = '<p class="csl-entry">' + citationText + "</p>";
             citationText = $j(citationText).attr("contenteditable", "false")[0].outerHTML;
 
             // how many citations are already included in the text?
