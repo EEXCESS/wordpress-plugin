@@ -51,9 +51,7 @@ limitations under the License.
          wp_enqueue_script( 'eexcess-jquery-plugins', plugins_url( '/js/eexcess-jquery-plugins.js', __FILE__ ), array('jquery') );
          //wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
          //for citeproc
-         wp_enqueue_script( 'CLSWrapper', plugins_url( '/js/CLSWrapper.js', __FILE__ ), array('jquery', 'eexcess-xmldom', 'eexcess-citeproc') );
-         wp_enqueue_script( 'eexcess-citeproc', plugins_url( '/js/lib/citeproc.js', __FILE__ ));
-         wp_enqueue_script( 'eexcess-xmldom', plugins_url( '/js/lib/xmldom.js', __FILE__ ));
+         wp_enqueue_script( 'eexcess-citeproc', plugins_url( '/js/lib/citationBuilder.js', __FILE__ ));
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
          wp_enqueue_style( 'onOffSwitch', plugins_url( '/styles/toggle-switch.css', __FILE__ ) );
@@ -155,7 +153,7 @@ limitations under the License.
          <?php
             // corresponds to EEXCESS.citeproc.stylesDir from eexcess-settings.js.
             // unfortunatley there is no way to share that variable. At least AFAIK.
-            $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citeproc-js/citionStyles';
+            $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citationStyles';
             if ($handle = opendir($citeprocStylesPath)) {
                while (false !== ($entry = readdir($handle))) {
                   if ($entry != "." && $entry != "..") {

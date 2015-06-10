@@ -1,7 +1,7 @@
 # 0.5 (2014-12-04)
 
 ###Features:
-   - Added new Citationsstyles:
+   - Added new Citations styles:
       - DIN 1505-2
       - Harvard - Gesellschaft für Bildung und Forschung in Europa (German)
    - Meaningful text for inserted Links (not any longer the static 'link'). It's derived from the search phrase.
