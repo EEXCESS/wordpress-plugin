@@ -1,0 +1,1 @@
+curl -v -H "Accept: application/json" -H "Content-Type: application/json" -d @bareMinimum.json http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend 2>/dev/null | python -m json.tool | less

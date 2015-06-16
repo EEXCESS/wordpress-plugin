@@ -95,7 +95,7 @@ limitations under the License.
                            <div class="eexcess-previewPlaceholder"></div>
                         {{/if}}
                         <div class="recommendationTextArea">
-                           <a target="_blank" href="{{uri}}">{{title}}</a>
+                           <a target="_blank" href="{{documentBadge.uri}}">{{title}}</a>
                            </br>
                            {{#if creator}}
                               Creator: {{creator}}
@@ -209,8 +209,11 @@ limitations under the License.
    // Callback function for the Ajax call
    function get_recommendations() {
       // Read the term form the POST variable
-      $items = $_POST['terms'];
-      $context = $_POST['trigger'];
+      /*$items = $_POST['terms'];
+      $trigger = $_POST['trigger'];
+      $contextKeywords = $_POST['contextKeywords'];*/
+      $payload = $_POST['payload'];
+      //var_dump($payload);
 
       /**
        * URL: http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend
@@ -219,33 +222,23 @@ limitations under the License.
        * DEV: http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend
        * Privacy Proxy
        */
+      // new Format
+      $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend";
+
       //dev
       //$proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
 
       //stable
-      $proxyURL = "http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
-
-      // Data for the api call
-      $postData = array(
-         "numResults" => 100,
-         "contextKeywords" => array(),
-         "context" => array("reason" => $context, "value" => "")
-      );
-
-      // Creating the context list for the api call
-      foreach($items as $term) {
-         array_push($postData["contextKeywords"], array( "weight" => strval (1.0 / sizeof($items)), "text" => $term ));
-      }
+      // $proxyURL = "http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
 
       // Create context for the API call
       $context = stream_context_create(array(
          'http' => array(
             'method' => 'POST',
-            'header' => array("Content-Type: application/json", "Origin: WP"),
-            'content' => json_encode($postData)
+            'header' => array("Content-Type: application/json", "Accept: application/json", "Origin: WP"),
+            'content' => json_encode($payload)
          )
       ));
-
       // Send the request and return the result
       echo @file_get_contents($proxyURL, FALSE, $context);
 
@@ -274,8 +267,11 @@ function advanced_logging() {
     * DEV: http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend
     * Privacy Proxy
     */
+   // new Format
+   $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend";
+
    //dev
-   $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/log/rview";
+   //$proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/log/rview";
 
    //stable
    //$proxyURL = "http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/log/rview";

@@ -1,0 +1,29 @@
+{
+   "documentBadge":[
+      {
+         "id":"/9200134/BibliographicResource_2000000012526",
+         "uri":"http://europeana.eu/resolve/record/9200134/BibliographicResource_2000000012526",
+         "provider":"Europeana"
+      },
+      {
+         "id":"sl23428166",
+         "uri":"http://service.wissens-server.com/wissensserver/view.html?a=t&r=CURRENT&i=sl23428166&s=BEP&v=eexcess&w=EEXCESS",
+         "provider":"wissenmedia"
+      },
+      {
+         "id":"/9200134/BibliographicResource_2000000012526",
+         "uri":"http://europeana.eu/resolve/record/9200134/BibliographicResource_2000000012526",
+         "provider":"Europeana"
+      },
+      {
+         "id":"995eb36f-151d-356c-b00c-4ef419bc2124",
+         "uri":"http://www.mendeley.com/research/hellenism-homoeroticism-shelley-circle",
+         "provider":"Mendeley"
+      },
+      {
+         "id":"DIST_000003457",
+         "uri":"http://www.kim.bl.openinteractive.ch/sammlungen#9ef343c7-aa70-487f-bcbe-64a5bdf1affa",
+         "provider":"KIM.Portal"
+      }
+   ]
+}

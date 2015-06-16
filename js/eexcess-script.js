@@ -304,7 +304,7 @@ var EEXCESS_METHODS = function () {
     *
     * @param data: The query that will be sent to the recommender.
     */
-   getRecommendations = function(data) {
+   getRecommendations = function(recommendationData) {
       // Hide the resullist. It could be visiable due to prior use
       this.resultList.hide("slow");
       this.searchQueryReflection.hide("slow");
@@ -317,6 +317,82 @@ var EEXCESS_METHODS = function () {
       // this kills a previous request
       if(this.request != null){
          this.request.abort();
+      }
+
+      var terms = recommendationData.terms,
+      // The object to be transfered with a lot of junk currently.
+      data = {
+         "action": recommendationData.action,
+         "trigger": recommendationData.trigger,
+         "payload": {
+            "partnerList":[
+               {
+                  "systemId":"Europeana"
+               },
+               {
+                  "systemId":"Wissenmedia"
+               },
+               {
+                  "systemId":"Mendeley"
+               },
+               {
+                  "systemId":"Deutsche Digitale Bibliothek"
+               },
+               {
+                  "systemId":"ZBW"
+               },
+               {
+                  "systemId":"KIMPortal"
+               }
+            ],
+            "protectedPartnerList":[
+
+            ],
+            "queryID":"1234COFFEE",
+            "firstName":"Max",
+            "lastName":"Musterman",
+            "birthDate":1433924619545,
+            "numResults":100,
+            "gender":"male",
+            "address":{
+               "country":"testcountry",
+               "zipCode":1213345,
+               "city":"testcity",
+               "line1":"nothing",
+               "line2":"to add"
+            },
+            "timeRange":{
+               "start":"1940",
+               "end":"1980"
+            },
+            "contextKeywords":[],
+            "context":{
+               "reason":"manual",
+               "value":"www.wikipedia.at"
+            },
+            "interests":[
+               {
+                  "text":"text",
+                  "weight":0.1,
+                  "confidence":0.1,
+                  "competenceLevel":0.1,
+                  "source":"source",
+                  "uri":"http://dsjkdjas.de"
+               },
+               {
+                  "text":"text2",
+                  "weight":0.2,
+                  "confidence":0.2,
+                  "competenceLevel":0.2,
+                  "source":"source2",
+                  "uri":"http://google.de"
+               }
+            ]
+         }
+      };
+
+      for(term in terms){
+         data.payload.contextKeywords.push({"text": terms[term], "weight": 1/terms.length});
       }
 
       this.request = $j.ajax({

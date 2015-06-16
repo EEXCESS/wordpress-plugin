@@ -1,11 +1,11 @@
 KNOWN ISSUES
 - Language for ZBW entries is always "de". Irrespective of the actual language of the recommended item. (see https://digital-jira.joanneum.at/browse/EEX-216)
-- Vagrantfile doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
+- Vagrant file doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
 - The "Results on" field is not filled when the tag-method (i.e. #exceess: keyword #) is used
-- errorhandling should be enhanced. especially when the recommender doesn't answer!
+- error handling should be enhanced. especially when the recommender doesn't answer!
 - number of results should be displayed
-- filteroptions for the resultslist
-- dynamic change of the citationstyle
+- filter options for the results list
+- dynamic change of the citation style
 
 
 TODOS/Upcoming improvements
@@ -13,7 +13,8 @@ TODOS/Upcoming improvements
    - Recommendation dashboard
    - Result list (optional)
 - Polish the plug-in up, to make it available in the plug-in market at wordpress.com
-- Implement the latest exchange format (https://github.com/EEXCESS/documentation/blob/master/result-format-proposal.md)
-- Make use if the new citation module (https://github.com/EEXCESS/c4/tree/master/CitationBuilder)
 - Implement user profiles
 - Make use of citeproc-js' localization skills
+- Nice features:
+   - Displaying the providers that contributed to the result
+   - Giving the user the opportunity to influence the number of results (and thereby the response time)
