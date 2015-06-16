@@ -100,13 +100,13 @@ limitations under the License.
                            {{#if creator}}
                               Creator: {{creator}}
                            {{else}}
-                              Provider: {{facets.provider}}
+                              Provider: {{documentBadge.provider}}
                            {{/if}}
                            <br/>
-                           {{#if facets.year}}
-                              Published: {{facets.year}}
+                           {{#if date}}
+                              Published: {{date}}
                            {{else}}
-                              Language: {{facets.language}}
+                              Language: {{language}}
                            {{/if}}
 
                            <br/>
@@ -120,13 +120,13 @@ limitations under the License.
                               <input type="hidden" name="description" value="{{description}}">
                            {{/if}}
                            {{#if eexcessURI}}
-                              <input type="hidden" name="eexcessURI" value="{{eexcessURI}}">
+                              <input type="hidden" name="eexcessURI" value="{{documentBadge.uri}}">
                            {{/if}}
                            {{#if facets.year}}
-                              <input type="hidden" name="facets.year" value="{{facets.year}}">
+                              <input type="hidden" name="facets.year" value="{{date}}">
                            {{/if}}
                            {{#if facets.language}}
-                              <input type="hidden" name="facets.language" value="{{facets.language}}">
+                              <input type="hidden" name="facets.language" value="{{language}}">
                            {{/if}}
                            {{#if id}}
                               <input type="hidden" name="id" value="{{id}}">
