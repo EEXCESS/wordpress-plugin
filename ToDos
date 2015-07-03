@@ -18,3 +18,6 @@ TODOS/Upcoming improvements
 - Nice features:
    - Displaying the providers that contributed to the result
    - Giving the user the opportunity to influence the number of results (and thereby the response time)
+- Uploading the project to Wordpress Plugin Directory
+   - Creation of good readme file (https://wordpress.org/plugins/about/readme.txt ). Covering “What, how, when and where” questions.
+   - Upload to Wordpress' SVN repo

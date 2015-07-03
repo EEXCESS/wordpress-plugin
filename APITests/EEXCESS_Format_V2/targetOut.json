@@ -1,0 +1,29 @@
+{
+    "documentBadge": [
+        {
+            "detail": {
+                "eexcessProxy": {
+                    "dccreator": [
+                        {
+                            "content": "Lenze, Jana",
+                            "xmlnsdc": "http:\\/\\/purl.org\\/dc\\/elements\\/1.1\\/"
+                        },
+                        {
+                            "content": "Klasen, Stephan",
+                            "xmlnsdc": "http:\\/\\/purl.org\\/dc\\/elements\\/1.1\\/"
+                        }
+                    ],
+                    "dcdescription": "Enhancing women&#146;s participation in the labour force has been seen as a way to promote their empowerment which in turn is believed to enhance their well-being and well-being of their children. However, the empirical literature on the relationship between women&#146;s employment status and domestic violence is less clear-cut. Motivated by this ambiguity, this study explores the effect of women&#146;s employment measured by their participation in paid work outside the home on reported spousal violence, based on quantitative data from Jordan in 2007. A notable feature of this paper is that it controls for the potential endogeneity of women&#146;s employment which might bias the relationship between employment and spousal violence. Disregarding the issue of endogeneity, the first regression results suggest that woman&#146;s participation in paid work enhances violence by her husband. After controlling for endogeneity of female employment using instrumental variable estimation, however, these results turn out to be insignificant, which suggests that women&#146;s work status has no causal influence on marital violence.",
+                    "dcidentifier": "10010330023",
+                    "dctermsdate": "2013",
+                    "dctitle": "The Impact of Women's Labour Force Participation on Domestic Violence in Jordan",
+                    "edmeuropeanaProxy": "false",
+                    "edmlanguage": "de"
+                }
+            },
+            "id": "10010330023",
+            "provider": "ZBW",
+            "uri": "http://www.econbiz.de/Record/10010330023"
+        }
+    ]
+}
