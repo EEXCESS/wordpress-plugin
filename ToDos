@@ -9,11 +9,10 @@ KNOWN ISSUES
 
 
 TODOS/Upcoming improvements
-- Incorporating EEXCESS modules
+- Incorporating EEXCESS modules [Nils]
    - Recommendation dashboard
    - Result list (optional)
-- Polish the plug-in up, to make it available in the plug-in market at wordpress.com
-- Implement the latest exchange format (https://github.com/EEXCESS/documentation/blob/master/result-format-proposal.md)
-- Make use if the new citation module (https://github.com/EEXCESS/c4/tree/master/CitationBuilder)
-- Implement user profiles
-- Make use of citeproc-js' localization skills
+- Polish the plug-in up, to make it available in the plug-in market at wordpress.com [Atif (Documentation), Nils (Code)]
+- Implement the latest exchange format (https://github.com/EEXCESS/documentation/blob/master/result-format-proposal.md) [Nils]
+- Implement user profiles [Atif (HTML form), Nils (Code)]
+- Make use of citeproc-js' localization skills [Nils]
