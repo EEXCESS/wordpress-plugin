@@ -83,7 +83,7 @@ limitations under the License.
          <div id="recommendationList">
             <ul id="eexcess-recommendationList">
                {{#each result}}
-                  <li data-id="{{id}}">
+                  <li data-id="{{documentBadge.id}}">
                      <div>
                         {{#if previewImage}}
                            <div class="eexcess-previewPlaceholder">
@@ -96,20 +96,16 @@ limitations under the License.
                         {{/if}}
                         <div class="recommendationTextArea">
                            <a target="_blank" href="{{documentBadge.uri}}">{{title}}</a>
-                           </br>
                            {{#if creator}}
-                              Creator: {{creator}}
+                              <div class="creator">Creator: {{creator}}</div>
                            {{else}}
-                              Provider: {{documentBadge.provider}}
+                              <div class="provider">Provider: {{documentBadge.provider}}</div>
                            {{/if}}
-                           <br/>
                            {{#if date}}
-                              Published: {{date}}
+                              <div class="published">Published: {{date}}</div>
                            {{else}}
-                              Language: {{language}}
+                              <div class="language">Language: {{language}}</div>
                            {{/if}}
-
-                           <br/>
                            {{#if collectionName}}
                               <input type="hidden" name="collectionName" value="{{collectionName}}">
                            {{/if}}
@@ -208,13 +204,7 @@ limitations under the License.
 
    // Callback function for the Ajax call
    function get_recommendations() {
-      // Read the term form the POST variable
-      /*$items = $_POST['terms'];
-      $trigger = $_POST['trigger'];
-      $contextKeywords = $_POST['contextKeywords'];*/
       $payload = $_POST['payload'];
-      //var_dump($payload);
-
       /**
        * URL: http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend
        * Alternative URL: http://132.231.111.197:8080/eexcess-privacy-proxy/api/v1/recommend
@@ -223,7 +213,7 @@ limitations under the License.
        * Privacy Proxy
        */
       // new Format
-      $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/recommend";
+      $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/recommend";
 
       //dev
       //$proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend";
@@ -244,6 +234,31 @@ limitations under the License.
 
 	   die(); // this is required to return a proper result
    }
+
+
+   // Ajax action handler
+   add_action( 'wp_ajax_get_details', 'get_details' );
+
+   // Callback function for the Ajax call
+   function get_details() {
+      $payload = $_POST['payload'];
+
+      $proxyURL = "http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails";
+      
+      // Create context for the API call
+      $context = stream_context_create(array(
+         'http' => array(
+            'method' => 'POST',
+            'header' => array("Content-Type: application/json", "Accept: application/json", "Origin: WP"),
+            'content' => json_encode($payload)
+         )
+      ));
+      // Send the request and return the result
+      echo @file_get_contents($proxyURL, FALSE, $context);
+
+	   die(); // this is required to return a proper result
+   }
+
 
 ///////////advanced logging///////////////
 

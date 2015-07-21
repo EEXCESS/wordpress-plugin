@@ -322,7 +322,7 @@ var EEXCESS_METHODS = function () {
       var terms = recommendationData.terms,
       // The object to be transfered with a lot of junk currently.
       data = {
-         "action": recommendationData.action,
+         "action": recommendationData.recommendation_action,
          "trigger": recommendationData.trigger,
          "payload": {
             "partnerList":[
@@ -399,7 +399,7 @@ var EEXCESS_METHODS = function () {
          type: "POST",
          url: ajaxurl,
          data: data,
-         success: ajaxCallbackSuccess,
+         success: recommendSuccessCallback,
          context: this
       });
    },
@@ -414,7 +414,7 @@ var EEXCESS_METHODS = function () {
     * @params: refer to http://api.jquery.com/jquery.ajax/ and look for the success-
     *          callback method.
     */
-   ajaxCallbackSuccess = function(response, status, jqXHR) {
+    recommendSuccessCallback = function(response, status, jqXHR) {
       if(response != "") {
          // no longer needed, since the operation has completed and thus
          // the abortion is no longer an option and the button can be faded away.
@@ -426,6 +426,28 @@ var EEXCESS_METHODS = function () {
          // parsing the JSON string
          var o = JSON.parse(response);
          $j("#numResults").text(o["totalResults"]);
+
+         // prepare the "getdetails" call date
+         var badges = { "documentBadge": [] };
+         for(var i=0; i<o.result.length; i++){
+            badges.documentBadge.push(o.result[i].documentBadge);
+         }
+
+         // The object to be transfered with a lot of junk currently.
+         data = {
+            "action": EEXCESS.recommendationData.get_details_action,
+            "trigger": EEXCESS.recommendationData.trigger,
+            "payload": badges
+         };
+
+         // Query for details
+         this.request = $j.ajax({
+            type: "POST",
+            url: ajaxurl,
+            data: data,
+            success: getdetailsSuccessCallback,
+            context: this
+         });
 
          // Using Handlebars.js to compile the template. See http://handlebarsjs.com/ for documentation.
          var template = Handlebars.compile($j("#list-template").html());
@@ -507,6 +529,52 @@ var EEXCESS_METHODS = function () {
 
       }
    };
+
+
+   /**
+    * The callback-function that is invoked when the recommenders answer arrives. It
+    * updates the UI and displays the results accordingly. when there are no matches
+    * an errormessage will be displayed.
+    * this functions is private (i.e. it can only by used inside of EEXCESS_METHODS
+    * objects).
+    *
+    * @params: refer to http://api.jquery.com/jquery.ajax/ and look for the success-
+    *          callback method.
+    */
+   getdetailsSuccessCallback = function(response, status, jqXHR) {
+      var o = JSON.parse(response);
+
+      // substitute information about publication date with information about
+      // the creatos whenever available
+      for(var i=0; i<o.documentBadge.length; i++){
+         if("dccreator" in o.documentBadge[i].detail.eexcessProxy){
+            var creators = o.documentBadge[i].detail.eexcessProxy.dccreator;
+            var authorString = "";
+
+            // one creator -> type = string
+            // multiple creators -> type =  object
+            if(typeof(creators) === "string"){
+               authorString = creators;
+            } else{
+               for(var c=0; c<creators.length; c++){
+                  if(typeof(creators[c]) === "string"){
+                     authorString += creators[c] + ", ";
+                  }
+               }
+               //removing last ", "
+               if(authorString.length - 2 >= 0){
+                  authorString = authorString.slice(0, authorString.length - 2);
+               }
+            }
+
+            $j("li[data-id=" + o.documentBadge[i].detail.eexcessProxy.dcidentifier + "]")
+            .find("div[class='published']")
+            .addClass("creator")
+            .removeClass("published")
+            .text("Creator: " + authorString);
+         }
+      }
+   }
 
    /**
     * This method deals with certain actions that the user can perform, namely:

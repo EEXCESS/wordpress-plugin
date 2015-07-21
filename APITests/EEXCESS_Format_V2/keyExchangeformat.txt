@@ -1,0 +1,32 @@
+## recommendation
+
+"resultGroup":[]
+"documentBadge":{
+   "id":"7IFQ6FBY3PI3B3S4Q5ZVQTL77PMQ2D5M"
+   "uri":"https://www.deutsche-digitale-bibliothek.de/item/7IFQ6FBY3PI3B3S4Q5ZVQTL77PMQ2D5M"
+   "provider":"Deutsche Digitale Bibliothek"
+}
+"mediaType":"image"
+"title":"Oben links: Lovelace ergreift dankbar Clarisse´ Hand."
+"description":"Hofschule Karls des GroßenHofschule Kạrls des Großen, Bezeichnung für die Buchmalerei am Hof Karls des Großen in Aachen, insbesondere für zehn karolingische Handschriften, die in Format und Bildprogramm weitgehend übereinstimmen; nach einem..."
+"date":"unknown"
+"language":"unknown"
+"licence":"https://creativecommons.org/publicdomain/zero/1.0/"
+"generatingQuery":"ada OR lovelace"
+"previewImage":"https://www.deutsche-digitale-bibliothek.de/binary/7IFQ6FBY3PI3B3S4Q5ZVQTL77PMQ2D5M/list/1.jpg"
+
+
+## getDetails
+
+"dcidentifier":"sl23330288"
+"wgs84lat":{},
+"dctitle":"Hofschule Karls des Großen"
+"edmeuropeanaProxy":"false"
+"wgs84long":{}
+"edmlanguage":"de"
+"dccreator":"Gius, Mark P."
+"dctermsdate":"2010-02-05T03:43:19Z"
+"dcdescription":"Hofschule Karls des GroßenHofschule Kạrls des Großen, Bezeichnung für die Buchmalerei am Hof Karls des Großen in Aachen, insbesondere für zehn karolingische Handschriften, die in Format und Bildprogramm weitgehend übereinstimmen; nach einem..."
+"edmcollectionName":"DISTL Herwegh-Archiv"
+"edmrights":"http://creativecommons.org/licenses/by-nc-sa/4.0/"
+"dcsubject":"Medicare Coordinated Care Lovelace"

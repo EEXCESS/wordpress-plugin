@@ -6,7 +6,8 @@ var EEXCESS = {
       "textSpan" : 2 // the amount of words send
    },
    "recommendationData" : { // The object for the ajax call
-      "action" : "get_recommendations", // serverside function
+      "recommendation_action" : "get_recommendations", // serverside function for recommendation
+      "get_details_action" : "get_details", // serverside function for geteDetails
       "terms" : [], // the keywords
       "trigger" : "default" //the trigger that started the recommendation workflow
    },
