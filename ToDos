@@ -9,15 +9,14 @@ KNOWN ISSUES
 
 
 TODOS/Upcoming improvements
-- Incorporating EEXCESS modules
+- Incorporating EEXCESS modules [Nils]
    - Recommendation dashboard
    - Result list (optional)
-- Polish the plug-in up, to make it available in the plug-in market at wordpress.com
-- Implement user profiles
-- Make use of citeproc-js' localization skills
-- Nice features:
+- Implement user profiles [Nils]
+- Make use of citeproc-js' localization skills [Nils]
+- Nice features [optional, no assignment:
    - Displaying the providers that contributed to the result
    - Giving the user the opportunity to influence the number of results (and thereby the response time)
 - Uploading the project to Wordpress Plugin Directory
-   - Creation of good readme file (https://wordpress.org/plugins/about/readme.txt ). Covering “What, how, when and where” questions.
-   - Upload to Wordpress' SVN repo
+   - Creation of good readme file (https://wordpress.org/plugins/about/readme.txt ). Covering “What, how, when and where” questions. [Atif]
+   - Upload to Wordpress' SVN repo [Nils]
