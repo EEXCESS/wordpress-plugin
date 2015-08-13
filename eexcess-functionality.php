@@ -27,35 +27,44 @@ limitations under the License.
 <?php
    add_action( 'admin_init', 'init_eexcess_plugin' );
 
-   // Prepare stuff
    function init_eexcess_plugin() {
       global $pagenow;
-
-      // Register the script first.
-      wp_register_script( 'some_handle', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ) );
-      // Now we can localize the script with our data.
-      $translation_array = array( 'pluginsPath' => plugin_dir_url( __FILE__ ) );
-      wp_localize_script( 'some_handle', 'pluginURL', $translation_array );
-      // The script can be enqueued now or later.
-      wp_enqueue_script( 'some_handle' );
-
+      
       // Load the scripts for the post creation / editing page
       if($pagenow == 'post-new.php' || $pagenow == 'post.php') {
-         // init jQuery
-         wp_enqueue_script('jquery');
-         // init JavaScript
+
+         $eventsScripts = array(
+            'jquery-ui-sortable',
+            'wp-backbone'
+            );
+         wp_deregister_script( $eventsScripts );
+
+         wp_enqueue_script( 'jquery' );
+         wp_enqueue_script( 'requirejs', plugins_url( '/js/lib/require.js', __FILE__ ));
          wp_enqueue_script( 'eexcess-settings', plugins_url( '/js/eexcess-settings.js', __FILE__ ), array('jquery') );
          wp_enqueue_script( 'eexcess-pagination-script', plugins_url( '/js/lib/jquery.paginate.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-templating-script', plugins_url( '/js/lib/handlebars-v1.3.0.js', __FILE__), array('jquery') );
          wp_enqueue_script( 'eexcess-script', plugins_url( '/js/eexcess-script.js', __FILE__ ), array('jquery') );
          wp_enqueue_script( 'eexcess-jquery-plugins', plugins_url( '/js/eexcess-jquery-plugins.js', __FILE__ ), array('jquery') );
-         //wp_enqueue_script( 'eexcess-jquery-eventhandlers', plugins_url( '/js/eexcess-jquery-eventhandlers.js', __FILE__ ), array('jquery') );
-         //for citeproc
+         // for citeproc
          wp_enqueue_script( 'eexcess-citeproc', plugins_url( '/js/lib/citationBuilder.js', __FILE__ ));
+
+         // for requireJS testing purposes
+         wp_enqueue_script( 'resultslist', plugins_url( '/js/resultList.js', __FILE__ ));
+        
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
          wp_enqueue_style( 'onOffSwitch', plugins_url( '/styles/toggle-switch.css', __FILE__ ) );
       }
+   }
+
+   add_filter( 'script_loader_tag', 'my_script_loader_tag', 10, 3 );
+   function my_script_loader_tag( $tag, $handle, $src ) {
+      if ( 'requirejs' == $handle ) {
+         $app = plugins_url( '/js/resultList.js', __FILE__ );
+         $tag = "<script data-main='{$app}' src='{$src}'></script>\n";
+      }
+      return $tag;
    }
 
    add_action( 'add_meta_boxes', 'myplugin_add_meta_box' );
@@ -161,6 +170,9 @@ limitations under the License.
             }
          ?>
       </select>
+      <div id="iframeFoo">
+         <iframe src=<?php echo plugin_dir_url(__FILE__) . 'visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
+      </div>
       <div id="searchQueryReflection" class="searchQueryReflection">
          <span id="numResults"></span> Results on:
          <span id="searchQuery" style="color: #000000"></span>
