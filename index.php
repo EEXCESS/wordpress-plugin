@@ -39,6 +39,8 @@ limitations under the License.
             );
          wp_deregister_script( $eventsScripts );
          wp_enqueue_script( 'requirejs', plugins_url( '/js/lib/require.js', __FILE__ ));
+
+         // make the plugins url available in scripts
          wp_localize_script( 'requirejs', 'plugin_url', plugins_url( '/', __FILE__ ) );
 
          // init styles
@@ -51,7 +53,7 @@ limitations under the License.
    add_filter( 'script_loader_tag', 'my_script_loader_tag', 10, 3 );
    function my_script_loader_tag( $tag, $handle, $src ) {
       if ( 'requirejs' == $handle ) {
-         $app = plugins_url( '/requireJSConfig.js', __FILE__ );
+         $app = plugins_url( '/js/requireJSConfig.js', __FILE__ );
          $tag = "<script data-main='{$app}' src='{$src}'></script>\n";
       }
       return $tag;
@@ -102,7 +104,7 @@ limitations under the License.
          <span id="searchQuery" style="color: #000000"></span>
       </div>
       <div id="resultList">
-         <iframe src=<?php echo plugin_dir_url(__FILE__) . 'js/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
+         <iframe id="resultList" src=<?php echo plugin_dir_url(__FILE__) . 'js/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
       </div>
       <div id="content">
          <p>
@@ -144,12 +146,13 @@ limitations under the License.
    // Setting up the onKeyUp event for the WYSIWYG editor
    function tiny_mce_before_init( $initArray ) {
       $initArray['setup'] = "function(ed) {
-         ed.onKeyUp.add(function(ed, e) {
-            eexcessMethods.extractTerm(ed);
-         });
          ed.onKeyDown.add(function(ed, e) {
-            eexcessMethods.assessKeystroke(e);
-         });
+            require(['recommendationEventsHelper'], function(helper){
+               if(helper.assessKeystroke(e)){
+                  helper.getTextAndRecommend();
+               }
+            });
+         })
       }";
       return $initArray;
    }
@@ -171,8 +174,8 @@ limitations under the License.
 
    // inlcude the js for tinymce
    function EEXCESS_add_tinymce_plugin( $plugin_array ) {
-      $plugin_array['EEXCESS_get_recommendations'] = plugins_url( 'js/tinyMCE_Get_Recommendations_Button.js', __FILE__ );
-      $plugin_array['EEXCESS_alter_citations'] = plugins_url( 'js/tinyMCE_Alter_Citations_Button.js', __FILE__ );
+      $plugin_array['EEXCESS_get_recommendations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Get_Recommendations_Button.js', __FILE__ );
+      $plugin_array['EEXCESS_alter_citations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Alter_Citations_Button.js', __FILE__ );
       return $plugin_array;
    }
 

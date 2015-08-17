@@ -1,8 +1,5 @@
 // load dependencies
-require(['APIconnector', 'iframes'], function(api, iframes) {
-    // jQuery is already beening loaded by Wordpress
-    $ = jQuery.noConflict();
-
+require(['jquery', 'APIconnector', 'iframes'], function($, api, iframes) {
     // set the URL of the federated recommender to the stable server
     // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
 

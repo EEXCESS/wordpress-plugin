@@ -1,72 +1,38 @@
-// Avoid jQuery conflicts from different plugins
-$j = jQuery.noConflict();
+require(['jquery'], function($){
+   
+   /*
+    * Handles the "Add as Image" buttons in the recommendation area. It adds Images
+    * to the blogpost.
+    */
+   $(document).on("mousedown", 'input[name="addAsImage"]', function(){
+      var imageURL = $(this).parent().prev().find("a").attr("href"),
+      title = $(this).parent().find("a").text(),
+      snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
+      position = eexcessMethods.getCursor(),
+      content = eexcessMethods.getContent();
 
-$j(document).ready(function() {
-
-   // Triggers the recommendations call by button
-   $j(document).on("mousedown", "#getRecommendations", function(event){
-      eexcessMethods.getSelectedTextAndRecommend(event);
-   });
-
-   // Triggers the recommendations call by keyboard (through ctrl+e)
-   $j(document).on("keydown", "#content", function(e){
-      eexcessMethods.assessKeystroke(e);
-   });
-
-   // Triggers the abort Request button
-   $j(document).on("mousedown", "#abortRequest", function(event){
-      eexcessMethods.request.abort();
-      eexcessMethods.toggleButtons();
-      eexcessMethods.resultList.hide("slow");
-      eexcessMethods.searchQueryReflection.hide("slow");
-      eexcessMethods.spinner.hide("slow", function(){
-         eexcessMethods.introText.show("slow");
-      });
-   });
-
-   // Observe the post title
-   $j(document).on("change", "input[name='post_title']", function() {
-      // get recommendations from title
-      EEXCESS.recommendationData.terms = [$j(this).val().trim()];
-      eexcessMethods.getRecommendations(EEXCESS.recommendationData);
-   });
-
-   // Observe the text editor
-   $j(document).on("keyup", "textarea#content", function(e) {
-      var text  = $j(this).val();
-      var regex = eval("/" + EEXCESS.trigger.marker + ".+" + EEXCESS.trigger.closingTag + "/");
-      if(regex.test(text)) { // Tests if the text contains #eexcess:keywords#
-         var terms = eexcessMethods.getTerms(text, false, true);
-
-         if(terms != null) {
-            EEXCESS.recommendationData.terms = terms;
-            eexcessMethods.getRecommendations(EEXCESS.recommendationData);
-            var cursorPosition = $j(this).getCursorPosition();
-            var text = $j(this).val();
-            var match = text.match(regex);
-            text = text.replace(match[0], match[0].slice(0, match[0].length - 1));
-            text = text.replace(EEXCESS.trigger.marker, "");
-            $j(this).val(text);
-            // setting the cursor position
-            $j(this).selectRange(cursorPosition - EEXCESS.trigger.marker.length - EEXCESS.trigger.closingTag.length);
-         }l
+      if(eexcessMethods.extendedLoggingEnabled()){
+         try{
+            sendUsersActivitiesSignal("image_embedded", this);
+         }catch(e){
+            console.log("Logging failed. Message was: " + e.message);
+         }
       }
+
+      var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
+      var newText = insertIntoText(content, insertionPosition, snippet);
+      eexcessMethods.setContent(newText);
    });
 
-   var generateReference = function(number){
-      number = number.toString();
-      return "<a href=\"#eexcess" + number + "\"><span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
-         number + "\">[" + number + "]</span></a>"
-   }
 
    /*
     * Handles the "Add as Citation" buttons in the recommendation area. It adds citations
     * to the text, depending on the value of the citation style drop down element
     */
-   $j(document).on("mousedown", 'input[name="addAsCitation"]', function(){
-      var url =  $j(this).siblings("a").attr('href'),
-      title = $j(this).siblings("a").text(),
-      citationStyle = $j('#citationStyleDropDown').val(),
+   $(document).on("mousedown", 'input[name="addAsCitation"]', function(){
+      var url =  $(this).siblings("a").attr('href'),
+      title = $(this).siblings("a").text(),
+      citationStyle = $('#citationStyleDropDown').val(),
       cursorPosition = "",
       text = "",
       alreadyCited = -1,
@@ -91,15 +57,15 @@ $j(document).ready(function() {
       }
 
       if(citationStyle == "default"){
-         var searchQuery = $j("#searchQuery").text();
+         var searchQuery = $("#searchQuery").text();
          var newText = eexcessMethods.pasteLinkToText(content, position, url, title, searchQuery);
       } else {
          // if this entry has already been cited. warn the user, ask if he/she wants to continue
          // and act accordingly
-         if($j(this).parent().hasClass("eexcess-alreadyCited")){
+         if($(this).parent().hasClass("eexcess-alreadyCited")){
             if (confirm(EEXCESS.errorMessages.resourceAlreadyInserted) == true) {
                // carry on, as the user ordered
-               alreadyCited = $j(this).parent().attr("data-refnumb");
+               alreadyCited = $(this).parent().attr("data-refnumb");
                position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
                                                                             content,
                                                                             position);
@@ -126,7 +92,7 @@ $j(document).ready(function() {
             }
 
             citationText = '<p class="csl-entry">' + citationText + "</p>";
-            citationText = $j(citationText).attr("contenteditable", "false")[0].outerHTML;
+            citationText = $(citationText).attr("contenteditable", "false")[0].outerHTML;
 
             // how many citations are already included in the text?
             citationsArray = content.match(citationsPattern);
@@ -143,12 +109,12 @@ $j(document).ready(function() {
             citationsPattern.exec(citationText);
 
             referenceNumberSource = generateReference(citations + 1);
-            citationText = $j(citationText).attr("data-eexcessrefid", citations + 1)[0].outerHTML;
+            citationText = $(citationText).attr("data-eexcessrefid", citations + 1)[0].outerHTML;
             referenceNumberDestination = "[<span id=\"eexcess" + (citations + 1).toString() + "\" class=\"refid\">" + (citations + 1).toString() + "</span>]";
 
             position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
 
-            citationText = $j(citationText).html(referenceNumberDestination + $j(citationText).html())[0].outerHTML;
+            citationText = $(citationText).html(referenceNumberDestination + $(citationText).html())[0].outerHTML;
             url = citationText.match(/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/g);
             if(url != null){
                for(var i=0; i<url.length; i++){
@@ -168,47 +134,10 @@ $j(document).ready(function() {
                                         citationText);
                // Change the appearance of the row to make clear to the user,
                // that this object has already been inserted.
-               $j(this).parent().addClass('eexcess-alreadyCited').attr("data-refnumb", citations + 1);
+               $(this).parent().addClass('eexcess-alreadyCited').attr("data-refnumb", citations + 1);
             }
          }
       }
       eexcessMethods.setContent(newText);
-   });
-
-   /*
-    * Handles the "Add as Image" buttons in the recommendation area. It adds Images
-    * to the blogpost.
-    */
-   $j(document).on("mousedown", 'input[name="addAsImage"]', function(){
-      var imageURL = $j(this).parent().prev().find("a").attr("href"),
-      title = $j(this).parent().find("a").text(),
-      snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
-      position = eexcessMethods.getCursor(),
-      content = eexcessMethods.getContent();
-
-      if(eexcessMethods.extendedLoggingEnabled()){
-         try{
-            sendUsersActivitiesSignal("image_embedded", this);
-         }catch(e){
-            console.log("Logging failed. Message was: " + e.message);
-         }
-      }
-
-      var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
-      var newText = insertIntoText(content, insertionPosition, snippet);
-      eexcessMethods.setContent(newText);
-   });
-
-   /*
-    *
-    */
-   $j(document).on("mousedown", ".recommendationTextArea a", function(){
-      if(eexcessMethods.extendedLoggingEnabled()){
-         try{
-            sendUsersActivitiesSignal("detail_view", this);
-         }catch(e){
-            console.log("Logging failed. Message was: " + e.message);
-         }
-      }
    });
 });

@@ -40,35 +40,6 @@ var EEXCESS_METHODS = function () {
       this.searchQueryReflection.hide();
    },
 
-   getFile = function(path){
-      var request = $j.ajax({
-         type: "GET",
-         url: path,
-         async: false,
-      });
-      if(request.status == 200){
-         return request.responseText;
-      }else{
-         return null;
-      }
-   },
-
-   /**
-    * This functions is called when a keyup-event occurs either in the visal-editor
-    * or in the text-editor. It checks if a certain keystroke combo was used (e.g.
-    * ctrl+e). If so, the recommendation workflow is triggered. this workflow is
-    * triggered when ctrl and the key defined in
-    * EEXCESS.keyboardBindungs.getRecommendations are used.
-    *
-    *
-    * @param keyPressed: the object that ist passed to an keylistener-eventhandler.
-    */
-   assessKeystroke = function(keyPressed){
-      if (keyPressed.keyCode == EEXCESS.keyboardBindungs.getRecommendations
-       && keyPressed.ctrlKey){
-      getSelectedTextAndRecommend.call(this, keyPressed);
-      }
-   },
 
    /**
    * Inserts a HTML-link (a-tag) composed of url and title at position
@@ -98,72 +69,6 @@ var EEXCESS_METHODS = function () {
       return newText
    },
 
-   getSelectedText = function(){
-      var text = "";
-      // Visual Editor
-      if(text == "" && tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         text = tinyMCE.activeEditor.selection.getContent( {format : "text"} );
-      } else { // Casual TextEditor
-         try {
-            var ta = $j('.wp-editor-area').get(0);
-               text = ta.value.substring(ta.selectionStart, ta.selectionEnd);
-         } catch (e) {
-            console.log('Exception during get selection text');
-         }
-      }
-      return text;
-   },
-
-   /**
-    * This function is invoked when the "Get Recommendations"-Button or the
-    * keybord shortcut is used.
-    * It extracts the marked text in either the visual- oder text editor and
-    * triggers the recommendation workflow.
-    *
-    * @param event: the event, that is associated with the "Get
-    *               Recommendations"-Button. The standard behavior will be
-    *               suppressed.
-    */
-   getSelectedTextAndRecommend = function(event) {
-      event.preventDefault();
-      var text = getSelectedText();
-
-      // In order to display the search query to the user
-      setSearchQueryReflection(this, text);
-
-      if(text != "") {
-         $j('.error').remove();
-         EEXCESS.recommendationData.terms = getTerms.call(this, text, false, false);
-         // determine the trigger that let to the invocation of this event
-         if(event.type == "keydown"){
-            EEXCESS.recommendationData.trigger = "keydown";
-         } else {
-            if(event.type == "mousedown" || event.type == "click"){
-               EEXCESS.recommendationData.trigger = "mousedown";
-            } else {
-               EEXCESS.recommendationData.trigger = "unknown";
-            }
-         }
-
-         getRecommendations.call(this, EEXCESS.recommendationData);
-      } else {
-         displayError(EEXCESS.errorMessages.noTextSelected, $j("#citationStyleDropDown"));
-      }
-   },
-
-   /**
-   * Inserts a div that contains an error message after a given element.
-   *
-   * @param msg:     The error message to display.
-   * @param element: The element after which to display the error.
-   */
-   displayError = function(msg, element) {
-      // Removing previously added error messages
-      $j(".error").remove();
-      var div = $j('<div class="error">' + msg + '</div>');
-      $j(element).after(div);
-      div.show("slow");
-   },
 
    /**
    * Extracting the terms from the text.
@@ -243,26 +148,6 @@ var EEXCESS_METHODS = function () {
       return null;
    },
 
-   /**
-    * Fades the "Get Recommendations"-Button out an the "abort Request"-Button in and vice versa.
-    */
-   toggleButtons = function(){
-      var recommendButton = $j('#getRecommendations');
-      var abortButton = $j('#abortRequest');
-      var privacyButton = $j('#privacySettings');
-
-      if(recommendButton.is(":visible")){
-         privacyButton.toggle("fast");
-         recommendButton.toggle("fast", function(){
-            abortButton.toggle("fast");
-         });
-      }else{
-         privacyButton.toggle("fast");
-         abortButton.toggle("fast", function(){
-            recommendButton.toggle("fast");
-         });
-      }
-   },
 
    extendedLoggingEnabled = function(){
       // did the user opt in to logging his/her activities?
@@ -439,18 +324,6 @@ var EEXCESS_METHODS = function () {
       return whitespaces;
    },
 
-   /**
-    * Sets the text for the "Results on:" display.
-    *
-    * @param context: An instance of this object (i.e. EEXCESS_METHODS)
-    * @param text: The new text.
-    */
-   setSearchQueryReflection = function(context, text){
-      var foo = context.searchQueryReflection.find('#searchQuery')
-      if(foo != null){
-         foo.text(text);
-      }
-   },
 
    getCursor = function(){
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
