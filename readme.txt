@@ -80,7 +80,7 @@ To use the EEXCESS-wordpress-plugin create or edit a post. Inside the text edito
 *	Multiple Citation Styles
 *	Image insertion
 *	Personalized Recommendations (User Profile)
-#### Screenshot 4: EEXCESS Features.
+= Screenshot 4: EEXCESS Features. =
 ![Screenshot 4: Features](assets/eexcessmarked.png "Screenshot 4: Highlighted Features")
 
 == Frequently Asked Questions ==
