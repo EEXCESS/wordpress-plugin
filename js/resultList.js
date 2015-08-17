@@ -1,5 +1,5 @@
 // load dependencies
-require(['lib/c4/APIconnector', 'lib/c4/iframes'], function(api, iframes) {
+require(['APIconnector', 'iframes'], function(api, iframes) {
     // jQuery is already beening loaded by Wordpress
     $ = jQuery.noConflict();
 
