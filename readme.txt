@@ -63,7 +63,7 @@ Activate the plugin on your WordPress plugin page and you will see two additiona
 
 = Screenshot 1: Illustration of additional EEXCESS Buttons in Wordpress Toolbar.=
 
-![Screenshot 1: EEXCESS Button in Wordpress Toolbar](assets/screenshot-1.png "Screenshot 1: EEXCESS Button in Wordpress Toolbar")
+[Screenshot 1: EEXCESS Button in Wordpress Toolbar](assets/screenshot-1.png "Screenshot 1: EEXCESS Button in Wordpress Toolbar")
 
 To use the EEXCESS-wordpress-plugin create or edit a post. Inside the text editor you can get recommendations by selecting the text and click the “Get Recommendations”-button inside the EEXCESS area beneath the editor or by pressing the keyboard shortcut CTRL+E. The plug-in will automatically strip the keyword from this phrase and try to get recommendations for the given keyword. If you wish to link to one of the recommended resources, position your cursor at the position where you want the reference to appear. Then select your preferred citation style and push the add button of the corresponding recommendation.
 
@@ -72,11 +72,11 @@ To use the EEXCESS-wordpress-plugin create or edit a post. Inside the text edito
 
 = Screenshot 2: WordPress Text editor with EEXCESS Functionality.=
 
-![Screenshot 2: WordPress Text editor with EEXCESS features](assets/screenshot-2.png "Screenshot 2: WordPress Text editor with EEXCESS features")
+[Screenshot 2: WordPress Text editor with EEXCESS features](assets/screenshot-2.png "Screenshot 2: WordPress Text editor with EEXCESS features")
 
 = Screenshot 3: Result set - List of Recommendation.=
 
-![Screenshot 3: Result set - List of Recommendation](assets/screenshot-3.png "Screenshot 3: Result set - List of Recommendation")
+[Screenshot 3: Result set - List of Recommendation](assets/screenshot-3.png "Screenshot 3: Result set - List of Recommendation")
 
 
 = Features =
@@ -86,7 +86,7 @@ To use the EEXCESS-wordpress-plugin create or edit a post. Inside the text edito
 
 = Screenshot 4: EEXCESS Features. =
 
-![Screenshot 4: Features](assets/screenshot-4.png "Screenshot 4: Highlighted Features")
+[Screenshot 4: Features](assets/screenshot-4.png "Screenshot 4: Highlighted Features")
 
 == Frequently Asked Questions ==
 
