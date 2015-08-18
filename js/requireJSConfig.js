@@ -4,7 +4,6 @@ requirejs.config({
       jquery: 'lib/jquery',
       APIconnector: 'lib/c4/APIconnector',
       iframes: 'lib/c4/iframes',
-      recommendationEvents: 'recommendationEvents',
       recommendationEventsHelper: 'recommendationEventsHelper',
       uiEventsHelper: 'uiEventsHelper',
       settings: 'settings'

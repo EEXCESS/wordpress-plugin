@@ -7,11 +7,11 @@
             title: 'Get Recommendations',
             image: url + '/../../images/EEXCESS_Icon.png',
             onclick: function(event) {
-               eexcessMethods.getSelectedTextAndRecommend(event);
+               require(['recommendationEventsHelper'], function(recommend){
+                  recommend.getTextAndRecommend();
+               });
             }
-
-        } );
-
-    } );
-
+        });
+    });
 })();
+

@@ -4,7 +4,6 @@ define(['jquery', 'settings'], function($, settings){
    recommendButton = $('#getRecommendations');
    resultList = $('#resultList');
    introText = $("#eexcess_container .inside #content p"),
-   abortRequestButton = $('#abortRequest'),
    CitationStyleDropDown = $('#citationStyleDropDown'),
    searchQueryReflection = $('#searchQueryReflection'),
    privacyButton = $('#privacySettings');
@@ -12,40 +11,13 @@ define(['jquery', 'settings'], function($, settings){
    function initializeUI(){
       spinner.hide();
       resultList.hide();
-      abortRequestButton.hide();
       CitationStyleDropDown.hide();
       searchQueryReflection.hide();
    }
    initializeUI();
 
 
-   // Triggers the abort Request button
-   $(document).on("mousedown", "#abortRequest", function(event){
-      this.toggleButtons();
-      resultList.hide("slow");
-      searchQueryReflection.hide("slow");
-      spinner.hide("slow", function(){
-         introText.show("slow");
-      });
-   });
-
    return{
-      /**
-       * Fades the "Get Recommendations"-Button out an the "abort Request"-Button in and vice versa.
-       */
-      toggleButtons : function(){
-         if(recommendButton.is(":visible")){
-            privacyButton.toggle("fast");
-            recommendButton.toggle("fast", function(){
-               abortButton.toggle("fast");
-            });
-         }else{
-            privacyButton.toggle("fast");
-            abortButton.toggle("fast", function(){
-               recommendButton.toggle("fast");
-            });
-         }
-      },
  
       /**
        * this function is invoked when the "get recommendations"-button or the
@@ -58,14 +30,27 @@ define(['jquery', 'settings'], function($, settings){
        *               suppressed.
        */
       queryTriggered : function(query) {
-         // in order to display the search query to the user
-         //setSearchQueryReflection(query);
-
          if(query != "") {
+            this.setSearchQueryReflection(query);
+            searchQueryReflection.show();
             $('.error').remove();
-            resultList.show("fast");
+            resultList.show("slow");
          } else {
             this.showError(settings.errorMessages.noTextSelected, $("#citationStyleDropDown"));
+            resultList.hide("slow");
+            searchQueryReflection.hide("slow");
+         }
+      },
+      
+      /**
+       * Sets the text for the "Results on:" display.
+       *
+       * @param text: The new text.
+       */
+      setSearchQueryReflection : function(text){
+         var foo = $('#searchQuery');
+         if(foo != null){
+            foo.text(text);
          }
       },
 

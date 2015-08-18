@@ -4,3 +4,6 @@
 [submodule "js/visualization-widgets"]
 	path = js/visualization-widgets
 	url = https://github.com/EEXCESS/visualization-widgets.git
+[submodule "js/lib/visualization-widgets"]
+	path = js/lib/visualization-widgets
+	url = https://github.com/EEXCESS/visualization-widgets.git

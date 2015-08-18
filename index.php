@@ -80,8 +80,7 @@ limitations under the License.
     */
    function eexcess_meta_box_callback( $post ) { ?>
       <?php // List template ?>
-      <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations">
-      <input name="abortRequest" class="button button-primary" id="abortRequest" value="Abort Request">
+      <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations" readonly>
       <select name="citationStyleDropDown" id="citationStyleDropDown" style="float: right">
          <option value="default" selected="selected">Citation Style (default Hyperlink)</option>
          <?php
@@ -104,13 +103,12 @@ limitations under the License.
          <span id="searchQuery" style="color: #000000"></span>
       </div>
       <div id="resultList">
-         <iframe id="resultList" src=<?php echo plugin_dir_url(__FILE__) . 'js/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
+         <iframe id="resultList" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
       </div>
       <div id="content">
          <p>
-            Get recommendations for keywords by using "#eexcess:Keyword#" inside the textarea.
-            Furthermore, you can select parts of the text and then either click the "Get Recommendations"
-            button or you can use the keyboard shortcut ctrl + e.
+            Get recommendations for keywords by using  selecting parts of the text and then 
+            either click the "Get Recommendations" button or use the keyboard shortcut CTRL + E.
          </p>
          <div class='eexcess-spinner'></div>
          <div id='list'></div>
