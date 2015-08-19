@@ -1,4 +1,4 @@
-=== EEXCESS Plug-in ===
+=== EEXCESS ===
 
 Contributors: (eexcess_developers)
 
