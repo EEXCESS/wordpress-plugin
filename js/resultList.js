@@ -102,4 +102,17 @@ require(['jquery', 'APIconnector', 'iframes'], function($, api, iframes) {
             console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
         }
     };
+    
+    /*
+     * When the iframe is completly loaded, send a message to add buttons
+     */
+    $(window.top.document).ready(function(){
+       iframes.sendMsg({
+           event: 'eexcess.registerButton.perResult',
+           node: '<body>',
+           html: '<input class="citation" value="Cite as Citation">',
+           responseEvent: 'eexcess.citationRequest'
+        }, 
+        ['resultList']);
+    });
 });

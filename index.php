@@ -86,7 +86,7 @@ limitations under the License.
          <?php
             // corresponds to EEXCESS.citeproc.stylesDir from eexcess-settings.js.
             // unfortunatley there is no way to share that variable. At least AFAIK.
-            $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citationStyles';
+            $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citationBuilder/citationStyles';
             if ($handle = opendir($citeprocStylesPath)) {
                while (false !== ($entry = readdir($handle))) {
                   if ($entry != "." && $entry != "..") {
@@ -102,7 +102,7 @@ limitations under the License.
          <span id="numResults"></span> Results on:
          <span id="searchQuery" style="color: #000000"></span>
       </div>
-      <div id="resultList">
+      <div id="resultListContainer">
          <iframe id="resultList" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
       </div>
       <div id="content">

@@ -4,14 +4,14 @@ define(['jquery', 'settings'], function($, settings){
    recommendButton = $('#getRecommendations');
    resultList = $('#resultList');
    introText = $("#eexcess_container .inside #content p"),
-   CitationStyleDropDown = $('#citationStyleDropDown'),
+   citationStyleDropDown = $('#citationStyleDropDown'),
    searchQueryReflection = $('#searchQueryReflection'),
    privacyButton = $('#privacySettings');
 
    function initializeUI(){
       spinner.hide();
       resultList.hide();
-      CitationStyleDropDown.hide();
+      citationStyleDropDown.hide();
       searchQueryReflection.hide();
    }
    initializeUI();
@@ -35,10 +35,12 @@ define(['jquery', 'settings'], function($, settings){
             searchQueryReflection.show();
             $('.error').remove();
             resultList.show("slow");
+            citationStyleDropDown.show("slow");
          } else {
             this.showError(settings.errorMessages.noTextSelected, $("#citationStyleDropDown"));
             resultList.hide("slow");
             searchQueryReflection.hide("slow");
+            citationStyleDropDown.hide("slow");
          }
       },
       
