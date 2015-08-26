@@ -6,7 +6,10 @@ requirejs.config({
       iframes: 'lib/c4/iframes',
       recommendationEventsHelper: 'recommendationEventsHelper',
       uiEventsHelper: 'uiEventsHelper',
-      settings: 'settings'
+      settings: 'settings',
+      citationBuilder: 'citationBuilder',
+      CLSWrapper: 'lib/c4/CitationBuilder/CitationBuilder/citationBuilder',
+      eexcessMethods: 'eexcessMethods'
    }
 });
 

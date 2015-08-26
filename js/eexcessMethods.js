@@ -1,12 +1,11 @@
-// Avoid jQuery conflicts from different plugins
-$j = jQuery.noConflict();
-/**
- * The following object contains all custom functions and properties for the EEXCESS-plugin.
- * It hides the limitations of javascript and behaves to the greates possible extent link
- * a class in other programming laguages. The "instanziation" and "initialization" of the
- * "class" can be found at the bottom of this file.
- */
-var EEXCESS_METHODS = function () {
+define(["jquery"], function($){
+   /**
+    * The following object contains all custom functions and properties for the EEXCESS-plugin.
+    * It hides the limitations of javascript and behaves to the greates possible extent link
+    * a class in other programming laguages. The "instanziation" and "initialization" of the
+    * "class" can be found at the bottom of this file.
+    */
+   
    // They hold references to jquery-objects that represent html-objects in the DOM.
    var that,
    spinner,
@@ -24,20 +23,45 @@ var EEXCESS_METHODS = function () {
     * @param mSpinner: reference to a DOM-object representation a spinner that is
     *                  usen when time-consuming actions take place
     */
-   init = function(mSpinner, mResultList, mIntroText, mAbortRequestButton, mCitationStyleDropDown, mSearchQueryReflection) {
+   init = function(mSpinner, mIntroText, mAbortRequestButton, mCitationStyleDropDown, mSearchQueryReflection) {
       this.that = this;
       this.spinner = mSpinner;
-      this.resultList = mResultList;
       this.introText = mIntroText;
       this.abortRequestButton = mAbortRequestButton;
       this.CitationStyleDropDown = mCitationStyleDropDown;
       this.searchQueryReflection = mSearchQueryReflection;
 
       this.spinner.hide();
-      this.resultList.hide();
       this.abortRequestButton.hide();
       this.CitationStyleDropDown.hide();
       this.searchQueryReflection.hide();
+
+      /**
+       * The return object exposes elements to the outside world.
+       * In terms of OO-languages supporting classes this mechanism emulates the "public"
+       * modifier whereas objects that are not mentioned in the return object remain "private".
+       */
+      return {
+         init: init,
+         pasteLinkToText: pasteLinkToText,
+         getTerms: getTerms,
+         getRecommendations: getRecommendations,
+         getCursorPosition: getCursorPosition,
+         setCursorPosition: setCursorPosition,
+         spinner: spinner,
+         introText: introText,
+         abortRequestButton: abortRequestButton,
+         request: request,
+         determineArticlesEnd: determineArticlesEnd,
+         findHtmlTagPositions: findHtmlTagPositions,
+         findWhitespaces: findWhitespaces,
+         searchQueryReflection: searchQueryReflection,
+         getCursor: getCursor,
+         getContent: getContent,
+         setContent: setContent,
+         determineDecentInsertPosition: determineDecentInsertPosition,
+         extendedLoggingEnabled: extendedLoggingEnabled,
+      };
    },
 
 
@@ -151,7 +175,7 @@ var EEXCESS_METHODS = function () {
 
    extendedLoggingEnabled = function(){
       // did the user opt in to logging his/her activities?
-      return $j("#extendedLogging:checked").length == 1;
+      return $("#extendedLogging:checked").length == 1;
    }
 
    /**
@@ -229,51 +253,6 @@ var EEXCESS_METHODS = function () {
    },
 
    /**
-    * Collects the information of a resultlist entry and puts them in a json-object.
-    * The format of the json-object is as required by citeproc-js in order to process
-    * accordingly.
-    *
-    * @param context: is the DOM element holding the required information.
-    */
-   readMetadata = function(context){
-      var creator = $j(context).siblings("input[name='creator']").val(),
-      collectionName = $j(context).siblings("input[name='collectionName']").val(),
-      year = $j(context).siblings("input[name='facets.year']").val(),
-      id = $j(context).siblings("input[name='id']").val(),
-      title = $j(context).siblings("a").text(),
-      uri = $j(context).siblings("input[name='eexcessURI']").val();
-
-      if(creator == undefined){ creator = "";}
-      if(collectionName == undefined){ collectionName = "";}
-      if(year == undefined){ year = "";}
-      if(id == undefined){ id = "";}
-      if(title == undefined){ title = "";}
-      if(uri == undefined){ uri = "";}
-
-      var json = '{ \
-         "' + id + '": { \
-            "id": "' + id + '", \
-            "container-title": "' + collectionName + '", \
-            "URL": "' + uri + ' ", \
-            "title": "' + title + '", \
-            "author": [ \
-              { \
-                "family": "' + creator + '" \
-              } \
-            ], \
-            "issued": { \
-              "date-parts": [ \
-                [ \
-                  "' + year + '" \
-                ] \
-              ] \
-            } \
-         } \
-      }';
-      return json;
-   },
-
-   /**
     * Return the last position of an article that can be used to insert text. Usually
     * it's not the end of the textbox since there is HTML included (i.e. mostly the <p>-tag)
     * and the text shouldn't be inserted outside of the last HTML-tag.
@@ -327,9 +306,9 @@ var EEXCESS_METHODS = function () {
 
    getCursor = function(){
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
-         return eexcessMethods.getCursorPosition(tinyMCE.activeEditor);
+         return getCursorPosition(tinyMCE.activeEditor);
       } else {
-         var textarea = $j("textarea#content");
+         var textarea = $("textarea#content");
          return textarea.getCursorPosition();
       }
    },
@@ -338,7 +317,7 @@ var EEXCESS_METHODS = function () {
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
          return tinyMCE.activeEditor.getContent();
       } else {
-         var textarea = $j("textarea#content");
+         var textarea = $("textarea#content");
          return textarea.val();
       }
    },
@@ -347,7 +326,7 @@ var EEXCESS_METHODS = function () {
       if(tinyMCE.activeEditor && tinyMCE.activeEditor.isHidden() == false) {
          return tinyMCE.activeEditor.setContent(newText);
       } else {
-         var textarea = $j("textarea#content");
+         var textarea = $("textarea#content");
          return textarea.val(newText);
       }
    },
@@ -390,54 +369,10 @@ var EEXCESS_METHODS = function () {
    };
 
    /**
-    * The return object exposes elements to the outside world.
-    * In terms of OO-languages supporting classes this mechanism emulates the "public"
-    * modifier whereas objects that are not mentioned in the return object remain "private".
+    * This code-snippet instanziates and initializes a EEXCESS_METHODS-Object and makes it
+    * globaly available.
     */
-   return {
-      getFile: getFile,
-      init: init,
-      extractTerm: extractTerm,
-      assessKeystroke: assessKeystroke,
-      pasteLinkToText: pasteLinkToText,
-      getSelectedTextAndRecommend: getSelectedTextAndRecommend,
-      getSelectedText: getSelectedText,
-      displayError: displayError,
-      getTerms: getTerms,
-      toggleButtons: toggleButtons,
-      getRecommendations: getRecommendations,
-      getCursorPosition: getCursorPosition,
-      setCursorPosition: setCursorPosition,
-      readMetadata: readMetadata,
-      spinner: spinner,
-      resultList: resultList,
-      introText: introText,
-      abortRequestButton: abortRequestButton,
-      request: request,
-      determineArticlesEnd: determineArticlesEnd,
-      findHtmlTagPositions: findHtmlTagPositions,
-      findWhitespaces: findWhitespaces,
-      searchQueryReflection: searchQueryReflection,
-      getCursor: getCursor,
-      getContent: getContent,
-      setContent: setContent,
-      determineDecentInsertPosition: determineDecentInsertPosition,
-      extendedLoggingEnabled: extendedLoggingEnabled,
-      sendUsersActivitiesSignal: sendUsersActivitiesSignal
-   };
-};
-
-
-/**
- * This code-snippet instanziates and initializes a EEXCESS_METHODS-Object and makes it
- * globaly available.
- */
-$j(document).ready(function() {
-   eexcessMethods = new EEXCESS_METHODS();
-   eexcessMethods.init($j("#eexcess_container .inside #content .eexcess-spinner"),
-            $j("#eexcess_container .inside #content #list"),
-            $j("#eexcess_container .inside #content p"),
-            $j('#abortRequest'),
-            $j('#citationStyleDropDown'),
-            $j('#searchQueryReflection'));
+   return init; 
 });
+
+

@@ -1,10 +1,16 @@
-require(['jquery'], function($){
+define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, CLSWrapper){
    
+   eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
+            $("#eexcess_container .inside #content #list"),
+            $("#eexcess_container .inside #content p"),
+            $('#abortRequest'),
+            $('#citationStyleDropDown'),
+            $('#searchQueryReflection'));
    /*
     * Handles the "Add as Image" buttons in the recommendation area. It adds Images
     * to the blogpost.
-    */
-   $(document).on("mousedown", 'input[name="addAsImage"]', function(){
+    *
+   function addAsImage(){
       var imageURL = $(this).parent().prev().find("a").attr("href"),
       title = $(this).parent().find("a").text(),
       snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
@@ -22,17 +28,15 @@ require(['jquery'], function($){
       var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
       var newText = insertIntoText(content, insertionPosition, snippet);
       eexcessMethods.setContent(newText);
-   });
+   });/
 
 
    /*
     * Handles the "Add as Citation" buttons in the recommendation area. It adds citations
     * to the text, depending on the value of the citation style drop down element
     */
-   $(document).on("mousedown", 'input[name="addAsCitation"]', function(){
-      var url =  $(this).siblings("a").attr('href'),
-      title = $(this).siblings("a").text(),
-      citationStyle = $('#citationStyleDropDown').val(),
+   function addAsCitation(record){
+      var citationStyle = $('#citationStyleDropDown').val(),
       cursorPosition = "",
       text = "",
       alreadyCited = -1,
@@ -46,6 +50,9 @@ require(['jquery'], function($){
       citationsArray = [],
       citations = "",
       citationText = "";
+
+      var url = record.uri || "",
+      title = record.detail.eexcessProxy.dctitle || "";
 
       if(eexcessMethods.extendedLoggingEnabled()){
          try{
@@ -82,9 +89,7 @@ require(['jquery'], function($){
                return;
             }
          }else{
-            citationText = CitationProcessor(JSON.parse(eexcessMethods.readMetadata(this)),
-               eexcessMethods.getFile(pluginURL.pluginsPath + EEXCESS.citeproc.localsDir + 'locales-en-US.xml'),
-               eexcessMethods.getFile(pluginURL.pluginsPath + EEXCESS.citeproc.stylesDir + citationStyle + '.csl'));
+            citationText = CLSWrapper(mapEEXCESSFormat(record));
             if(citationText.hasOwnProperty("length")){
                if(citationText.length > 0){
                   citationText = citationText[0];
@@ -139,5 +144,47 @@ require(['jquery'], function($){
          }
       }
       eexcessMethods.setContent(newText);
-   });
+   };
+
+   /**
+    * Collects the information of a resultlist entry and puts them in a json-object.
+    * The format of the json-object is as required by citeproc-js in order to process
+    * accordingly.
+    *
+    * @param context: is the DOM element holding the required information.
+    */
+   function mapEEXCESSFormat(record){
+      var creator = record.detail.eexcessProxy.dccreator || "",
+      collectionName = record.detail.eexcessProxy.edmCollectionName || "",
+      year = record.detail.eexcessProxy.dctermsdate || "",
+      id = record.id || "",
+      title = record.detail.eexcessProxy.dctitle || "",
+      uri = record.uri || "";
+
+      var json = '{ \
+         "' + id + '": { \
+            "id": "' + id + '", \
+            "container-title": "' + collectionName + '", \
+            "URL": "' + uri + ' ", \
+            "title": "' + title + '", \
+            "author": [ \
+              { \
+                "family": "' + creator + '" \
+              } \
+            ], \
+            "issued": { \
+              "date-parts": [ \
+                [ \
+                  "' + year + '" \
+                ] \
+              ] \
+            } \
+         } \
+      }';
+      return JSON.parse(json);
+   }
+
+   return {
+      addAsCitation: addAsCitation
+   }
 });

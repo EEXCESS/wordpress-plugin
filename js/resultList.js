@@ -1,5 +1,5 @@
 // load dependencies
-require(['jquery', 'APIconnector', 'iframes'], function($, api, iframes) {
+require(['jquery', 'APIconnector', 'iframes', 'citationBuilder'], function($, api, iframes, citationBuilder) {
     // set the URL of the federated recommender to the stable server
     // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
 
@@ -93,7 +93,6 @@ require(['jquery', 'APIconnector', 'iframes'], function($, api, iframes) {
             detailsCall(msg.data.data);
         }
 
-
         /*
          * Here, we are only interested in ratings that might have been given in one of the included widgets.
          * For the full list of possible events, see the readme in the root folder.
@@ -101,16 +100,35 @@ require(['jquery', 'APIconnector', 'iframes'], function($, api, iframes) {
         if (msg.data.event && msg.data.event === 'eexcess.rating') {
             console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
         }
+
+        /*
+         * 
+         */
+        if (msg.data.event && msg.data.event === 'eexcess.citationRequsted') {
+            api.getDetails([msg.data.documentBadge], function(response){
+                if(response.status === 'success'){
+                   var record = response.data.documentBadge[0];
+                   citationBuilder.addAsCitation(record);
+                } else if(response.status === 'error'){
+
+                } else{
+
+                }
+                console.log("some msg");
+            });
+        }
     };
     
     /*
      * When the iframe is completly loaded, send a message to add buttons
      */
-    $(window.top.document).ready(function(){
+    //var iframe = $("#resultList")[0].contentDocument;
+    var iframe = $("#resultList")[0];
+    $(iframe).ready(function(){
        iframes.sendMsg({
            event: 'eexcess.registerButton.perResult',
            node: '<body>',
-           html: '<input class="citation" value="Cite as Citation">',
+           html: '<div style="float: right; padding-top: 6px;"><img src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
            responseEvent: 'eexcess.citationRequest'
         }, 
         ['resultList']);
