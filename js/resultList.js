@@ -102,7 +102,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder'], function($, ap
         }
 
         /*
-         * 
+         * This signal is sent after the user hit a citation button.
          */
         if (msg.data.event && msg.data.event === 'eexcess.citationRequsted') {
             api.getDetails([msg.data.documentBadge], function(response){
@@ -110,11 +110,10 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder'], function($, ap
                    var record = response.data.documentBadge[0];
                    citationBuilder.addAsCitation(record);
                 } else if(response.status === 'error'){
-
+                   alert("Could not retrieve data required to asseble the citation");
                 } else{
 
                 }
-                console.log("some msg");
             });
         }
     };

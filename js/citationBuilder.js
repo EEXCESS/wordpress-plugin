@@ -1,4 +1,4 @@
-define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, CLSWrapper){
+define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexcessMethods, CLSWrapper, settings){
    
    eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
             $("#eexcess_container .inside #content #list"),
@@ -69,10 +69,11 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
       } else {
          // if this entry has already been cited. warn the user, ask if he/she wants to continue
          // and act accordingly
-         if($(this).parent().hasClass("eexcess-alreadyCited")){
-            if (confirm(EEXCESS.errorMessages.resourceAlreadyInserted) == true) {
+         var curRef = $("#content_ifr").contents().find('p[data-eexcessid="' + record.id + '"]')
+         if(curRef.length > 0){
+            if (confirm(settings.errorMessages.resourceAlreadyInserted) == true) {
                // carry on, as the user ordered
-               alreadyCited = $(this).parent().attr("data-refnumb");
+               alreadyCited = curRef.attr("data-eexcessrefid");
                position = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods,
                                                                             content,
                                                                             position);
@@ -80,7 +81,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
 
                // -1 is the value of posFirstCitation, if no citation has been inserted.
                if(position > posFirstCitation && posFirstCitation != -1){
-                  alert(EEXCESS.citeproc.errorMsg);
+                  alert(settings.citeproc.errorMsg);
                } else {
                   newText = insertIntoText(content, position, referenceNumberText);
                }
@@ -96,7 +97,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
                }
             }
 
-            citationText = '<p class="csl-entry">' + citationText + "</p>";
+            citationText = '<p class="csl-entry" data-eexcessId="' + record.id  + '">' + citationText + "</p>";
             citationText = $(citationText).attr("contenteditable", "false")[0].outerHTML;
 
             // how many citations are already included in the text?
@@ -129,7 +130,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
 
             // -1 is the value of posFirstCitation, if no citation has been inserted.
             if(position > posFirstCitation && posFirstCitation != -1){
-               alert(EEXCESS.citeproc.errorMsg);
+               alert(settings.citeproc.errorMsg);
             } else {
                // insert reference # into text (at cursor position)
                newText = insertIntoText(content, position, referenceNumberSource);
@@ -137,9 +138,6 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
                newText = insertIntoText(newText,
                                         eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
                                         citationText);
-               // Change the appearance of the row to make clear to the user,
-               // that this object has already been inserted.
-               $(this).parent().addClass('eexcess-alreadyCited').attr("data-refnumb", citations + 1);
             }
          }
       }
@@ -147,11 +145,10 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
    };
 
    /**
-    * Collects the information of a resultlist entry and puts them in a json-object.
-    * The format of the json-object is as required by citeproc-js in order to process
-    * accordingly.
+    * Maps the EEXCESS response format to the format required by citeprocJS
     *
-    * @param context: is the DOM element holding the required information.
+    * @param record: An object containing data in the EEXCESS format
+    * @return: The citeprocJS compatible object
     */
    function mapEEXCESSFormat(record){
       var creator = record.detail.eexcessProxy.dccreator || "",
@@ -182,6 +179,13 @@ define(['jquery', 'eexcessMethods', "CLSWrapper"], function($, eexcessMethods, C
          } \
       }';
       return JSON.parse(json);
+   }
+
+
+   function generateReference(number){
+      number = number.toString();
+      return "<a href=\"#eexcess" + number + "\"><span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
+         number + "\">[" + number + "]</span></a>"
    }
 
    return {

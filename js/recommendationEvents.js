@@ -11,11 +11,5 @@ require(['jquery', 'recommendationEventsHelper', 'iframes'], function($, helper,
          helper.getTextAndRecommend();
       }
    });
-
-   var generateReference = function(number){
-      number = number.toString();
-      return "<a href=\"#eexcess" + number + "\"><span class=\"eexcessRef\" contenteditable=\"false\" data-eexcessrefid=\"" +
-         number + "\">[" + number + "]</span></a>"
-   }
 });
 
