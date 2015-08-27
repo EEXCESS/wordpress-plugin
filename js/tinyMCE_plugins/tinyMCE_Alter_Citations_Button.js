@@ -1,4 +1,3 @@
-// closure to avoid namespace collision
 (function(){
 	/*
 	* The following feunction registers the plugin.
@@ -11,8 +10,8 @@
 			onclick : function() {
 				// triggers the thickbox
 				updateList();
-				var width = $j(window).width(),
-				H = $j(window).height(),
+				var width = $(window).width(),
+				H = $(window).height(),
 				W = ( 750 < width ) ? 750 : width;
 				tb_show( 'Alter EEXCESS Citations', '#TB_inline?width=' + W + '&height=' + H + '&inlineId=alterCitationsForm' );
 			}
@@ -26,49 +25,49 @@
 	*/
 	var removeCitationById = function(idToRemove){
 		//remove citation
-		$j("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + idToRemove + "']").remove();
+		$("#content_ifr").contents().find(".csl-entry[data-eexcessrefid='" + idToRemove + "']").remove();
 
 		// remove reference
-		$j("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove();
+		$("#content_ifr").contents().find(".eexcessRef[data-eexcessrefid='" + idToRemove + "']").remove();
 
 		// update citations
-		$j("#content_ifr")
+		$("#content_ifr")
 		.contents()
 		.find(".csl-entry[data-eexcessrefid]")
 		.filter(function(index){
 			// only those citations that are "behind" the one removed
-			return $j(this).attr("data-eexcessrefid") > removeCitationById.arguments[0];
+			return $(this).attr("data-eexcessrefid") > removeCitationById.arguments[0];
 		})
 		.each(function(){
-			var citation = $j(this);
+			var citation = $(this);
 			// update the attribute
 			citation.attr("data-eexcessrefid", citation.attr("data-eexcessrefid") - 1);
 			// update the text enclosed by the span-tag
-			$j("span", citation).text($j("span", citation).text() - 1);
+			$("span", citation).text($("span", citation).text() - 1);
 		});
 
 		// update references
-		$j("#content_ifr")
+		$("#content_ifr")
 		.contents()
 		.find(".eexcessRef")
 		.filter(function(index){
 			// only those citations that are "behind" the one removed
-			return $j(this).attr("data-eexcessrefid") > removeCitationById.arguments[0];
+			return $(this).attr("data-eexcessrefid") > removeCitationById.arguments[0];
 		})
 		.each(function(){
-			var citation = $j(this);
+			var citation = $(this);
 			// update the attribute
 			citation.attr("data-eexcessrefid", citation.attr("data-eexcessrefid") - 1);
 			// update the text enclosed by the span-tag
-			var text = $j(this).text();
-			$j(this).text("[" + (text.slice(1, text.length-1) - 1) + "]");
+			var text = $(this).text();
+			$(this).text("[" + (text.slice(1, text.length-1) - 1) + "]");
 		});
 
 		//removing the "already cited"-flag from resultlist
-		$j(".eexcess-alreadyCited[data-refnumb=" + idToRemove + "]")
+		$(".eexcess-alreadyCited[data-refnumb=" + idToRemove + "]")
 		.each(function(){
-			$j(this).removeClass("eexcess-alreadyCited");
-			$j(this).removeAttr("data-refnumb");
+			$(this).removeClass("eexcess-alreadyCited");
+			$(this).removeAttr("data-refnumb");
 		});
 	}
 
@@ -78,8 +77,8 @@
 	 */
 	var updateList = function(){
 		// empty the page
-		var links = $j(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
-		references = $j(tinyMCE.activeEditor.getBody()).find('.csl-entry');
+		var links = $(tinyMCE.activeEditor.getBody()).find('.eexcessRef'),
+		references = $(tinyMCE.activeEditor.getBody()).find('.csl-entry');
 		// creates a form to be displayed everytime the button is clicked
 		if(references != null){
 			var form = '<div id="alterCitationsForm"><table id="citation-table" class="form-table">';
@@ -87,7 +86,7 @@
 				form = form + '<tr> \
 						<td><input type="checkbox" class="deletionIndicator"></td> \
 						<td>' + references[i].outerHTML + '</td> \
-						<td><button name="delete" class="button-secondary remove"><img src="' + pluginURL.pluginsPath + 'images/cross.png"</button></td> \
+						<td><button name="delete" class="button-secondary remove"><img src="' + plugin_url + 'images/cross.png"</button></td> \
 					</tr>';
 			}
 			form = form + '</table>\
@@ -98,15 +97,15 @@
 		}
 
 		//removes a possibly existing expired version of the table
-		$j("#alterCitationsForm").remove()
+		$("#alterCitationsForm").remove()
 
-		form = $j(form);
+		form = $(form);
 		var table = form.find('table');
 		form.appendTo('body').hide();
 
 		// handles the click event of the submit button
 		form.find('.remove').click(function(){
-			var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid");
+			var idToRemove = $($(this).parents()[1]).find("p").attr("data-eexcessrefid");
 			removeCitationById(idToRemove);
 			// closes Thickbox
 			tb_remove();
@@ -115,11 +114,11 @@
 		form.find('#deletion-submit').click(function(){
 			var alreadyRemoved = 0;
 			// remove the selected citations and there respective references
-			$j(".deletionIndicator").each(function(){
-				if($j(this).is(":checked")){
-					var idToRemove = $j($j(this).parents()[1]).find("p").attr("data-eexcessrefid") - alreadyRemoved;
+			$(".deletionIndicator").each(function(){
+				if($(this).is(":checked")){
+					var idToRemove = $($(this).parents()[1]).find("p").attr("data-eexcessrefid") - alreadyRemoved;
 					removeCitationById(idToRemove);
-					$j($j(this).parents()[1]).remove();
+					$($(this).parents()[1]).remove();
 					alreadyRemoved += 1;
 				}
 			});
