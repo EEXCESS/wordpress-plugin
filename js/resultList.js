@@ -166,7 +166,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         // cite as citation button
         iframes.sendMsg({
             event: 'eexcess.registerButton.perResult',
-            html: '<div style="float: right; padding-top: 6px;"><img alt="Cite as citation" src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
+            html: '<div style="float: right; padding-top: 6px;"><img data-method="eexcess.citationRequest" alt="Cite as citation" src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
             responseEvent: 'eexcess.citationRequest'
         }, 
         ['resultList']);
@@ -174,7 +174,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         // cite as image button
         iframes.sendMsg({
             event: 'eexcess.registerButton.perResult',
-            html: '<div style="float: right; padding-top: 6px;"><img alt="Cite as image" src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
+            html: '<div style="float: right; padding-top: 6px;"><img data-method="eexcess.imageCitationRequest" alt="Cite as image" src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
             responseEvent: 'eexcess.imageCitationRequest'
         }, 
         ['resultList']);
