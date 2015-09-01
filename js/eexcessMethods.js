@@ -67,6 +67,7 @@ define(["jquery"], function($){
 
 
    /**
+    * WARNING: THIS METHOD IS CURRENTLY DISABLED DUE TO API ISSUES
     * This method deals with certain actions that the user can perform, namely:
     *    1. Cite a resource.
     *    2. Embed an image.
@@ -97,7 +98,7 @@ define(["jquery"], function($){
          "uuid": uuid
       };
 
-      $.ajax({
+      /*$.ajax({
          type: "POST",
          url: ajaxurl,
          data: data,
@@ -107,7 +108,7 @@ define(["jquery"], function($){
                console.log("Processing advanced logs failed");
             }
          }
-      });
+      });*/
    }
 
    /**

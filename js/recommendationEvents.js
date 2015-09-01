@@ -1,5 +1,8 @@
 require(['jquery', 'recommendationEventsHelper', 'iframes'], function($, helper, iframes){
-   
+   function resizeIframe(){
+      $("#resultList").width($("#eexcess_container").width());
+   }
+
    // Triggers the recommendations call by button
    $(document).on("mousedown", "#getRecommendations", function(event){
       helper.getTextAndRecommend();
@@ -11,5 +14,9 @@ require(['jquery', 'recommendationEventsHelper', 'iframes'], function($, helper,
          helper.getTextAndRecommend();
       }
    });
+   $(window).resize(function(e){
+      resizeIframe();
+   });
+   resizeIframe();
 });
 
