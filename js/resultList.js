@@ -112,8 +112,8 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         /*
          * This signal is sent after the user hit a citation button.
          */
-        if (msg.data.event && msg.data.event === 'eexcess.citationRequsted') {
-            api.getDetails([msg.data.documentBadge], function(response){
+        if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
+            api.getDetails([msg.data.documentsMetadata.documentBadge], function(response){
                 if(response.status === 'success'){
                    var record = response.data.documentBadge[0];
                    citationBuilder.addAsCitation(record);

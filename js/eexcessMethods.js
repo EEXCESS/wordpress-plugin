@@ -61,9 +61,54 @@ define(["jquery"], function($){
          setContent: setContent,
          determineDecentInsertPosition: determineDecentInsertPosition,
          extendedLoggingEnabled: extendedLoggingEnabled,
+         sendUsersActivitiesSignal: sendUsersActivitiesSignal
       };
    },
 
+
+   /**
+    * This method deals with certain actions that the user can perform, namely:
+    *    1. Cite a resource.
+    *    2. Embed an image.
+    *    3. Look at the detail page of a resource.
+    * It than sends an AJAX-request to the privacy proxy in order to inform him
+    * about the action that has just been taken.
+    *
+    * @param action: A string reprentating the action. Valid strings are:
+    *                "cited", "image_embedded" and "detail_view".
+    * @param trigger: The object(button or link) that was used to trigger the
+    *                 action.
+    *
+    */
+   sendUsersActivitiesSignal = function(action, documentBadge){
+      var resource = documentBadge.uri,
+      timestamp = Date.now().toString(),
+      query = $("#searchQuery").text(),
+      uuid = documentBadge.id;
+
+      var data = {
+         "action": "advanced_logging",//this is required for selecting the a server-side php method
+         "resource": resource,
+         "timestamp": timestamp,
+         "type": "view",
+         "query": query,
+         "beenRecommended": "true",
+         "action-taken": action,
+         "uuid": uuid
+      };
+
+      $.ajax({
+         type: "POST",
+         url: ajaxurl,
+         data: data,
+         context: action,
+         success: function(response, status, jqXHR){
+            if(response.search("200 OK") === -1){
+               console.log("Processing advanced logs failed");
+            }
+         }
+      });
+   }
 
    /**
    * Inserts a HTML-link (a-tag) composed of url and title at position

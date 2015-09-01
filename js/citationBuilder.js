@@ -56,7 +56,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
 
       if(eexcessMethods.extendedLoggingEnabled()){
          try{
-            sendUsersActivitiesSignal("cited", this);
+            sendUsersActivitiesSignal("cited", record);
          }catch(e){
             console.log("Logging failed. Message was: " + e.message);
          }
