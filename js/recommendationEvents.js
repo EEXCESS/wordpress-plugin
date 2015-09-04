@@ -15,10 +15,18 @@ require(['jquery', 'recommendationEventsHelper', 'iframes'], function($, helper,
    function resizeResultList(){
       $("#resultList").width($("#eexcess_container").width());
    }
-
-   /*$(document).on("DOMNodeInserted", "#TB_ajaxContent", function(){
+   
+   // Beware! this is an ugly hack. it resizes the vis thickbox after it's been displayed
+   // If you read this and feel brave, pls find a better solution. 
+   window.tb_show_old = window.tb_show;
+   window.tb_show = function(t, a, g){
+      window.tb_show_old(t, a, g);
       resizeVisualization();
-   });*/
+      var res = JSON.parse(sessionStorage.getItem("curResults"));
+      res = {event: "eexcess.newResults", data: res};
+      
+      iframes.sendMsg(res , ["dashboard"]);
+   }
 
    // Triggers the recommendations call by button
    $(document).on("mousedown", "#getRecommendations", function(event){
