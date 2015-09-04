@@ -81,6 +81,20 @@ limitations under the License.
    function eexcess_meta_box_callback( $post ) { ?>
       <?php // List template ?>
       <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations" readonly>
+
+
+      <!-- Visualization thickbox-->
+      <?php add_thickbox(); ?>
+      <div id="visualizationThickbox" style="display:none;">
+         <!-- thickbox content-->
+         <iframe id="dashboard" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/Dashboard/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
+         <!-- /thickbox content-->
+      </div>
+      <a href="#TB_inline?width=600&height=550&inlineId=visualizationThickbox" title="Visualization" class="thickbox">
+         <input id="visualizationButton"  style="width: 100px;" name="visualization" class="button button-small" value="Visualization">
+      </a>
+      <!-- / Visualization thickbox-->
+
       <select name="citationStyleDropDown" id="citationStyleDropDown" style="float: right">
          <option value="default" selected="selected">Citation Style (default Hyperlink)</option>
          <?php

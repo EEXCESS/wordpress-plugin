@@ -23,7 +23,12 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       sendQuery : function(profile) {
         api.query(profile, function(res) {
             if (res.status === 'success') {
-                iframes.sendMsgAll({event: 'eexcess.newResults', data: {profile: profile, results: {results: res.data.result}}});
+                var res = {profile: profile, results: {results: res.data.result}};
+                $('iframe#dashboard').load(function(){
+                   iframes.sendMsgAll({event: 'eexcess.newResults', data: res});
+                   sessionStorage.setItem("curResults", JSON.stringify(res));
+                });
+                iframes.sendMsgAll({event: 'eexcess.newResults', data: res});
             } else {
                 iframes.sendMsgAll({event: 'eexcess.error', data: res.data});
             }
