@@ -12,7 +12,7 @@ Stable tag: 4.3
 
 License: (Apache License Version 2.0), GPLv2 or later
 
-License URI: [GPLv2](http://www.gnu.org/licenses/gpl-2.0.html)
+
 
 
 
@@ -59,37 +59,19 @@ This section describes how to install the plugin and get it working. e.g.
 
 = Once Configured how to get started: =
 
-Activate the plugin on your WordPress plugin page and you will see two additional EEXCESS buttons in top let corner of wordpress default toolbar.
+Activate the plugin on your WordPress plugin page and you will see two additional EEXCESS buttons in top let corner of wordpress default toolbar as shown in Screenshots Section.
 
-= Screenshot 1: Illustration of additional EEXCESS Buttons in Wordpress Toolbar.=
-
-[Screenshot 1: EEXCESS Button in Wordpress Toolbar](assets/screenshot-1.png "Screenshot 1: EEXCESS Button in Wordpress Toolbar")
+**How to Use**
 
 To use the EEXCESS-wordpress-plugin create or edit a post. Inside the text editor you can get recommendations by selecting the text and click the “Get Recommendations”-button inside the EEXCESS area beneath the editor or by pressing the keyboard shortcut CTRL+E. The plug-in will automatically strip the keyword from this phrase and try to get recommendations for the given keyword. If you wish to link to one of the recommended resources, position your cursor at the position where you want the reference to appear. Then select your preferred citation style and push the add button of the corresponding recommendation.
 
+**Features**
 
-== Screenshots ==
-
-= Screenshot 2: WordPress Text editor with EEXCESS Functionality.=
-
-[Screenshot 2: WordPress Text editor with EEXCESS features](assets/screenshot-2.png "Screenshot 2: WordPress Text editor with EEXCESS features")
-
-= Screenshot 3: Result set - List of Recommendation.=
-
-[Screenshot 3: Result set - List of Recommendation](assets/screenshot-3.png "Screenshot 3: Result set - List of Recommendation")
-
-
-= Features =
 *	Multiple Citation Styles
 *	Image insertion
 *	Personalized Recommendations (User Profile)
 
-= Screenshot 4: EEXCESS Features. =
-
-[Screenshot 4: Features](assets/screenshot-4.png "Screenshot 4: Highlighted Features")
-
 == Frequently Asked Questions ==
-
 
 = What privacy information is logged? =
 
@@ -108,3 +90,19 @@ The following information is being transmitted:
 4.	Whether a content objects was inserted as image or citation (only second case)
 
 ***Logging is optional (opt-out).***
+
+== Screenshots ==
+1. EEXCESS Button in Wordpress Toolbar.
+
+
+2. WordPress Text editor with EEXCESS features.
+ 
+
+3. Result set - List of Recommendation.
+
+
+4. Highlighted Features.
+
+
+
+
