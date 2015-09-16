@@ -23,8 +23,15 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       sendQuery : function(profile) {
         api.query(profile, function(res) {
             if (res.status === 'success') {
-                var res = {profile: profile, results: {results: res.data.result}};
+                var res = {profile: profile, result: res.data.result};
                 $('iframe#dashboard').load(function(){
+                // initializing vis dashboard
+                iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
+                    //selectedChart: 'geochart',
+                    hideCollections: true,
+                    showLinkImageButton: true,
+                    showLinkItemButton: true
+                }});
                    iframes.sendMsgAll({event: 'eexcess.newResults', data: res});
                    sessionStorage.setItem("curResults", JSON.stringify(res));
                 });

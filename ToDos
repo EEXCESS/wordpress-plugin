@@ -23,8 +23,7 @@ TODOS/Upcoming improvements
 - Removing the "#EEXCESS# <search term>"-feature [Atif]
 
 Issues concerning the rewrite
-- advanced logging need reimplementation
-- alter citations button needs reimplementation
-- citation of ressources needs reimplementation
-- number of results
-- user visualization builder from c4-repo
+- insert items from dashboard beautifully
+- implement logging
+- remove some icons from resultlist
+- fix bad alignment of icons in resultlist citation 

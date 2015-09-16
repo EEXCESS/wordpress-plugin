@@ -1,5 +1,5 @@
 // load dependencies
-require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, api, iframes, citationBuilder, eexcessMethods) {
+require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods', 'impromptu'], function($, api, iframes, citationBuilder, eexcessMethods, impromptu) {
     // set the URL of the federated recommender to the stable server
     // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
 
@@ -74,6 +74,15 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
            eexcessMethods.setContent(newText);
         }
 
+
+        if (msg.data.event && msg.data.event === 'eexcess.linkImageClicked') {
+           console.log("up 'n' runnin. image clicked.");
+        }
+
+        if (msg.data.event && msg.data.event === 'eexcess.linkItemClicked') {
+            hideThickbox();
+        }
+        
         /*
          * Registers custom buttons after the iframe has signaled, that the msg listeners are in place
          */
@@ -92,7 +101,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         // cite as citation button
         iframes.sendMsg({
             event: 'eexcess.registerButton.perResult',
-            html: '<div style="float: right; padding-top: 6px;"><img data-method="eexcess.citationRequest" alt="Cite as citation" src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
+            html: '<div style="float: right; padding-top: 6px;"><img data-method="eexcess.citationRequest" alt="Cite as citation" src="' + plugin_url + 'images/Wordpress_Cite_Button_Inactive_24.png' + '"></div>',
             responseEvent: 'eexcess.citationRequest'
         }, 
         ['resultList']);
@@ -100,9 +109,23 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         // cite as image button
         iframes.sendMsg({
             event: 'eexcess.registerButton.perResult',
-            html: '<div style="float: right; padding-top: 6px;"><img data-method="eexcess.imageCitationRequest" alt="Cite as image" src="' + plugin_url + 'images/Sketch-Book-icon.png' + '"></div>',
+            html: '<div style="float: right; padding-top: 6px;"><img data-method="eexcess.imageCitationRequest" alt="Cite as image" src="' + plugin_url + 'images/Thumbnails_EECXESS_Inactive_24.png' + '"></div>',
             responseEvent: 'eexcess.imageCitationRequest'
         }, 
         ['resultList']);
+    }
+
+    function hideThickbox(){
+        $("#TB_window").hide("fast");
+        //$("#TB_overlay").hide("fast");
+        $("body").removeClass('modal-open');
+        $("body").animate({
+              scrollTop: $("#wp-content-editor-container").offset().top
+        }, 500);
+        $("#mceu_29").css("z-index", $("#TB_overlay").css("z-index") + 1);
+    }
+    function showThickbox(){
+        $("#TB_window").show("fast");
+        $("#TB_overlay").show("fast");
     }
 });
