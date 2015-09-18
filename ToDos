@@ -27,3 +27,4 @@ Issues concerning the rewrite
 - implement logging
 - remove some icons from resultlist
 - fix bad alignment of icons in resultlist citation 
+- add button for "insert url"
