@@ -10,7 +10,6 @@ requirejs.config({
       citationBuilder: 'citationBuilder',
       CLSWrapper: 'lib/c4/CitationBuilder/CitationBuilder/citationBuilder',
       eexcessMethods: 'eexcessMethods',
-      impromptu: 'jquery-impromptu.min'
    }
 });
 

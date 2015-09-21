@@ -46,6 +46,7 @@ limitations under the License.
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
          wp_enqueue_style( 'onOffSwitch', plugins_url( '/styles/toggle-switch.css', __FILE__ ) );
+         add_editor_style(plugins_url( '/styles/jquery-ui.min.css', __FILE__ ));
       }
    }
 

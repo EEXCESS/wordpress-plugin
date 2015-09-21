@@ -1,5 +1,5 @@
 // load dependencies
-require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods', 'impromptu'], function($, api, iframes, citationBuilder, eexcessMethods, impromptu) {
+require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, api, iframes, citationBuilder, eexcessMethods) {
     // set the URL of the federated recommender to the stable server
     // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
 
@@ -39,16 +39,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
          * This signal is sent after the user hit a citation button.
          */
         if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
-            api.getDetails([msg.data.documentsMetadata.documentBadge], function(response){
-                if(response.status === 'success'){
-                   var record = response.data.documentBadge[0];
-                   citationBuilder.addAsCitation(record);
-                } else if(response.status === 'error'){
-                   alert("Could not retrieve data required to asseble the citation");
-                } else {
-
-                }
-            });
+           insertCitation([msg.data.documentsMetadata.documentBadge]);
         }
 
         /*
@@ -80,7 +71,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         }
 
         if (msg.data.event && msg.data.event === 'eexcess.linkItemClicked') {
-            hideThickbox();
+            hideThickbox(msg.data.data);
         }
         
         /*
@@ -115,17 +106,66 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         ['resultList']);
     }
 
-    function hideThickbox(){
+    function hideThickbox(res){
         $("#TB_window").hide("fast");
-        //$("#TB_overlay").hide("fast");
         $("body").removeClass('modal-open');
+
+        // scroll to editor
         $("body").animate({
               scrollTop: $("#wp-content-editor-container").offset().top
         }, 500);
+        
+
+        // bring editor to foreground and hide the toolsbar
         $("#mceu_29").css("z-index", $("#TB_overlay").css("z-index") + 1);
+        $("#mceu_30").hide("slow");
+
+        // unbind click event handler of the overlay so that the user can't leave the dialog
+        $("#TB_overlay").unbind();
+
+        // create "embed into blog post" dialog
+
+        var ifrBody = $("#content_ifr").contents().find("body");
+        ifrBody.click(function(e){
+           if (confirm("Do you want to embed the citation at the location you just clicked?") == true) {
+               insertCitation([res.v2DataItem.documentBadge]);
+               restoreDashboard();
+           } else {
+               x = "You pressed Cancel!";
+               restoreDashboard();
+           } 
+        });
+
     }
+
+    function restoreDashboard(){
+       $("#content_ifr").contents().find("body").unbind("click");
+       $("#TB_window").show("fast");
+       $("body").addClass('modal-open');
+       $("#mceu_29").css("z-index", "auto");
+       $("#mceu_30").show();
+    }
+
     function showThickbox(){
         $("#TB_window").show("fast");
         $("#TB_overlay").show("fast");
+    }
+
+    function insertCitation(documentBadges){
+       if(Array.isArray(documentBadges)){
+          api.getDetails(documentBadges, function(response){
+             if(response.status === 'success'){
+                var record = response.data.documentBadge[0];
+                citationBuilder.addAsCitation(record);
+             } else if(response.status === 'error'){
+                alert("Could not retrieve data required to asseble the citation");
+             } else {
+
+             }
+          });
+       } else {
+          throw new Error("You need to pass an array of badges");
+       }
+
     }
 });

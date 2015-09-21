@@ -1,0 +1,17 @@
+FEATURES
+- better icons for cite image/cite/add hyperlink
+- add hyperlink as seperate button
+- implementing insert as image feature
+- implement logging
+- implement comprehensive user profile 
+- use the entity extraction service from the browser extension to generate the queries (instead of only searching for selected text)
+- new tabs: text vs. images (instead of all, images, cultural, scientific)
+- remember the selected citation style for per post 
+- change all citations when style is changed
+- simplify resultlist by removing icons
+
+
+OPINIONS
+- visualisation is overload and overloaded
+- position of the EEXCESS plugin is not optimal, when you have a longer article you don’t see the search result list anymore
+- is changing of the citation style possible (no suggestion, just a question)
