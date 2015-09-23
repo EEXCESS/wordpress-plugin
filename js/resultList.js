@@ -36,42 +36,39 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         }
 
         /*
-         * This signal is sent after the user hit a citation button.
+         * This signal is sent from the resultList after the user hit a citation button.
          */
         if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
-           insertCitation([msg.data.documentsMetadata.documentBadge]);
+            insertCitation([msg.data.documentsMetadata.documentBadge], function(){
+              alert("The image was successfully added to the blog post");
+           });
         }
 
         /*
-         * This signal is sent after the user hit a citation as image button.
+         * This signal is sent from the resultlist after the user hit a citation as image button.
          */
         if (msg.data.event && msg.data.event === 'eexcess.imageCitationRequest') {
-           var imageURL = msg.data.documentsMetadata.previewImage,
-           title = msg.data.documentsMetadata.title,
-           snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
-           position = eexcessMethods.getCursor(),
-           content = eexcessMethods.getContent();
-
-           if(eexcessMethods.extendedLoggingEnabled()){
-              try{
-                 sendUsersActivitiesSignal("image_embedded", this);
-              }catch(e){
-                 console.log("Logging failed. Message was: " + e.message);
-              }
-           }
-
-           var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
-           var newText = insertIntoText(content, insertionPosition, snippet);
-           eexcessMethods.setContent(newText);
+           embedImage(msg.data.documentsMetadata.title, msg.data.documentsMetadata.previewImage, function(){
+              alert("The image was successfully added to the blog post");
+           });
         }
-
-
+        
+        /*
+         * This signal is sent from the dashboaord after the user hit a citation as image button.
+         */
         if (msg.data.event && msg.data.event === 'eexcess.linkImageClicked') {
-           console.log("up 'n' runnin. image clicked.");
+           embedImage(msg.data.data.title, msg.data.data.previewImage, function(){
+              alert("The image was successfully added to the blog post");
+           });
         }
 
+        /*
+         * This signal is sent from the dashboaord after the user hit a citation button.
+         */
         if (msg.data.event && msg.data.event === 'eexcess.linkItemClicked') {
-            hideThickbox(msg.data.data);
+            hideThickbox(msg.data.data, function(){
+              alert("The citation was successfully added to the blog post");
+           });
         }
         
         /*
@@ -84,6 +81,28 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
     };
     // registers buttons if iframe loads first
     registerButtons();
+
+
+    function embedImage(title, imageURL, callback){
+        var snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
+        position = eexcessMethods.getCursor(),
+        content = eexcessMethods.getContent();
+
+        if(eexcessMethods.extendedLoggingEnabled()){
+           try{
+              sendUsersActivitiesSignal("image_embedded", this);
+           }catch(e){
+              console.log("Logging failed. Message was: " + e.message);
+           }
+        }
+
+        var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
+        var newText = insertIntoText(content, insertionPosition, snippet);
+        eexcessMethods.setContent(newText);
+        if(typeof(callback) === "function"){
+           callback();
+        }
+    }
 
     /*
      * When the iframe is completly loaded, send a message to add buttons
@@ -106,7 +125,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         ['resultList']);
     }
 
-    function hideThickbox(res){
+    function hideThickbox(res, callback){
         $("#TB_window").hide("fast");
         $("body").removeClass('modal-open');
 
@@ -128,7 +147,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         var ifrBody = $("#content_ifr").contents().find("body");
         ifrBody.click(function(e){
            if (confirm("Do you want to embed the citation at the location you just clicked?") == true) {
-               insertCitation([res.v2DataItem.documentBadge]);
+               insertCitation([res.v2DataItem.documentBadge], callback);
                restoreDashboard();
            } else {
                x = "You pressed Cancel!";
@@ -151,12 +170,15 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         $("#TB_overlay").show("fast");
     }
 
-    function insertCitation(documentBadges){
+    function insertCitation(documentBadges, callback){
        if(Array.isArray(documentBadges)){
           api.getDetails(documentBadges, function(response){
              if(response.status === 'success'){
                 var record = response.data.documentBadge[0];
                 citationBuilder.addAsCitation(record);
+                if(typeof(callback) === "function"){
+                   callback();
+                }
              } else if(response.status === 'error'){
                 alert("Could not retrieve data required to asseble the citation");
              } else {
