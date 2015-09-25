@@ -21,11 +21,14 @@ require(['jquery', 'recommendationEventsHelper', 'iframes'], function($, helper,
    window.tb_show_old = window.tb_show;
    window.tb_show = function(t, a, g){
       window.tb_show_old(t, a, g);
-      resizeVisualization();
-      var res = JSON.parse(sessionStorage.getItem("curResults"));
-      res = {event: "eexcess.newResults", data: res};
-      
-      iframes.sendMsg(res , ["dashboard"]);
+      // only when the title of the thickbox is "Visualization"
+      if(t === "Visualization"){
+         resizeVisualization();
+         var res = JSON.parse(sessionStorage.getItem("curResults"));
+         res = {event: "eexcess.newResults", data: res};
+         
+         iframes.sendMsg(res , ["dashboard"]);
+      }
    }
 
    // Triggers the recommendations call by button
