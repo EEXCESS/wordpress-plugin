@@ -35,7 +35,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
     * Handles the "Add as Citation" buttons in the recommendation area. It adds citations
     * to the text, depending on the value of the citation style drop down element
     */
-   function addAsCitation(record){
+   function addAsCitation(record, hyperlink){
       var citationStyle = $('#citationStyleDropDown').val(),
       cursorPosition = "",
       text = "",
@@ -63,7 +63,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
 
       }
 
-      if(citationStyle == "default"){
+      if(hyperlink){
          var searchQuery = $("#searchQuery").text();
          var newText = eexcessMethods.pasteLinkToText(content, position, url, title, searchQuery);
       } else {

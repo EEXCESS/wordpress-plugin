@@ -86,12 +86,12 @@
 				form = form + '<tr> \
 						<td><input type="checkbox" class="deletionIndicator"></td> \
 						<td>' + references[i].outerHTML + '</td> \
-						<td><button name="delete" class="button-secondary remove"><img src="' + plugin_url + 'images/cross.png"</button></td> \
+						<td><button name="delete" class="button-secondary remove"><img height="20" width="20" src="' + plugin_url + 'images/delete.png"</button></td> \
 					</tr>';
 			}
 			form = form + '</table>\
 			<p class="submit">\
-				<input type="button" id="deletion-submit" class="button-primary" value="Delete marked" name="submit" />\
+				<input type="button" id="deletion-submit" class="button-primary" value="Delete marked" name="submit" style="margin-left: 10px"/>\
 			</p>\
 			</div>';
 		}

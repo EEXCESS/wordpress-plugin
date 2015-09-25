@@ -39,7 +39,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
          * This signal is sent from the resultList after the user hit a citation button.
          */
         if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
-            insertCitation([msg.data.documentsMetadata.documentBadge], function(){
+            insertCitation([msg.data.documentsMetadata.documentBadge], false, function(){
               alert("The image was successfully added to the blog post");
            });
         }
@@ -71,6 +71,15 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
            });
         }
         
+        /*
+         * This signal is sent from the resultlist after the user clicked the "insert hyperlink"-button.
+         */
+        if (msg.data.event && msg.data.event === 'eexcess.hyperlinkInsertRequest') {
+            insertCitation([msg.data.documentsMetadata.documentBadge], true, function(){
+              alert("The hyperlink was successfully added to the blog post");
+           });
+        }
+
         /*
          * Registers custom buttons after the iframe has signaled, that the msg listeners are in place
          */
@@ -156,7 +165,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         var ifrBody = $("#content_ifr").contents().find("body");
         ifrBody.click(function(e){
            if (confirm("Do you want to embed the citation at the location you just clicked?") == true) {
-               insertCitation([res.v2DataItem.documentBadge], callback);
+               insertCitation([res.v2DataItem.documentBadge], false, callback);
                restoreDashboard();
            } else {
                x = "You pressed Cancel!";
@@ -179,12 +188,12 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         $("#TB_overlay").show("fast");
     }
 
-    function insertCitation(documentBadges, callback){
-       if(Array.isArray(documentBadges)){
+    function insertCitation(documentBadges, hyperlink, callback){
+       if(Array.isArray(documentBadges) && typeof(hyperlink) === 'boolean'){
           api.getDetails(documentBadges, function(response){
              if(response.status === 'success'){
                 var record = response.data.documentBadge[0];
-                citationBuilder.addAsCitation(record);
+                citationBuilder.addAsCitation(record, hyperlink);
                 if(typeof(callback) === "function"){
                    callback();
                 }
@@ -195,7 +204,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
              }
           });
        } else {
-          throw new Error("You need to pass an array of badges");
+          throw new Error("The parameters you passed have invalid types.");
        }
 
     }

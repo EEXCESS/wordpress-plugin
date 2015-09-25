@@ -96,7 +96,6 @@ limitations under the License.
       <!-- / Visualization thickbox-->
 
       <select name="citationStyleDropDown" id="citationStyleDropDown" style="float: right">
-         <option value="default" selected="selected">Citation Style (default Hyperlink)</option>
          <?php
             // corresponds to EEXCESS.citeproc.stylesDir from eexcess-settings.js.
             // unfortunatley there is no way to share that variable. At least AFAIK.
