@@ -1,24 +1,10 @@
-{
+{  
    "documentBadge":[
       {
-             "id": "10010330023",
-             "provider": "ZBW",
-             "uri": "http://www.econbiz.de/Record/10010330023"
-      },
-      {
-             "id": "10010775499",
-             "provider": "ZBW",
-             "uri": "http://www.econbiz.de/Record/10010775499"
-      },
-      {
-             "id": "JOONPT3LZAVG2PBL6UZRAQRTSLKBI5IN",
-             "provider": "Deutsche Digitale Bibliothek",
-             "uri": "https://www.deutsche-digitale-bibliothek.de/item/JOONPT3LZAVG2PBL6UZRAQRTSLKBI5IN"
-      },
-      {
-             "id": "D3767SGU6ZHP3RWQ7EHU3PGBZE6U42B5",
-             "provider": "Deutsche Digitale Bibliothek",
-             "uri": "https://www.deutsche-digitale-bibliothek.de/item/D3767SGU6ZHP3RWQ7EHU3PGBZE6U42B5"
+         "id":"NPK7HG245PT2GCOD3I3VIH576DLM43LR",
+         "uri":"https://www.deutsche-digitale-bibliothek.de/item/NPK7HG245PT2GCOD3I3VIH576DLM43LR",
+         "provider":"Deutsche Digitale Bibliothek"
       }
    ]
 }
+

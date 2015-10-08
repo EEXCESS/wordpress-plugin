@@ -4,7 +4,6 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
             $("#eexcess_container .inside #content #list"),
             $("#eexcess_container .inside #content p"),
             $('#abortRequest'),
-            $('#citationStyleDropDown'),
             $('#searchQueryReflection'));
    /*
     * Handles the "Add as Image" buttons in the recommendation area. It adds Images
@@ -36,7 +35,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
     * to the text, depending on the value of the citation style drop down element
     */
    function addAsCitation(record, hyperlink){
-      var citationStyle = $('#citationStyleDropDown').val(),
+      var citationStyle = $("#mceu_17-open").text(),
       cursorPosition = "",
       text = "",
       alreadyCited = -1,

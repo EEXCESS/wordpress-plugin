@@ -8,7 +8,6 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
             $("#eexcess_container .inside #content #list"),
             $("#eexcess_container .inside #content p"),
             $('#abortRequest'),
-            $('#citationStyleDropDown'),
             $('#searchQueryReflection'));
 
     /*
@@ -191,7 +190,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
     function insertCitation(documentBadges, hyperlink, callback){
        if(Array.isArray(documentBadges) && typeof(hyperlink) === 'boolean'){
           api.getDetails(documentBadges, function(response){
-             if(response.status === 'success'){
+             if(response.status === 'success' && response.data.documentBadge.length > 0){
                 var record = response.data.documentBadge[0];
                 citationBuilder.addAsCitation(record, hyperlink);
                 if(typeof(callback) === "function"){

@@ -12,7 +12,6 @@ define(["jquery"], function($){
    resultList,
    introText,
    abortRequestButton,
-   CitationStyleDropDown,
 
    // used to store a ajax request in order to be able to abort it.
    request = null;
@@ -23,17 +22,15 @@ define(["jquery"], function($){
     * @param mSpinner: reference to a DOM-object representation a spinner that is
     *                  usen when time-consuming actions take place
     */
-   init = function(mSpinner, mIntroText, mAbortRequestButton, mCitationStyleDropDown, mSearchQueryReflection) {
+   init = function(mSpinner, mIntroText, mAbortRequestButton,  mSearchQueryReflection) {
       this.that = this;
       this.spinner = mSpinner;
       this.introText = mIntroText;
       this.abortRequestButton = mAbortRequestButton;
-      this.CitationStyleDropDown = mCitationStyleDropDown;
       this.searchQueryReflection = mSearchQueryReflection;
 
       this.spinner.hide();
       this.abortRequestButton.hide();
-      this.CitationStyleDropDown.hide();
       this.searchQueryReflection.hide();
 
       /**

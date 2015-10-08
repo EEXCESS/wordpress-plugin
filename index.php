@@ -43,6 +43,22 @@ limitations under the License.
          // make the plugins url available in scripts
          wp_localize_script( 'requirejs', 'plugin_url', plugins_url( '/', __FILE__ ) );
 
+
+         // read all citeproc style files and make them available on the client side
+         $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citationBuilder/citationStyles';
+         if ($handle = opendir($citeprocStylesPath)) {
+            $citationStyles = array();
+            while (false !== ($entry = readdir($handle))) {
+               if ($entry != "." && $entry != "..") {
+                  $entry = str_replace(".csl", "", $entry);
+                  $citationStyles[] = $entry;
+                  //echo '<option value="' . $entry . '">' . $entry . '</option>';
+               }
+            }
+            closedir($handle);
+            wp_localize_script( 'requirejs', 'citationStyles', $citationStyles );
+         }
+
          // init styles
          wp_enqueue_style( 'eexcess-styles', plugins_url( '/styles/eexcess-styles.css', __FILE__ ) );
          wp_enqueue_style( 'onOffSwitch', plugins_url( '/styles/toggle-switch.css', __FILE__ ) );
@@ -94,23 +110,6 @@ limitations under the License.
          <input id="visualizationButton"  style="width: 100px;" name="visualization" class="button button-small" value="Visualization">
       </a>
       <!-- / Visualization thickbox-->
-
-      <select name="citationStyleDropDown" id="citationStyleDropDown" style="float: right">
-         <?php
-            // corresponds to EEXCESS.citeproc.stylesDir from eexcess-settings.js.
-            // unfortunatley there is no way to share that variable. At least AFAIK.
-            $citeprocStylesPath = plugin_dir_path(__FILE__) . 'js/lib/citationBuilder/citationStyles';
-            if ($handle = opendir($citeprocStylesPath)) {
-               while (false !== ($entry = readdir($handle))) {
-                  if ($entry != "." && $entry != "..") {
-                     $entry = str_replace(".csl", "", $entry);
-                     echo '<option value="' . $entry . '">' . $entry . '</option>';
-                  }
-               }
-               closedir($handle);
-            }
-         ?>
-      </select>
       <div id="searchQueryReflection" class="searchQueryReflection">
          <span id="numResults"></span> Results on:
          <span id="searchQuery" style="color: #000000"></span>
@@ -187,6 +186,7 @@ limitations under the License.
    function EEXCESS_add_tinymce_plugin( $plugin_array ) {
       $plugin_array['EEXCESS_get_recommendations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Get_Recommendations_Button.js', __FILE__ );
       $plugin_array['EEXCESS_alter_citations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Alter_Citations_Button.js', __FILE__ );
+      $plugin_array['EEXCESS_citation_styles'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Citation_Styles.js', __FILE__ );
       return $plugin_array;
    }
 
@@ -195,6 +195,7 @@ limitations under the License.
 
       array_push( $buttons, 'Get_Recommendations_Button');
       array_push( $buttons, 'Alter_Citations_Button');
+      array_push( $buttons, 'Citation_Styles');
       return $buttons;
    }
 ?>
