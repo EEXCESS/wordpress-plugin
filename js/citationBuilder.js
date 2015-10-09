@@ -35,7 +35,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
     * to the text, depending on the value of the citation style drop down element
     */
    function addAsCitation(record, hyperlink){
-      var citationStyle = $("#mceu_17-open").text(),
+      var citationStyle = $("#currentCitationStyle").attr("data-citationstyle"),
       cursorPosition = "",
       text = "",
       alreadyCited = -1,

@@ -52,7 +52,6 @@ limitations under the License.
                if ($entry != "." && $entry != "..") {
                   $entry = str_replace(".csl", "", $entry);
                   $citationStyles[] = $entry;
-                  //echo '<option value="' . $entry . '">' . $entry . '</option>';
                }
             }
             closedir($handle);
@@ -96,9 +95,6 @@ limitations under the License.
     */
    function eexcess_meta_box_callback( $post ) { ?>
       <?php // List template ?>
-      <input name="getRecommendations" class="button button-primary" id="getRecommendations" value="Get Recommendations" readonly>
-
-
       <!-- Visualization thickbox-->
       <?php add_thickbox(); ?>
       <div id="visualizationThickbox" style="display:none;">
@@ -106,24 +102,9 @@ limitations under the License.
          <iframe id="dashboard" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/Dashboard/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
          <!-- /thickbox content-->
       </div>
-      <a href="#TB_inline?width=600&height=550&inlineId=visualizationThickbox" title="Visualization" class="thickbox">
-         <input id="visualizationButton"  style="width: 100px;" name="visualization" class="button button-small" value="Visualization">
-      </a>
       <!-- / Visualization thickbox-->
-      <div id="searchQueryReflection" class="searchQueryReflection">
-         <span id="numResults"></span> Results on:
-         <span id="searchQuery" style="color: #000000"></span>
-      </div>
       <div id="resultListContainer">
          <iframe id="resultList" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
-      </div>
-      <div id="content">
-         <p>
-            Get recommendations for keywords by using  selecting parts of the text and then 
-            either click the "Get Recommendations" button or use the keyboard shortcut CTRL + E.
-         </p>
-         <div class='eexcess-spinner'></div>
-         <div id='list'></div>
       </div>
       <div id="privacySettings">
          <hr>
@@ -148,6 +129,7 @@ limitations under the License.
          </a>
       </div>
       <!-- /privacy settings thickbox-->
+      <div id="currentCitationStyle" data-citationStyle="apa" style="display:none;">
    <?php }
 
    // Hook for the WYSIWYG editor
@@ -186,6 +168,7 @@ limitations under the License.
    function EEXCESS_add_tinymce_plugin( $plugin_array ) {
       $plugin_array['EEXCESS_get_recommendations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Get_Recommendations_Button.js', __FILE__ );
       $plugin_array['EEXCESS_alter_citations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Alter_Citations_Button.js', __FILE__ );
+      $plugin_array['EEXCESS_vis_dashboard'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Vis_Dashboard.js', __FILE__ );
       $plugin_array['EEXCESS_citation_styles'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Citation_Styles.js', __FILE__ );
       return $plugin_array;
    }
@@ -195,6 +178,7 @@ limitations under the License.
 
       array_push( $buttons, 'Get_Recommendations_Button');
       array_push( $buttons, 'Alter_Citations_Button');
+      array_push( $buttons, 'Vis_Dashboard');
       array_push( $buttons, 'Citation_Styles');
       return $buttons;
    }

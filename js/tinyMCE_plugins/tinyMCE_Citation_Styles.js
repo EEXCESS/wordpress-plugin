@@ -11,8 +11,9 @@
       editor.addButton( 'Citation_Styles', {
          type: 'listbox',
          text: 'Citation Styles',
+         title: 'Citation Styles',
          onselect: function(e) {
-            console.log("some msg");  
+            $("#currentCitationStyle").attr("data-citationstyle", this.value());
          }, 
          values: styles,
          onPostRender: function() {

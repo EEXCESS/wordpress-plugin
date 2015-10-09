@@ -6,32 +6,14 @@ define(["jquery"], function($){
     * "class" can be found at the bottom of this file.
     */
    
-   // They hold references to jquery-objects that represent html-objects in the DOM.
-   var that,
-   spinner,
-   resultList,
-   introText,
-   abortRequestButton,
-
-   // used to store a ajax request in order to be able to abort it.
-   request = null;
-
    /**
     * The Constructor of this class.
     * All parameters are jquery-objects.
     * @param mSpinner: reference to a DOM-object representation a spinner that is
     *                  usen when time-consuming actions take place
     */
-   init = function(mSpinner, mIntroText, mAbortRequestButton,  mSearchQueryReflection) {
+   init = function() {
       this.that = this;
-      this.spinner = mSpinner;
-      this.introText = mIntroText;
-      this.abortRequestButton = mAbortRequestButton;
-      this.searchQueryReflection = mSearchQueryReflection;
-
-      this.spinner.hide();
-      this.abortRequestButton.hide();
-      this.searchQueryReflection.hide();
 
       /**
        * The return object exposes elements to the outside world.
@@ -42,17 +24,11 @@ define(["jquery"], function($){
          init: init,
          pasteLinkToText: pasteLinkToText,
          getTerms: getTerms,
-         getRecommendations: getRecommendations,
          getCursorPosition: getCursorPosition,
          setCursorPosition: setCursorPosition,
-         spinner: spinner,
-         introText: introText,
-         abortRequestButton: abortRequestButton,
-         request: request,
          determineArticlesEnd: determineArticlesEnd,
          findHtmlTagPositions: findHtmlTagPositions,
          findWhitespaces: findWhitespaces,
-         searchQueryReflection: searchQueryReflection,
          getCursor: getCursor,
          getContent: getContent,
          setContent: setContent,
@@ -94,18 +70,6 @@ define(["jquery"], function($){
          "action-taken": action,
          "uuid": uuid
       };
-
-      /*$.ajax({
-         type: "POST",
-         url: ajaxurl,
-         data: data,
-         context: action,
-         success: function(response, status, jqXHR){
-            if(response.search("200 OK") === -1){
-               console.log("Processing advanced logs failed");
-            }
-         }
-      });*/
    }
 
    /**

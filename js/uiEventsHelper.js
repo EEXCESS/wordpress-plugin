@@ -1,18 +1,11 @@
 define(['jquery', 'settings'], function($, settings){
 
-   var spinner = $("#eexcess_container .inside #content .eexcess-spinner"),
-   recommendButton = $('#getRecommendations');
-   resultList = $('#resultList');
-   introText = $("#eexcess_container .inside #content p"),
-   searchQueryReflection = $('#searchQueryReflection'),
-   privacyButton = $('#privacySettings');
+   var resultList = $('#resultList'),
+   privacyButton = $('#privacySettings'),
+   visButton = $('div[aria-label="Visualization Dashboard"]');
 
-   function initializeUI(){
-      spinner.hide();
-      resultList.hide();
-      searchQueryReflection.hide();
-   }
-   initializeUI();
+   resultList.hide();
+   visButton.hide();
 
 
    return{
@@ -29,14 +22,8 @@ define(['jquery', 'settings'], function($, settings){
        */
       queryTriggered : function(query) {
          if(query != "") {
-            this.setSearchQueryReflection(query);
-            searchQueryReflection.show();
-            $('.error').remove();
             resultList.show("slow");
-         } else {
-            this.showError(settings.errorMessages.noTextSelected, $("#visualizationThickbox"));
-            resultList.hide("slow");
-            searchQueryReflection.hide("slow");
+            visButton.show("fast");
          }
       },
       
