@@ -27,14 +27,6 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         }
 
         /*
-         * Here, we are only interested in ratings that might have been given in one of the included widgets.
-         * For the full list of possible events, see the readme in the root folder.
-         */
-        if (msg.data.event && msg.data.event === 'eexcess.rating') {
-            console.log('The resource: ' + msg.data.data.uri + ' has been rated with a score of ' + msg.data.data.score);
-        }
-
-        /*
          * This signal is sent from the resultList after the user hit a citation button.
          */
         if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
@@ -152,9 +144,11 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         }, 500);
         
 
-        // bring editor to foreground and hide the toolsbar
-        $("#mceu_29").css("z-index", $("#TB_overlay").css("z-index") + 1);
-        $("#mceu_30").hide("slow");
+        // bring editor to foreground and hide the toolbar
+        var tinymce = $('.mce-tinymce'),
+        toolbar = tinymce.find('.mce-toolbar-grp');
+        tinymce.css("z-index", $("#TB_overlay").css("z-index") + 1);
+        toolbar.hide("slow");
 
         // unbind click event handler of the overlay so that the user can't leave the dialog
         $("#TB_overlay").unbind();
@@ -175,11 +169,14 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
     }
 
     function restoreDashboard(){
+       var tinymce = $('.mce-tinymce'),
+       toolbar = tinymce.find('.mce-toolbar-grp');
+
        $("#content_ifr").contents().find("body").unbind("click");
        $("#TB_window").show("fast");
        $("body").addClass('modal-open');
-       $("#mceu_29").css("z-index", "auto");
-       $("#mceu_30").show();
+       tinymce.css("z-index", "auto");
+       toolbar.show();
     }
 
     function showThickbox(){
@@ -188,23 +185,48 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
     }
 
     function insertCitation(documentBadges, hyperlink, callback){
-       if(Array.isArray(documentBadges) && typeof(hyperlink) === 'boolean'){
-          api.getDetails(documentBadges, function(response){
-             if(response.status === 'success' && response.data.documentBadge.length > 0){
-                var record = response.data.documentBadge[0];
-                citationBuilder.addAsCitation(record, hyperlink);
-                if(typeof(callback) === "function"){
-                   callback();
-                }
-             } else if(response.status === 'error'){
-                alert("Could not retrieve data required to asseble the citation");
-             } else {
+       if(Array.isArray(documentBadges) 
+             && documentBadges.length > 0 
+             && typeof(hyperlink) === 'boolean'){
+          var cached = probeCache(documentBadges[0]);
+          if(cached == null){
+             api.getDetails(documentBadges, function(response){
+                if(response.status === 'success' && response.data.documentBadges.length > 0){
+                   var record = response.data.documentBadges[0];
+                   citationBuilder.addAsCitation(record, hyperlink);
+                   if(typeof(callback) === "function"){
+                      callback();
+                   }
+                } else if(response.status === 'error'){
+                   alert("Could not retrieve data required to asseble the citation");
+                } else {
 
+                }
+             });
+          } else {
+             citationBuilder.addAsCitation(cached, hyperlink);
+             if(typeof(callback) === "function"){
+                callback();
              }
-          });
+          } 
        } else {
           throw new Error("The parameters you passed have invalid types.");
        }
 
+    }
+
+    function probeCache(documentBadge){
+       var cache = JSON.parse(sessionStorage.getItem("curResults"));
+       if(cache != null && cache.hasOwnProperty("result")){
+          cache = cache.result;
+          for(i=0; i<cache.length; i++){
+             if(cache[i].documentBadge.id == documentBadge.id && cache[i].documentBadge.hasOwnProperty("detail")){
+                return cache[i].documentBadge;
+             }
+          }
+          return null;
+       } else {
+          throw new Error("Invalid cache content");
+       }
     }
 });

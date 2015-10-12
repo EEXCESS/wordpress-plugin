@@ -1,11 +1,10 @@
 define(['jquery', 'settings'], function($, settings){
 
    var resultList = $('#resultList'),
-   privacyButton = $('#privacySettings'),
-   visButton = $('div[aria-label="Visualization Dashboard"]');
+   privacyButton = $('#privacySettings');
 
+   $('div[aria-label="Visualization Dashboard"]').hide();
    resultList.hide();
-   visButton.hide();
 
 
    return{
@@ -23,7 +22,6 @@ define(['jquery', 'settings'], function($, settings){
       queryTriggered : function(query) {
          if(query != "") {
             resultList.show("slow");
-            visButton.show("fast");
          }
       },
       
