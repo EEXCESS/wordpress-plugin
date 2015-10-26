@@ -31,7 +31,6 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
          } else {
 
          }
-         console.log("aal");
       });
    }
 
