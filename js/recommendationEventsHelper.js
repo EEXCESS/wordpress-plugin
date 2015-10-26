@@ -67,14 +67,17 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
                        showLinkImageButton: true,
                        showLinkItemButton: true
                    }});
-                   iframes.sendMsgAll({event: 'eexcess.newResults', data: res});
+                   // when the dashboard is currently displayed, then...
+                   if( $("#dashboard").parent().attr("id") == "TB_ajaxContent"){
+                      iframes.sendMsg({event: 'eexcess.newResults', data: res}, ["dashboard"]);
+                   };
                 });
                 sessionStorage.setItem("curResults", JSON.stringify(res));
                 fetchDetails(res);
-                iframes.sendMsgAll({event: 'eexcess.newResults', data: res});
+                iframes.sendMsg({event: 'eexcess.newResults', data: res}, ["resultList"]);
                 $('div[aria-label="Visualization Dashboard"]').show("slow");
             } else {
-                iframes.sendMsgAll({event: 'eexcess.error', data: res.data});
+                iframes.sendMsg({event: 'eexcess.error', data: res.data}, ["resultList"]);
             }
         });
       },
