@@ -1,8 +1,52 @@
 {  
    "documentBadge":[
       {
-         "id":"NPK7HG245PT2GCOD3I3VIH576DLM43LR",
-         "uri":"https://www.deutsche-digitale-bibliothek.de/item/NPK7HG245PT2GCOD3I3VIH576DLM43LR",
+         "id":"24738970-9e37-3dc0-bb43-20d5c799b19b",
+         "uri":"http://www.mendeley.com/research/diabetes-managed-care-lovelace-health-systems-episode-care-program",
+         "provider":"Mendeley"
+      },
+      {
+         "id":"10001571124",
+         "uri":"http://www.econbiz.de/Record/10001571124",
+         "provider":"ZBW"
+      },
+      {
+         "id":"86d6e53e-33a0-330c-9d86-612c9f129d30",
+         "uri":"http://www.mendeley.com/research/management-diabetes-mellitus-lovelace-health-systems-episodes-care-program",
+         "provider":"Mendeley"
+      },
+      {
+         "id":"10004608579",
+         "uri":"http://www.econbiz.de/Record/10004608579",
+         "provider":"ZBW"
+      },
+      {
+         "id":"RP-F-2005-105-46",
+         "uri":"https://www.rijksmuseum.nl/en/collection/RP-F-2005-105-46",
+         "provider":"RijksMuseum"
+      },
+      {
+         "id":"P7YGIDNJ4CI6DFB7PCL2JL4T6B7IXTWC",
+         "uri":"https://www.deutsche-digitale-bibliothek.de/item/P7YGIDNJ4CI6DFB7PCL2JL4T6B7IXTWC",
+         "provider":"Deutsche Digitale Bibliothek"},
+      {
+         "id":"/2022323/301B1706F223C8B81BDE555E89A8AFD42CE858B2",
+         "uri":"http://europeana.eu/resolve/record/2022323/301B1706F223C8B81BDE555E89A8AFD42CE858B2",
+         "provider":"Europeana"
+      },
+      {
+         "id":"9b645c85-ea8e-3a76-b4a2-9d80b025a5ba",
+         "uri":"http://www.mendeley.com/research/vision-kinesthesis-accuracy-hand-movement",
+         "provider":"Mendeley"
+      },
+      {
+         "id":"RP-F-2005-105-34",
+         "uri":"https://www.rijksmuseum.nl/en/collection/RP-F-2005-105-34",
+         "provider":"RijksMuseum"
+      },
+      {
+         "id":"CJCISRE4HWFZ556FREPTGXBLSPFX6TNH",
+         "uri":"https://www.deutsche-digitale-bibliothek.de/item/CJCISRE4HWFZ556FREPTGXBLSPFX6TNH",
          "provider":"Deutsche Digitale Bibliothek"
       }
    ]

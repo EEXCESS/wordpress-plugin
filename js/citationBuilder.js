@@ -187,7 +187,19 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
          number + "\">[" + number + "]</span></a>"
    }
 
+   function setStyle(style){
+      console.log("aal");
+   }
+
+
+   function getStyle(){
+      console.log("aal");
+      return "apa";
+   }
+
    return {
-      addAsCitation: addAsCitation
+      addAsCitation: addAsCitation,
+      setStyle: setStyle,
+      getStyle: getStyle 
    }
 });

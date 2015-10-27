@@ -14,6 +14,10 @@
          title: 'Citation Styles',
          onselect: function(e) {
             $("#currentCitationStyle").attr("data-citationstyle", this.value());
+            var style = this.value();
+            require(["citationBuilder"], function(citationBuilder){
+               citationBuilder.setStyle(style);
+            });
          }, 
          values: styles,
          onPostRender: function() {

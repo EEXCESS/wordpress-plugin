@@ -191,7 +191,8 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
           var cached = probeCache(documentBadges[0]);
           if(cached == null){
              api.getDetails(documentBadges, function(response){
-                if(response.status === 'success' && response.data.documentBadges.length > 0){
+                var aal = documentBadges;
+                if(response.status === 'success' && response.data.documentBadge.length > 0){
                    var record = response.data.documentBadges[0];
                    citationBuilder.addAsCitation(record, hyperlink);
                    if(typeof(callback) === "function"){
