@@ -21,12 +21,17 @@
          }, 
          values: styles,
          onPostRender: function() {
-            // Select the second item by default
-            if(Array.isArray(styles) && styles.length > 0){
-               if(styles[0].hasOwnProperty("text")){
-                  this.value(styles[0]["text"]);
+            var style = ""
+            thisButton = this;
+            require(["citationBuilder"], function(citationBuilder){
+               var style = citationBuilder.getStyle();
+               // Select the second item by default
+               if(Array.isArray(styles) && styles.length > 0){
+                  if(styles[0].hasOwnProperty("text")){
+                     thisButton.value(styles[0]["text"]);
+                  }
                }
-            }
+            });
          }
       });
    });

@@ -35,7 +35,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
     * to the text, depending on the value of the citation style drop down element
     */
    function addAsCitation(record, hyperlink){
-      var citationStyle = $("#currentCitationStyle").attr("data-citationstyle"),
+      var citationStyle = this.getStyle(),
       cursorPosition = "",
       text = "",
       alreadyCited = -1,
@@ -187,14 +187,37 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
          number + "\">[" + number + "]</span></a>"
    }
 
-   function setStyle(style){
-      console.log("aal");
+   /**
+    * Stores the the last chosen citation style of a blog post into 
+    * the blog post inself.
+    *
+    * @param newStyle: String that represents the style
+    */
+   function setStyle(newStyle){
+      var content = $(eexcessMethods.getContent()),
+      style = content.first().find("#citationStyle");
+      if(style.length == 0){
+         content.first().append("<span id='citationStyle' data-style='" + newStyle + "' style='display: none;'></span>");
+      } else {
+         style.attr("data-style", newStyle);
+      }
+      eexcessMethods.setContent($("<p>").append(content).html());
    }
 
-
+   /**
+    * Returns the last chosen citation style
+    *
+    * @return: The style if valid, null otherwise
+    */
    function getStyle(){
-      console.log("aal");
-      return "apa";
+      var content = $(eexcessMethods.getContent()),
+      style = content.first().find("#citationStyle").attr("data-style");
+      if(typeof(style) === "string" && style.length > 0){
+         return style;    
+      } else {
+         return null;
+      }
+      
    }
 
    return {
