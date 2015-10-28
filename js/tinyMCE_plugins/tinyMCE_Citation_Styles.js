@@ -12,6 +12,7 @@
          type: 'listbox',
          text: 'Citation Styles',
          title: 'Citation Styles',
+         icon: false,
          onselect: function(e) {
             $("#currentCitationStyle").attr("data-citationstyle", this.value());
             var style = this.value();
@@ -25,12 +26,7 @@
             thisButton = this;
             require(["citationBuilder"], function(citationBuilder){
                var style = citationBuilder.getStyle();
-               // Select the second item by default
-               if(Array.isArray(styles) && styles.length > 0){
-                  if(styles[0].hasOwnProperty("text")){
-                     thisButton.value(styles[0]["text"]);
-                  }
-               }
+               thisButton.value(style);
             });
          }
       });
