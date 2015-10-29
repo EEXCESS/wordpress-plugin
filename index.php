@@ -115,150 +115,153 @@ limitations under the License.
          <!-- privacy settings thickbox-->
          <?php add_thickbox(); ?>
          <div id="privacyThickbox" style="display:none;">
-            <br>
-            <!-- tooglebutton-->
-            <table class="privacySettings">
-               <tr>
-                  <td>Enable extended logging</td>
-                  <td>
-                     <input id="extendedLogging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
-                     <label for="extendedLogging"></label>
-                  </td>
-               </tr>
-            </table>
+               <!-- Atif: User profile panel -->
+             <div class="panel panel-primary">
+               <div class="panel-heading" style="background-color: white;">
+                  <h3 class="panel-title"> User Profile
+                     <!--<span class="glyphicon glyphicon-user"></span> -->
+                  </h3>
+               </div>
+               <div class="panel-body">
+                             <!-- SOURCE SELECTION -->
+                  <div class="row">
+                                 <!--     <div class="col-lg-12">
+                                         <div id="source_selection" class="panel panel-info">
+                                             <div class="panel-heading">
+                                                 <h3 class="panel-title">Source selection</h3>
+                                             </div>
+                                          </div>
+                                     </div> -->
+                     <div class="col-lg-8">
+                        <!-- IDENTITY -->
+                        <div class="panel panel-info">
+                           <div class="panel-heading">
+                              <h3 class="panel-title">
+                                 Identity<span class="badge pull-right setting"></span>
+                              </h3>
+                           </div>
+                           <div class="panel-body">
+                              <div class="content">
+                                 <form class="form-income">
+                                    <div class="form-group">
+                                       <label for="" class="control-label">Name</label>
+                                       <div class="row">
+                                          <div class="col-lg-2">
+                                             <select  data-eexcess-profile-field="title" class="form-control">
+                                                <option value=""></option>
+                                                <option value="mr">Mr</option>
+                                                <option value="miss">Miss</option>
+                                                <option value="mrs">Mrs</option>
+                                                <option value="ms">Ms</option>
+                                             </select>
+                                          </div>
+                                          <div class="col-lg-5">
+                                             <input data-eexcess-profile-field="firstname" type="text" class="form-control"
+                                                placeholder="First name">
+                                          </div>
+                                          <div class="col-lg-5">
+                                             <input data-eexcess-profile-field="lastname" type="text" class="form-control"
+                                                placeholder="Last name">
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="form-group">
+                                       <label for="" class="control-label">Address</label>
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <input data-eexcess-profile-field="address.line1" type="text" class="form-control" placeholder="Line 1">
+                                          </div>
+                                          <div class="col-lg-12">
+                                             <input data-eexcess-profile-field="address.line2" type="text" class="form-control" placeholder="Line 2">
+                                          </div>
+                                          <div class="col-lg-4">
+                                             <input data-eexcess-profile-field="address.zipcode" type="text" class="form-control" placeholder="Zip code">
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
+                                          </div>
+                                          <div class="col-lg-12">
+                                             <input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </form>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /IDENTITY-->
+                     </div>
+                     <div class="col-lg-4">
+                        <!-- DEMOGRAPHICS -->
+                        <div class="panel panel-info">
+                           <div class="panel-heading">
+                              <h3 class="panel-title">
+                                 Demographics <span class="badge pull-right setting"></span>
+                              </h3>
+                           </div>
+                           <div class="panel-body">
+                              <div class="form-group">
+                                 <label for="" class="control-label">Gender</label>
+                                 <select data-eexcess-profile-field="gender" class="form-control">
+                                    <option value=""></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 <label for="" class="control-label">Birthdate</label>
+                                 <div class="input-group">
+                                    <!--<span class="input-group-addon"><span class="glyphicon glyphicon-calendar icon-calendar"></span></span>-->
+                                    <input data-eexcess-profile-field="birthdate" class="form-control datepicker" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="Birthdate"></input>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /DEMOGRAPHICS-->
 
 
-         <!-- Atif: User profile panel -->
-		 <div class="panel panel-primary">
-			<div class="panel-heading" style="background-color: white;">
-				<h3 class="panel-title"> User Profile
-					<!--<span class="glyphicon glyphicon-user"></span> -->
-				</h3>
-			</div>
-			<div class="panel-body">
-	                    <!-- SOURCE SELECTION -->
-				<div class="row">
-	                        <!--     <div class="col-lg-12">
-	                                <div id="source_selection" class="panel panel-info">
-	                                    <div class="panel-heading">
-	                                        <h3 class="panel-title">Source selection</h3>
-	                                    </div>
-	                                 </div>
-	                            </div> -->
-					<div class="col-lg-8">
-						<!-- IDENTITY -->
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									Identity<span class="badge pull-right setting"></span>
-								</h3>
-							</div>
-							<div class="panel-body">
-								<div class="content">
-									<form class="form-income">
-										<div class="form-group">
-											<label for="" class="control-label">Name</label>
-											<div class="row">
-												<div class="col-lg-2">
-													<select  data-eexcess-profile-field="title" class="form-control">
-														<option value=""></option>
-														<option value="mr">Mr</option>
-														<option value="miss">Miss</option>
-														<option value="mrs">Mrs</option>
-														<option value="ms">Ms</option>
-													</select>
-												</div>
-												<div class="col-lg-5">
-													<input data-eexcess-profile-field="firstname" type="text" class="form-control"
-														placeholder="First name">
-												</div>
-												<div class="col-lg-5">
-													<input data-eexcess-profile-field="lastname" type="text" class="form-control"
-														placeholder="Last name">
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="" class="control-label">Address</label>
-											<div class="row">
-												<div class="col-lg-12">
-													<input data-eexcess-profile-field="address.line1" type="text" class="form-control" placeholder="Line 1">
-												</div>
-												<div class="col-lg-12">
-													<input data-eexcess-profile-field="address.line2" type="text" class="form-control" placeholder="Line 2">
-												</div>
-												<div class="col-lg-4">
-													<input data-eexcess-profile-field="address.zipcode" type="text" class="form-control" placeholder="Zip code">
-												</div>
-												<div class="col-lg-8">
-													<input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
-												</div>
-												<div class="col-lg-12">
-													<input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
-												</div>
-											</div>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-						<!-- /IDENTITY-->
-					</div>
-					<div class="col-lg-4">
-						<!-- DEMOGRAPHICS -->
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									Demographics <span class="badge pull-right setting"></span>
-								</h3>
-							</div>
-							<div class="panel-body">
-								<div class="form-group">
-									<label for="" class="control-label">Gender</label>
-									<select data-eexcess-profile-field="gender" class="form-control">
-										<option value=""></option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="" class="control-label">Birthdate</label>
-									<div class="input-group">
-										<!--<span class="input-group-addon"><span class="glyphicon glyphicon-calendar icon-calendar"></span></span>-->
-										<input data-eexcess-profile-field="birthdate" class="form-control datepicker" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="Birthdate"></input>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /DEMOGRAPHICS-->
-					</div>
-					
-				<!--	<div class="col-lg-12">
-						<!-- TOPICS -->
-				<!--		<div id="topics" class="panel panel-info">
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									Topics of interest <span class="badge pull-right setting"></span>
-								</h3>
-							</div>
-	<!--						<div class="panel-body">
-								<div class="form-group">
-									<input class="form-control" type="text" placeholder="New topic"></input>
-								</div>
-								<div class="label-container well well-lg">
-								</div>
-							</div>-->
-					<!--	<ul id="topicInput"></ul>
-						</div>
-						<!-- /TOPICS-->
-				<!--	</div> -->
-				</div>
-			</div>
-		</div>
-		 <!-- Atif: User profile panel ends here-->
+                        <!--  PRIVACY-->
+                        <div class="panel panel-info">
+                           <div class="panel-heading">
+                              <h3 class="panel-title">
+                                 Privacy <span class="badge pull-right setting"></span>
+                              </h3>
+                           </div>
+                           <div class="panel-body">
+                              <div class="form-group">
+                                 <label for="" class="control-label">Logging</label>
+                                 <input id="extendedLogging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                                 <label for="extendedLogging"></label>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- /PRIVACY-->
+                     </div>
+                     
+                  <!--	<div class="col-lg-12">
+                        <!-- TOPICS -->
+                  <!--		<div id="topics" class="panel panel-info">
+                           <div class="panel-heading">
+                              <h3 class="panel-title">
+                                 Topics of interest <span class="badge pull-right setting"></span>
+                              </h3>
+                           </div>
+         <!--						<div class="panel-body">
+                              <div class="form-group">
+                                 <input class="form-control" type="text" placeholder="New topic"></input>
+                              </div>
+                              <div class="label-container well well-lg">
+                              </div>
+                           </div>-->
+                     <!--	<ul id="topicInput"></ul>
+                        </div>
+                        <!-- /TOPICS-->
+                  <!--	</div> -->
+                  </div>
+               </div>
+            </div>
+             <!-- Atif: User profile panel ends here-->
 
-
-            <!-- /tooglebutton-->
          </div>
          <a href="#TB_inline?width=600&height=550&inlineId=privacyThickbox" title="Profile Settings" class="thickbox">
             <input id="privacySettings"  style="width: 100px;" name="privacySettings" class="button button-small" value="Profile Settings">

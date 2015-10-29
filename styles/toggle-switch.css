@@ -34,15 +34,15 @@ input.cmn-toggle-round + label:before {
   transition: background 0.4s;
 }
 input.cmn-toggle-round + label:after {
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   background-color: #fff;
   border-radius: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   transition: margin 0.4s;
 }
 input.cmn-toggle-round:checked + label:before {
-  background-color: #2ea2cc;
+  background-color: rgba(29, 144, 78, 0.4);
 }
 input.cmn-toggle-round:checked + label:after {
   margin-left: 16px;
