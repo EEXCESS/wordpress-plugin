@@ -88,7 +88,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         position = eexcessMethods.getCursor(),
         content = eexcessMethods.getContent();
 
-        if(eexcessMethods.extendedLoggingEnabled()){
+        if(eexcessMethods.loggingEnabled()){
            try{
               sendUsersActivitiesSignal("image_embedded", this);
            }catch(e){

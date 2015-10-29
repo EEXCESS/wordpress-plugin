@@ -125,13 +125,6 @@ limitations under the License.
                <div class="panel-body">
                              <!-- SOURCE SELECTION -->
                   <div class="row">
-                                 <!--     <div class="col-lg-12">
-                                         <div id="source_selection" class="panel panel-info">
-                                             <div class="panel-heading">
-                                                 <h3 class="panel-title">Source selection</h3>
-                                             </div>
-                                          </div>
-                                     </div> -->
                      <div class="col-lg-8">
                         <!-- IDENTITY -->
                         <div class="panel panel-info">
@@ -146,20 +139,22 @@ limitations under the License.
                                     <div class="form-group">
                                        <label for="" class="control-label">Name</label>
                                        <div class="row">
-                                          <div class="col-lg-2">
+                                          <div class="col-lg-3">
                                              <select  data-eexcess-profile-field="title" class="form-control">
-                                                <option value=""></option>
+                                                <option value="" disabled selected>Title</option>
                                                 <option value="mr">Mr</option>
                                                 <option value="miss">Miss</option>
                                                 <option value="mrs">Mrs</option>
                                                 <option value="ms">Ms</option>
                                              </select>
                                           </div>
-                                          <div class="col-lg-5">
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-lg-6">
                                              <input data-eexcess-profile-field="firstname" type="text" class="form-control"
                                                 placeholder="First name">
                                           </div>
-                                          <div class="col-lg-5">
+                                          <div class="col-lg-6">
                                              <input data-eexcess-profile-field="lastname" type="text" class="form-control"
                                                 placeholder="Last name">
                                           </div>
@@ -230,8 +225,8 @@ limitations under the License.
                            <div class="panel-body">
                               <div class="form-group">
                                  <label for="" class="control-label">Logging</label>
-                                 <input id="extendedLogging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
-                                 <label for="extendedLogging"></label>
+                                 <input id="loggingEnabled" data-eexcess-profile-field="logging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                                 <label for="loggingEnabled"></label>
                               </div>
                            </div>
                         </div>

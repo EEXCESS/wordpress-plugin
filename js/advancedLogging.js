@@ -3,7 +3,7 @@ require(['jquery'], function($){
     * Implements the advanced logging
     */
    $(document).on("mousedown", ".recommendationTextArea a", function(){
-      if(eexcessMethods.extendedLoggingEnabled()){
+      if(eexcessMethods.loggingEnabled()){
          try{
             sendUsersActivitiesSignal("detail_view", this);
          }catch(e){

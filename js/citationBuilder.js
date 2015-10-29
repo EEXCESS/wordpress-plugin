@@ -5,30 +5,6 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
             $("#eexcess_container .inside #content p"),
             $('#abortRequest'),
             $('#searchQueryReflection'));
-   /*
-    * Handles the "Add as Image" buttons in the recommendation area. It adds Images
-    * to the blogpost.
-    *
-   function addAsImage(){
-      var imageURL = $(this).parent().prev().find("a").attr("href"),
-      title = $(this).parent().find("a").text(),
-      snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",
-      position = eexcessMethods.getCursor(),
-      content = eexcessMethods.getContent();
-
-      if(eexcessMethods.extendedLoggingEnabled()){
-         try{
-            sendUsersActivitiesSignal("image_embedded", this);
-         }catch(e){
-            console.log("Logging failed. Message was: " + e.message);
-         }
-      }
-
-      var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
-      var newText = insertIntoText(content, insertionPosition, snippet);
-      eexcessMethods.setContent(newText);
-   });/
-
 
    /*
     * Handles the "Add as Citation" buttons in the recommendation area. It adds citations
@@ -53,7 +29,7 @@ define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexce
       var url = record.uri || "",
       title = record.detail.eexcessProxy.dctitle || "";
 
-      if(eexcessMethods.extendedLoggingEnabled()){
+      if(eexcessMethods.loggingEnabled()){
          try{
             sendUsersActivitiesSignal("cited", record);
          }catch(e){

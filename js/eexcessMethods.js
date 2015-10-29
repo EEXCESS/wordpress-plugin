@@ -33,7 +33,7 @@ define(["jquery"], function($){
          getContent: getContent,
          setContent: setContent,
          determineDecentInsertPosition: determineDecentInsertPosition,
-         extendedLoggingEnabled: extendedLoggingEnabled,
+         loggingEnabled: loggingEnabled,
          sendUsersActivitiesSignal: sendUsersActivitiesSignal
       };
    },
@@ -180,9 +180,9 @@ define(["jquery"], function($){
    },
 
 
-   extendedLoggingEnabled = function(){
+   loggingEnabled = function(){
       // did the user opt in to logging his/her activities?
-      return $("#extendedLogging:checked").length == 1;
+      return $("input[data-eexcess-profile-field='logging']:checked").length == 1;
    }
 
    /**

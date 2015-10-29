@@ -6,6 +6,29 @@ define(['jquery', 'settings'], function($, settings){
    $('div[aria-label="Visualization Dashboard"]').hide();
    resultList.hide();
 
+   // event handler keeping track of the profile form, storing
+   // changed values into local 
+   
+   function profileFormHandler(o){
+      var formElement  = $(o.currentTarget),
+      elementName = formElement.attr("data-eexcess-profile-field");
+      console.log("aal");
+   }
+
+   $("select[data-eexcess-profile-field='title']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='firstname']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='lastname']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='address.line1']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='address.line2']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='address.zipcode']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='address.city']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='address.country']").change(profileFormHandler);
+   $("select[data-eexcess-profile-field='gender']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='birthdate']").change(profileFormHandler);
+   $("input[data-eexcess-profile-field='logging']").change(profileFormHandler);
+
+
+
 
    return{
  
@@ -23,32 +46,6 @@ define(['jquery', 'settings'], function($, settings){
          if(query != "") {
             resultList.show("slow");
          }
-      },
-      
-      /**
-       * Sets the text for the "Results on:" display.
-       *
-       * @param text: The new text.
-       */
-      setSearchQueryReflection : function(text){
-         var foo = $('#searchQuery');
-         if(foo != null){
-            foo.text(text);
-         }
-      },
-
-      /**
-      * Inserts a div that contains an error message after a given element.
-      *
-      * @param msg:     The error message to display.
-      * @param element: The element after which to display the error.
-      */
-      showError : function(msg, element) {
-         // Removing previously added error messages
-         $(".error").remove();
-         var div = $('<div class="error">' + msg + '</div>');
-         $(element).after(div);
-         div.show("slow");
       }
    };
 });
