@@ -34,6 +34,27 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       });
    }
 
+   function compileUserProfile(){
+      return {
+         "address" : {
+            "country": localStorage["eexcess.address.country"],
+            "city": localStorage["eexcess.address.city"]
+         },
+         "ageRange": parseInt(localStorage["eexcess.birthdate"]),
+         "gender" : localStorage["eexcess.gender"]
+
+      };
+      /* expired
+      localStorage["eexcess.address.line1"]
+      localStorage["eexcess.address.line2"]
+      localStorage["eexcess.address.zipcode"]
+      localStorage["eexcess.firstname"]
+      localStorage["eexcess.lastname"]
+      localStorage["eexcess.logging"]
+      localStorage["eexcess.title"]
+      */
+   }
+
    return {
       /**
        * Extracts text marked by the user and sends it to the recommender.
@@ -42,10 +63,10 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       getTextAndRecommend: function() {
          var query = this.getSelectedText();
          if(query !== ""){
-            var profile = {contextKeywords: [{
+            var profile = $.extend(compileUserProfile(), {contextKeywords: [{
                text: query,
                weight: 1.0
-            }]};
+            }]});
             iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
             this.sendQuery(profile); // send the request
          }

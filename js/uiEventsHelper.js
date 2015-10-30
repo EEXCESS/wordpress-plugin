@@ -21,7 +21,6 @@ define(['jquery', 'settings'], function($, settings){
          }
          localStorage.setItem("eexcess." + elementName, elementValue);
       }
-      console.log("aal");
    }
    $("#privacyPanel").change(profileFormHandler);
 

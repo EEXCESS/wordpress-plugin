@@ -110,7 +110,7 @@ limitations under the License.
       <div id="resultListContainer">
          <iframe id="resultList" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/SearchResultList/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
       </div>
-      <div id="privacySettings">
+      <div id="privacySettingsForm">
          <hr>
          <!-- privacy settings thickbox-->
          <?php add_thickbox(); ?>
@@ -259,7 +259,7 @@ limitations under the License.
 
          </div>
          <a href="#TB_inline?width=600&height=550&inlineId=privacyThickbox" title="Profile Settings" class="thickbox">
-            <input id="privacySettings"  style="width: 100px;" name="privacySettings" class="button button-small" value="Profile Settings">
+            <input id="privacySettingsBtn"  style="width: 100px;" name="privacySettings" class="button button-small" value="Profile Settings">
          </a>
       </div>
       <!-- /privacy settings thickbox-->

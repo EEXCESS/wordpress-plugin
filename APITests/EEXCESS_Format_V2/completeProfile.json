@@ -1,0 +1,12 @@
+{
+   "address":{
+      "country":"DE",
+      "city":"kirchbarkau"
+   },
+   "ageRange":2,
+   "gender":"male",
+   "contextKeywords":[{
+      "text":"ada lovelace",
+      "weight":1
+   }]
+}
