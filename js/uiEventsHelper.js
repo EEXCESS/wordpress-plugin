@@ -10,25 +10,20 @@ define(['jquery', 'settings'], function($, settings){
    // changed values into local 
    
    function profileFormHandler(o){
-      var formElement  = $(o.currentTarget),
-      elementName = formElement.attr("data-eexcess-profile-field");
+      var formElement  = $(o.originalEvent.path[0]),
+      elementName = formElement.attr("data-eexcess-profile-field"),
+      elementValue = formElement.val();
+      if(elementName == undefined){
+         return null;
+      } else {
+         if(elementName === "logging"){
+            elementValue = formElement.is(":checked");
+         }
+         localStorage.setItem("eexcess." + elementName, elementValue);
+      }
       console.log("aal");
    }
-
-   $("select[data-eexcess-profile-field='title']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='firstname']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='lastname']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='address.line1']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='address.line2']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='address.zipcode']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='address.city']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='address.country']").change(profileFormHandler);
-   $("select[data-eexcess-profile-field='gender']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='birthdate']").change(profileFormHandler);
-   $("input[data-eexcess-profile-field='logging']").change(profileFormHandler);
-
-
-
+   $("#privacyPanel").change(profileFormHandler);
 
    return{
  

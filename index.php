@@ -116,7 +116,7 @@ limitations under the License.
          <?php add_thickbox(); ?>
          <div id="privacyThickbox" style="display:none;">
                <!-- Atif: User profile panel -->
-             <div class="panel panel-primary">
+             <div id="privacyPanel" class="panel panel-primary">
                <div class="panel-heading" style="background-color: white;">
                   <h3 class="panel-title"> User Profile
                      <!--<span class="glyphicon glyphicon-user"></span> -->
