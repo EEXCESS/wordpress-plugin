@@ -22,7 +22,23 @@ define(['jquery', 'settings'], function($, settings){
          localStorage.setItem("eexcess." + elementName, elementValue);
       }
    }
+
+   function loadProfileHandler(e){
+      $("[data-eexcess-profile-field='address.city']").val(localStorage.getItem("eexcess.address.city") || "");
+      $("[data-eexcess-profile-field='address.country']").val(localStorage.getItem("eexcess.address.country") || "");	
+      $("[data-eexcess-profile-field='address.line1']").val(localStorage.getItem("eexcess.address.line1") || "");
+      $("[data-eexcess-profile-field='address.line2']").val(localStorage.getItem("eexcess.address.line2") || "");
+      $("[data-eexcess-profile-field='address.zipcode']").val(localStorage.getItem("eexcess.address.zipcode") || "");	
+      $("[data-eexcess-profile-field='birthdate']").val(localStorage.getItem("eexcess.birthdate") || "");	
+      $("[data-eexcess-profile-field='firstname']").val(localStorage.getItem("eexcess.firstname") || "");	
+      $("[data-eexcess-profile-field='gender']").val(localStorage.getItem("eexcess.gender") || "");	
+      $("[data-eexcess-profile-field='lastname']").val(localStorage.getItem("eexcess.lastname") || "");
+      $("[data-eexcess-profile-field='logging']").prop("checked", $.parseJSON(localStorage.getItem("eexcess.logging") || "true"));
+      $("[data-eexcess-profile-field='title']").val(localStorage.getItem("eexcess.title") || "");
+   }
+
    $("#privacyPanel").change(profileFormHandler);
+   $("#privacySettingsBtn").click(loadProfileHandler);
 
    return{
  

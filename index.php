@@ -125,7 +125,7 @@ limitations under the License.
                <div class="panel-body">
                              <!-- SOURCE SELECTION -->
                   <div class="row">
-                     <div class="col-lg-8">
+                     <div class="col-lg-12">
                         <!-- IDENTITY -->
                         <div class="panel panel-info">
                            <div class="panel-heading">
@@ -137,121 +137,62 @@ limitations under the License.
                               <div class="content">
                                  <form class="form-income">
                                     <div class="form-group">
-                                       <label for="" class="control-label">Name</label>
-                                       <div class="row">
-                                          <div class="col-lg-3">
-                                             <select  data-eexcess-profile-field="title" class="form-control">
-                                                <option value="" disabled selected>Title</option>
-                                                <option value="mr">Mr</option>
-                                                <option value="miss">Miss</option>
-                                                <option value="mrs">Mrs</option>
-                                                <option value="ms">Ms</option>
-                                             </select>
-                                          </div>
-                                       </div>
+                                       <label for="" class="control-label">Address</label>
                                        <div class="row">
                                           <div class="col-lg-6">
-                                             <input data-eexcess-profile-field="firstname" type="text" class="form-control"
-                                                placeholder="First name">
+                                             <input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
                                           </div>
                                           <div class="col-lg-6">
-                                             <input data-eexcess-profile-field="lastname" type="text" class="form-control"
-                                                placeholder="Last name">
+                                             <input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
                                           </div>
                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                       <label for="" class="control-label">Address</label>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <input data-eexcess-profile-field="address.line1" type="text" class="form-control" placeholder="Line 1">
+
+                                    <div class="row">
+                                       <div class="form-group">
+                                          <div class="col-lg-3">
+                                             <label for="" class="control-label">Gender</label>
                                           </div>
-                                          <div class="col-lg-12">
-                                             <input data-eexcess-profile-field="address.line2" type="text" class="form-control" placeholder="Line 2">
+                                          <div class="col-lg-6">
+                                             <label for="" class="control-label">Age</label>
                                           </div>
-                                          <div class="col-lg-4">
-                                             <input data-eexcess-profile-field="address.zipcode" type="text" class="form-control" placeholder="Zip code">
+                                          <div class="col-lg-3">
+                                             <label for="" class="control-label">Allow Logging</label>
                                           </div>
-                                          <div class="col-lg-8">
-                                             <input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <div class="col-lg-3">
+                                          <select data-eexcess-profile-field="gender" class="form-control">
+                                             <option value="notSpecified">Not Specified</option>
+                                             <option value="other">Other</option>
+                                             <option value="male">Male</option>
+                                             <option value="female">Female</option>
+                                          </select>
+                                       </div>
+                                       <div class="col-lg-6">
+                                          <div class="btn-group" data-toggle="buttons">
+                                              <label class="btn btn-default">
+                                                  <input type="radio" id="q156" name="quality[25]" value="1" /> Child
+                                              </label> 
+                                              <label class="btn btn-default">
+                                                  <input type="radio" id="q157" name="quality[25]" value="2" /> Young Adult
+                                              </label> 
+                                              <label class="btn btn-default">
+                                                  <input type="radio" id="q158" name="quality[25]" value="3" /> Adult
+                                              </label> 
                                           </div>
-                                          <div class="col-lg-12">
-                                             <input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
-                                          </div>
+                                       </div>
+                                       <div class="col-lg-3">
+                                          <input id="loggingEnabled" data-eexcess-profile-field="logging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                                          <label for="loggingEnabled"></label>
                                        </div>
                                     </div>
                                  </form>
                               </div>
                            </div>
                         </div>
-                        <!-- /IDENTITY-->
                      </div>
-                     <div class="col-lg-4">
-                        <!-- DEMOGRAPHICS -->
-                        <div class="panel panel-info">
-                           <div class="panel-heading">
-                              <h3 class="panel-title">
-                                 Demographics <span class="badge pull-right setting"></span>
-                              </h3>
-                           </div>
-                           <div class="panel-body">
-                              <div class="form-group">
-                                 <label for="" class="control-label">Gender</label>
-                                 <select data-eexcess-profile-field="gender" class="form-control">
-                                    <option value=""></option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                 </select>
-                              </div>
-                              <div class="form-group">
-                                 <label for="" class="control-label">Birthdate</label>
-                                 <div class="input-group">
-                                    <!--<span class="input-group-addon"><span class="glyphicon glyphicon-calendar icon-calendar"></span></span>-->
-                                    <input data-eexcess-profile-field="birthdate" class="form-control datepicker" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="Birthdate"></input>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- /DEMOGRAPHICS-->
-
-
-                        <!--  PRIVACY-->
-                        <div class="panel panel-info">
-                           <div class="panel-heading">
-                              <h3 class="panel-title">
-                                 Privacy <span class="badge pull-right setting"></span>
-                              </h3>
-                           </div>
-                           <div class="panel-body">
-                              <div class="form-group">
-                                 <label for="" class="control-label">Logging</label>
-                                 <input id="loggingEnabled" data-eexcess-profile-field="logging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
-                                 <label for="loggingEnabled"></label>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- /PRIVACY-->
-                     </div>
-                     
-                  <!--	<div class="col-lg-12">
-                        <!-- TOPICS -->
-                  <!--		<div id="topics" class="panel panel-info">
-                           <div class="panel-heading">
-                              <h3 class="panel-title">
-                                 Topics of interest <span class="badge pull-right setting"></span>
-                              </h3>
-                           </div>
-         <!--						<div class="panel-body">
-                              <div class="form-group">
-                                 <input class="form-control" type="text" placeholder="New topic"></input>
-                              </div>
-                              <div class="label-container well well-lg">
-                              </div>
-                           </div>-->
-                     <!--	<ul id="topicInput"></ul>
-                        </div>
-                        <!-- /TOPICS-->
-                  <!--	</div> -->
                   </div>
                </div>
             </div>

@@ -10,7 +10,9 @@ requirejs.config({
       citationBuilder: 'citationBuilder',
       CLSWrapper: 'lib/c4/CitationBuilder/CitationBuilder/citationBuilder',
       eexcessMethods: 'eexcessMethods',
+      bootstrap: 'lib/bootstrap.min',
+      npm: 'lib/npm'
    }
 });
 
-require(['resultList', 'recommendationEvents', 'uiEventsHelper']);
+require(['resultList', 'recommendationEvents', 'uiEventsHelper', 'bootstrap', 'npm']);
