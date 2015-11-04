@@ -1,8 +1,13 @@
 // load dependencies
 require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, api, iframes, citationBuilder, eexcessMethods) {
-    // set the URL of the federated recommender to the stable server
-    // api.init({url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
-
+    api.init({
+       origin:{
+         clientType:"EEXCESS - Wordpress Plug-in",
+         clientVersion:"0.4", 
+         userID:"" 
+      },
+      loggingLevel: 0
+    });
 
    eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
             $("#eexcess_container .inside #content #list"),

@@ -1,5 +1,18 @@
 define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], function($, api, iframes, settings, uiEventsHelper){
 
+   var uuid = localStorage.getItem("eexcess.uuid") || "";
+   var originHeader = {
+      origin:{
+         clientType: "EEXCESS - Wordpress Plug-in",
+         clientVersion: "0.4", 
+         module: "SearchResultList",
+         userID: uuid
+     },
+     loggingLevel: 0
+   };
+
+   api.init(originHeader);
+
    function mergeWithCache(response){
       var cache = JSON.parse(sessionStorage.getItem("curResults"));
       if(response.hasOwnProperty("documentBadge") && response.documentBadge.hasOwnProperty("length")){
@@ -20,12 +33,17 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
 
    function fetchDetails(res){
       var badges = [];
+      var date = new Date();
+      var queryID = (uuid + date.getTime()).hashCode().toString();
+      var queryHeader = Object.create(originHeader);
+      queryHeader.queryID = queryID;
       for (i=0; i<res.result.length; i++){
          if(res.result[i].hasOwnProperty("documentBadge")){
             badges.push(res.result[i].documentBadge);
          }
       }
-      api.getDetails(badges, function(response){
+      var profile = $.extend(queryHeader, {"documentBadges": badges});
+      api.getDetails(profile, function(response){
          if(response.status == 'success'){
             mergeWithCache(response.data);
          } else {
@@ -41,8 +59,13 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
             "city": localStorage["eexcess.address.city"]
          },
          "ageRange": parseInt(localStorage["eexcess.birthdate"]),
-         "gender" : localStorage["eexcess.gender"]
-
+         "gender" : localStorage["eexcess.gender"],
+         "origin":{
+            "clientType": "EEXCESS - Wordpress Plug-in", 
+            "clientVersion": "0.4", 
+            "module": "SearchResultList"
+         },
+         "loggingLevel": 0
       };
       /* expired
       localStorage["eexcess.address.line1"]

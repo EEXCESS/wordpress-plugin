@@ -63,7 +63,6 @@ limitations under the License.
          wp_enqueue_style( 'onOffSwitch', plugins_url( '/styles/toggle-switch.css', __FILE__ ) );
          wp_enqueue_style( 'bootstrap', plugins_url( '/styles/bootstrap.css', __FILE__ ) );
          wp_enqueue_style( 'bootstrap-theme', plugins_url( '/styles/bootstrap-theme.css', __FILE__ ) );
-         wp_enqueue_style( 'datepicker', plugins_url( '/styles/datepicker.css', __FILE__ ) );
          wp_enqueue_style( 'jquery-ui', plugins_url( '/styles/jquery-ui.css', __FILE__ ) );
       }
    }
@@ -115,81 +114,70 @@ limitations under the License.
          <!-- privacy settings thickbox-->
          <?php add_thickbox(); ?>
          <div id="privacyThickbox" style="display:none;">
-               <!-- Atif: User profile panel -->
              <div id="privacyPanel" class="panel panel-primary">
                <div class="panel-heading" style="background-color: white;">
                   <h3 class="panel-title"> User Profile
-                     <!--<span class="glyphicon glyphicon-user"></span> -->
                   </h3>
                </div>
                <div class="panel-body">
-                             <!-- SOURCE SELECTION -->
                   <div class="row">
                      <div class="col-lg-12">
-                        <!-- IDENTITY -->
-                        <div class="panel panel-info">
-                           <div class="panel-heading">
-                              <h3 class="panel-title">
-                                 Identity<span class="badge pull-right setting"></span>
-                              </h3>
-                           </div>
-                           <div class="panel-body">
-                              <div class="content">
-                                 <form class="form-income">
-                                    <div class="form-group">
-                                       <label for="" class="control-label">Address</label>
-                                       <div class="row">
-                                          <div class="col-lg-6">
-                                             <input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
-                                          </div>
-                                          <div class="col-lg-6">
-                                             <input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
-                                          </div>
-                                       </div>
-                                    </div>
-
+                        <div class="panel-body">
+                           <div class="content">
+                              <form class="form-income">
+                                 <div class="form-group">
+                                    <label for="" class="control-label">Address</label>
                                     <div class="row">
-                                       <div class="form-group">
-                                          <div class="col-lg-3">
-                                             <label for="" class="control-label">Gender</label>
-                                          </div>
-                                          <div class="col-lg-6">
-                                             <label for="" class="control-label">Age</label>
-                                          </div>
-                                          <div class="col-lg-3">
-                                             <label for="" class="control-label">Allow Logging</label>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    <div class="row">
-                                       <div class="col-lg-3">
-                                          <select data-eexcess-profile-field="gender" class="form-control">
-                                             <option value="notSpecified">Not Specified</option>
-                                             <option value="other">Other</option>
-                                             <option value="male">Male</option>
-                                             <option value="female">Female</option>
-                                          </select>
+                                       <div class="col-lg-6">
+                                          <input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
                                        </div>
                                        <div class="col-lg-6">
-                                          <div class="btn-group" data-toggle="buttons">
-                                              <label class="btn btn-default">
-                                                  <input type="radio" id="q156" name="quality[25]" value="1" /> Child
-                                              </label> 
-                                              <label class="btn btn-default">
-                                                  <input type="radio" id="q157" name="quality[25]" value="2" /> Young Adult
-                                              </label> 
-                                              <label class="btn btn-default">
-                                                  <input type="radio" id="q158" name="quality[25]" value="3" /> Adult
-                                              </label> 
-                                          </div>
-                                       </div>
-                                       <div class="col-lg-3">
-                                          <input id="loggingEnabled" data-eexcess-profile-field="logging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
-                                          <label for="loggingEnabled"></label>
+                                          <input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
                                        </div>
                                     </div>
-                                 </form>
-                              </div>
+                                 </div>
+
+                                 <div class="row">
+                                    <div class="form-group">
+                                       <div class="col-lg-3">
+                                          <label for="" class="control-label">Gender</label>
+                                       </div>
+                                       <div class="col-lg-6">
+                                          <label for="" class="control-label">Age</label>
+                                       </div>
+                                       <div class="col-lg-3">
+                                          <label for="" class="control-label">Allow Logging</label>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-lg-3">
+                                       <select data-eexcess-profile-field="gender" class="form-control">
+                                          <option value="notSpecified">Not Specified</option>
+                                          <option value="other">Other</option>
+                                          <option value="male">Male</option>
+                                          <option value="female">Female</option>
+                                       </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                       <div class="btn-group" data-toggle="buttons">
+                                           <label class="btn btn-default">
+                                               <input type="radio" id="q156" name="quality[25]" value="1" /> Child
+                                           </label> 
+                                           <label class="btn btn-default">
+                                               <input type="radio" id="q157" name="quality[25]" value="2" /> Young Adult
+                                           </label> 
+                                           <label class="btn btn-default">
+                                               <input type="radio" id="q158" name="quality[25]" value="3" /> Adult
+                                           </label> 
+                                       </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                       <input id="loggingEnabled" data-eexcess-profile-field="logging" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                                       <label for="loggingEnabled"></label>
+                                    </div>
+                                 </div>
+                              </form>
                            </div>
                         </div>
                      </div>

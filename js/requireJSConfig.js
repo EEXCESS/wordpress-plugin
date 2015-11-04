@@ -11,8 +11,12 @@ requirejs.config({
       CLSWrapper: 'lib/c4/CitationBuilder/CitationBuilder/citationBuilder',
       eexcessMethods: 'eexcessMethods',
       bootstrap: 'lib/bootstrap.min',
-      npm: 'lib/npm'
+      "peas/peas_indist": "lib/peas/peas_indist",
+      "peas/util": "lib/peas/util",
+      graph: "lib/peas/bower_components/graph/lib/graph",
+      hashCode: "hashCode",
+      initialize: "initialize"
    }
 });
 
-require(['resultList', 'recommendationEvents', 'uiEventsHelper', 'bootstrap', 'npm']);
+require(['resultList', 'recommendationEvents', 'uiEventsHelper', 'bootstrap', 'hashCode', 'initialize']);

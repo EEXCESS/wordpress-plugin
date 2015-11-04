@@ -4,3 +4,6 @@
 [submodule "js/lib/visualization-widgets"]
 	path = js/lib/visualization-widgets
 	url = git@github.com:n-witt/visualization-widgets.git
+[submodule "js/lib/peas"]
+	path = js/lib/peas
+	url = git@github.com:EEXCESS/peas.git
