@@ -58,7 +58,7 @@ define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexce
                if(position > posFirstCitation && posFirstCitation != -1){
                   alert(settings.citeproc.errorMsg);
                } else {
-                  newText = insertIntoText(content, position, referenceNumberText);
+                  newText = eexcessMethods.insertIntoText(content, position, referenceNumberText);
                }
             } else {
                // insertion rejected
@@ -108,9 +108,9 @@ define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexce
                alert(settings.citeproc.errorMsg);
             } else {
                // insert reference # into text (at cursor position)
-               newText = insertIntoText(content, position, referenceNumberSource);
+               newText = eexcessMethods.insertIntoText(content, position, referenceNumberSource);
                // append the reference itself
-               newText = insertIntoText(newText,
+               newText = eexcessMethods.insertIntoText(newText,
                                         eexcessMethods.determineArticlesEnd(newText, eexcessMethods.findHtmlTagPositions(newText)),
                                         citationText);
             }

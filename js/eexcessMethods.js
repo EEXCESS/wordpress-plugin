@@ -1,11 +1,17 @@
-define(["jquery"], function($){
-   /**
-    * The following object contains all custom functions and properties for the EEXCESS-plugin.
-    * It hides the limitations of javascript and behaves to the greates possible extent link
-    * a class in other programming laguages. The "instanziation" and "initialization" of the
-    * "class" can be found at the bottom of this file.
-    */
+define(["jquery", "APIconnector"], function($, api){
    
+   api.init(originHeader);
+   var uuid = localStorage.getItem("eexcess.uuid") || "",
+   originHeader = {
+      origin:{
+         clientType: "EEXCESS - Wordpress Plug-in",
+         clientVersion: "0.4", 
+         module: "SearchResultList",
+         userID: uuid
+     },
+     loggingLevel: 0
+   },
+
    /**
     * The Constructor of this class.
     * All parameters are jquery-objects.
@@ -34,10 +40,54 @@ define(["jquery"], function($){
          setContent: setContent,
          determineDecentInsertPosition: determineDecentInsertPosition,
          loggingEnabled: loggingEnabled,
-         sendUsersActivitiesSignal: sendUsersActivitiesSignal
+         sendUsersActivitiesSignal: sendUsersActivitiesSignal,
+         fetchDetails: fetchDetails,
+         compileUserProfile: compileUserProfile,
+         insertIntoText: insertIntoText,
+         originHeader: originHeader,
+         uuid: uuid
       };
    },
 
+
+   compileUserProfile = function(){
+      return {
+         "address" : {
+            "country": localStorage["eexcess.address.country"],
+            "city": localStorage["eexcess.address.city"]
+         },
+         "ageRange": localStorage["eexcess.age"],
+         "gender" : localStorage["eexcess.gender"],
+         "origin": originHeader.origin,
+         "loggingLevel": 0
+      };
+      /* expired
+      localStorage["eexcess.address.line1"]
+      localStorage["eexcess.address.line2"]
+      localStorage["eexcess.address.zipcode"]
+      localStorage["eexcess.firstname"]
+      localStorage["eexcess.lastname"]
+      localStorage["eexcess.logging"]
+      localStorage["eexcess.title"]
+      */
+   },
+
+
+   fetchDetails = function(res, callback){
+      var badges = [];
+      var date = new Date();
+      var queryID = (uuid + date.getTime()).hashCode().toString();
+      var queryHeader = {};
+      queryHeader.origin = $.extend(true, {}, originHeader.origin);
+      queryHeader.queryID = queryID;
+      for (i=0; i<res.result.length; i++){
+         if(res.result[i].hasOwnProperty("documentBadge")){
+            badges.push(res.result[i].documentBadge);
+         }
+      }
+      var profile = $.extend(queryHeader, {"documentBadge": badges});
+      api.getDetails(profile, callback);
+   },
 
    /**
     * WARNING: THIS METHOD IS CURRENTLY DISABLED DUE TO API ISSUES
@@ -70,7 +120,7 @@ define(["jquery"], function($){
          "action-taken": action,
          "uuid": uuid
       };
-   }
+   },
 
    /**
    * Inserts a HTML-link (a-tag) composed of url and title at position

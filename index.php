@@ -160,15 +160,15 @@ limitations under the License.
                                        </select>
                                     </div>
                                     <div class="col-lg-6">
-                                       <div class="btn-group" data-toggle="buttons">
+                                       <div class="btn-group" data-eexcess-profile-field="age" data-toggle="buttons">
                                            <label class="btn btn-default">
-                                               <input type="radio" id="q156" name="quality[25]" value="1" /> Child
+                                               <input type="radio" value="0" /> Child
                                            </label> 
                                            <label class="btn btn-default">
-                                               <input type="radio" id="q157" name="quality[25]" value="2" /> Young Adult
+                                               <input type="radio" value="1" /> Young Adult
                                            </label> 
                                            <label class="btn btn-default">
-                                               <input type="radio" id="q158" name="quality[25]" value="3" /> Adult
+                                               <input type="radio" value="2" /> Adult
                                            </label> 
                                        </div>
                                     </div>

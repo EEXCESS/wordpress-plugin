@@ -8,7 +8,7 @@ requirejs.config({
       uiEventsHelper: 'uiEventsHelper',
       settings: 'settings',
       citationBuilder: 'citationBuilder',
-      CLSWrapper: 'lib/c4/CitationBuilder/CitationBuilder/citationBuilder',
+      CLSWrapper: 'lib/citationBuilder/citationBuilder',
       eexcessMethods: 'eexcessMethods',
       bootstrap: 'lib/bootstrap.min',
       "peas/peas_indist": "lib/peas/peas_indist",

@@ -26,19 +26,24 @@ define(['jquery', 'settings'], function($, settings){
    function loadProfileHandler(e){
       $("[data-eexcess-profile-field='address.city']").val(localStorage.getItem("eexcess.address.city") || "");
       $("[data-eexcess-profile-field='address.country']").val(localStorage.getItem("eexcess.address.country") || "");	
-      $("[data-eexcess-profile-field='address.line1']").val(localStorage.getItem("eexcess.address.line1") || "");
-      $("[data-eexcess-profile-field='address.line2']").val(localStorage.getItem("eexcess.address.line2") || "");
-      $("[data-eexcess-profile-field='address.zipcode']").val(localStorage.getItem("eexcess.address.zipcode") || "");	
-      $("[data-eexcess-profile-field='birthdate']").val(localStorage.getItem("eexcess.birthdate") || "");	
-      $("[data-eexcess-profile-field='firstname']").val(localStorage.getItem("eexcess.firstname") || "");	
       $("[data-eexcess-profile-field='gender']").val(localStorage.getItem("eexcess.gender") || "");	
-      $("[data-eexcess-profile-field='lastname']").val(localStorage.getItem("eexcess.lastname") || "");
       $("[data-eexcess-profile-field='logging']").prop("checked", $.parseJSON(localStorage.getItem("eexcess.logging") || "true"));
-      $("[data-eexcess-profile-field='title']").val(localStorage.getItem("eexcess.title") || "");
+     
+      var age = localStorage.getItem("eexcess.age") || "2";
+      $("[data-eexcess-profile-field='age']").find(".active").removeClass("active");
+      $("[data-eexcess-profile-field='age']").find("[value='" + age + "']").parent().addClass("active"); 
+   }
+
+   function ageButtonHandler(e){
+      var val = $(e.originalEvent.path[0]).find("input").val();
+      localStorage.setItem("eexcess.age", val);
    }
 
    $("#privacyPanel").change(profileFormHandler);
    $("#privacySettingsBtn").click(loadProfileHandler);
+
+   // unfortunatly the age buttons need a seperate treatment
+   $("[data-eexcess-profile-field='age']").click(ageButtonHandler);
 
    return{
  

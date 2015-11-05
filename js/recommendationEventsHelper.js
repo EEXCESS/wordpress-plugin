@@ -1,18 +1,12 @@
-define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], function($, api, iframes, settings, uiEventsHelper){
+define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexcessMethods'], function($, api, iframes, settings, uiEventsHelper, eexcessMethods){
 
-   var uuid = localStorage.getItem("eexcess.uuid") || "";
-   var originHeader = {
-      origin:{
-         clientType: "EEXCESS - Wordpress Plug-in",
-         clientVersion: "0.4", 
-         module: "SearchResultList",
-         userID: uuid
-     },
-     loggingLevel: 0
-   };
+   eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
+            $("#eexcess_container .inside #content #list"),
+            $("#eexcess_container .inside #content p"),
+            $('#abortRequest'),
+            $('#searchQueryReflection'));
 
-   api.init(originHeader);
-
+   api.init(eexcessMethods.originHeader);
    function mergeWithCache(response){
       var cache = JSON.parse(sessionStorage.getItem("curResults"));
       if(response.hasOwnProperty("documentBadge") && response.documentBadge.hasOwnProperty("length")){
@@ -31,54 +25,6 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       }
    }
 
-   function fetchDetails(res){
-      var badges = [];
-      var date = new Date();
-      var queryID = (uuid + date.getTime()).hashCode().toString();
-      var queryHeader = {};
-      queryHeader.origin = $.extend(true, {}, originHeader.origin);
-      queryHeader.queryID = queryID;
-      for (i=0; i<res.result.length; i++){
-         if(res.result[i].hasOwnProperty("documentBadge")){
-            badges.push(res.result[i].documentBadge);
-         }
-      }
-      var profile = $.extend(queryHeader, {"documentBadge": badges});
-      api.getDetails(profile, function(response){
-         if(response.status == 'success'){
-            mergeWithCache(response.data);
-         } else {
-
-         }
-      });
-   }
-
-   function compileUserProfile(){
-      return {
-         "address" : {
-            "country": localStorage["eexcess.address.country"],
-            "city": localStorage["eexcess.address.city"]
-         },
-         "ageRange": parseInt(localStorage["eexcess.birthdate"]),
-         "gender" : localStorage["eexcess.gender"],
-         "origin":{
-            "clientType": "EEXCESS - Wordpress Plug-in", 
-            "clientVersion": "0.4", 
-            "module": "SearchResultList"
-         },
-         "loggingLevel": 0
-      };
-      /* expired
-      localStorage["eexcess.address.line1"]
-      localStorage["eexcess.address.line2"]
-      localStorage["eexcess.address.zipcode"]
-      localStorage["eexcess.firstname"]
-      localStorage["eexcess.lastname"]
-      localStorage["eexcess.logging"]
-      localStorage["eexcess.title"]
-      */
-   }
-
    return {
       /**
        * Extracts text marked by the user and sends it to the recommender.
@@ -87,7 +33,7 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       getTextAndRecommend: function() {
          var query = this.getSelectedText();
          if(query !== ""){
-            var profile = $.extend(compileUserProfile(), {contextKeywords: [{
+            var profile = $.extend(eexcessMethods.compileUserProfile(), {contextKeywords: [{
                text: query,
                weight: 1.0
             }]});
@@ -118,7 +64,12 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
                    };
                 });
                 sessionStorage.setItem("curResults", JSON.stringify(res));
-                fetchDetails(res);
+                eexcessMethods.fetchDetails(res, function(response){
+                   if(response.status == 'success'){
+                      mergeWithCache(response.data);
+                   } else {
+                   }
+                });
                 iframes.sendMsg({event: 'eexcess.newResults', data: res}, ["resultList"]);
                 $('div[aria-label="Visualization Dashboard"]').show("slow");
             } else {

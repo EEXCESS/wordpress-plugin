@@ -1,13 +1,5 @@
 // load dependencies
-require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, api, iframes, citationBuilder, eexcessMethods) {
-    api.init({
-       origin:{
-         clientType:"EEXCESS - Wordpress Plug-in",
-         clientVersion:"0.4", 
-         userID:"" 
-      },
-      loggingLevel: 0
-    });
+require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($,  iframes, citationBuilder, eexcessMethods) {
 
    eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
             $("#eexcess_container .inside #content #list"),
@@ -36,7 +28,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
          */
         if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
             insertCitation([msg.data.documentsMetadata.documentBadge], false, function(){
-              alert("The image was successfully added to the blog post");
+              alert("The citation was successfully added to the blog post");
            });
         }
 
@@ -102,7 +94,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
         }
 
         var insertionPosition = eexcessMethods.determineDecentInsertPosition.call(eexcessMethods, content, position);
-        var newText = insertIntoText(content, insertionPosition, snippet);
+        var newText = eexcessMethods.insertIntoText(content, insertionPosition, snippet);
         eexcessMethods.setContent(newText);
         if(typeof(callback) === "function"){
            callback();
@@ -195,8 +187,7 @@ require(['jquery', 'APIconnector', 'iframes', 'citationBuilder', 'eexcessMethods
              && typeof(hyperlink) === 'boolean'){
           var cached = probeCache(documentBadges[0]);
           if(cached == null){
-             api.getDetails(documentBadges, function(response){
-                var aal = documentBadges;
+             eexcessMethods.fetchDetails(documentBadges, function(response){
                 if(response.status === 'success' && response.data.documentBadge.length > 0){
                    var record = response.data.documentBadges[0];
                    citationBuilder.addAsCitation(record, hyperlink);
