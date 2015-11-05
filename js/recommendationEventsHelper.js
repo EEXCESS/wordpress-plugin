@@ -35,14 +35,15 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper'], func
       var badges = [];
       var date = new Date();
       var queryID = (uuid + date.getTime()).hashCode().toString();
-      var queryHeader = Object.create(originHeader);
+      var queryHeader = {};
+      queryHeader.origin = $.extend(true, {}, originHeader.origin);
       queryHeader.queryID = queryID;
       for (i=0; i<res.result.length; i++){
          if(res.result[i].hasOwnProperty("documentBadge")){
             badges.push(res.result[i].documentBadge);
          }
       }
-      var profile = $.extend(queryHeader, {"documentBadges": badges});
+      var profile = $.extend(queryHeader, {"documentBadge": badges});
       api.getDetails(profile, function(response){
          if(response.status == 'success'){
             mergeWithCache(response.data);

@@ -1,4 +1,4 @@
-define(['jquery', 'eexcessMethods', "CLSWrapper", "settings"], function($, eexcessMethods, CLSWrapper, settings){
+define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexcessMethods, CLSWrapper, settings){
    
    eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
             $("#eexcess_container .inside #content #list"),

@@ -3,17 +3,17 @@
 
 #recommendURL="http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend"
 #getdetailsURL="http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/getDetails"
-
-recommendURL="http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/recommend"
-getdetailsURL="http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails"
+baseURL="https://eexcess.joanneum.at/eexcess-privacy-proxy-issuer-1.0-SNAPSHOT/issuer/"
+recommendURLExtension="recommend"
+getdetailsURLExtension="getDetails"
 
 if [ "$2" == "recommend" ]; then
-   url=$recommendURL
+   url=$baseURL$recommendURLExtension
 else
    if [ "$2" == "details" ]; then
-      url=$getdetailsURL
+      url=$baseURL$getdetailsURLExtension
    else
-      url=$recommendURL
+      url=$baseURL$recommendURLExtension
    fi
 fi
 
