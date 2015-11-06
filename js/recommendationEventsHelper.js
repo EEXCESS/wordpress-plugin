@@ -1,11 +1,5 @@
 define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexcessMethods'], function($, api, iframes, settings, uiEventsHelper, eexcessMethods){
 
-   eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
-            $("#eexcess_container .inside #content #list"),
-            $("#eexcess_container .inside #content p"),
-            $('#abortRequest'),
-            $('#searchQueryReflection'));
-
    api.init(eexcessMethods.originHeader);
    function mergeWithCache(response){
       var cache = JSON.parse(sessionStorage.getItem("curResults"));
@@ -39,6 +33,7 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
             }]});
             iframes.sendMsgAll({event: 'eexcess.queryTriggered', data: profile});
             this.sendQuery(profile); // send the request
+            sessionStorage["eexcess.lastSearchQuery"] = query;
          }
          uiEventsHelper.queryTriggered(query);
       },
@@ -64,7 +59,15 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
                    };
                 });
                 sessionStorage.setItem("curResults", JSON.stringify(res));
-                eexcessMethods.fetchDetails(res, function(response){
+                // extract documentBadges
+                var badges = [];
+                for (i=0; i<res.result.length; i++){
+                   if(res.result[i].hasOwnProperty("documentBadge")){
+                      badges.push(res.result[i].documentBadge);
+                   }
+                }
+
+                eexcessMethods.fetchDetails(badges, function(response){
                    if(response.status == 'success'){
                       mergeWithCache(response.data);
                    } else {

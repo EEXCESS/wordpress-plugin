@@ -1,12 +1,6 @@
 // load dependencies
 require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($,  iframes, citationBuilder, eexcessMethods) {
 
-   eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
-            $("#eexcess_container .inside #content #list"),
-            $("#eexcess_container .inside #content p"),
-            $('#abortRequest'),
-            $('#searchQueryReflection'));
-
     /*
      * Listen for message from the embedded iframes.
      */
@@ -189,15 +183,19 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
           if(cached == null){
              eexcessMethods.fetchDetails(documentBadges, function(response){
                 if(response.status === 'success' && response.data.documentBadge.length > 0){
-                   var record = response.data.documentBadges[0];
-                   citationBuilder.addAsCitation(record, hyperlink);
+                   if(Array.isArray(response.data.documentBadge)){
+                      var record = response.data.documentBadge;
+                   } else {
+                      var record = response.data.documentBadge[0];
+                   }
+                   citationBuilder.addAsCitation(record[0], hyperlink);
                    if(typeof(callback) === "function"){
                       callback();
                    }
                 } else if(response.status === 'error'){
                    alert("Could not retrieve data required to asseble the citation");
                 } else {
-
+                   throw new Error("Received invalid data format");
                 }
              });
           } else {

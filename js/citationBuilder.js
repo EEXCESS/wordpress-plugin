@@ -1,11 +1,5 @@
 define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexcessMethods, CLSWrapper, settings){
    
-   eexcessMethods = eexcessMethods($("#eexcess_container .inside #content .eexcess-spinner"),
-            $("#eexcess_container .inside #content #list"),
-            $("#eexcess_container .inside #content p"),
-            $('#abortRequest'),
-            $('#searchQueryReflection'));
-
    /*
     * Handles the "Add as Citation" buttons in the recommendation area. It adds citations
     * to the text, depending on the value of the citation style drop down element
@@ -39,8 +33,9 @@ define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexce
       }
 
       if(hyperlink){
-         var searchQuery = $("#searchQuery").text();
-         var newText = eexcessMethods.pasteLinkToText(content, position, url, title, searchQuery);
+         var searchQuery = sessionStorage["eexcess.lastSearchQuery"];
+         var insertionPosition = eexcessMethods.determineDecentInsertPosition(content, position);
+         var newText = eexcessMethods.pasteLinkToText(content, insertionPosition, url, title, searchQuery);
       } else {
          // if this entry has already been cited. warn the user, ask if he/she wants to continue
          // and act accordingly

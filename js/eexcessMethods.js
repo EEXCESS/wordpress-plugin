@@ -12,44 +12,6 @@ define(["jquery", "APIconnector"], function($, api){
      loggingLevel: 0
    },
 
-   /**
-    * The Constructor of this class.
-    * All parameters are jquery-objects.
-    * @param mSpinner: reference to a DOM-object representation a spinner that is
-    *                  usen when time-consuming actions take place
-    */
-   init = function() {
-      this.that = this;
-
-      /**
-       * The return object exposes elements to the outside world.
-       * In terms of OO-languages supporting classes this mechanism emulates the "public"
-       * modifier whereas objects that are not mentioned in the return object remain "private".
-       */
-      return {
-         init: init,
-         pasteLinkToText: pasteLinkToText,
-         getTerms: getTerms,
-         getCursorPosition: getCursorPosition,
-         setCursorPosition: setCursorPosition,
-         determineArticlesEnd: determineArticlesEnd,
-         findHtmlTagPositions: findHtmlTagPositions,
-         findWhitespaces: findWhitespaces,
-         getCursor: getCursor,
-         getContent: getContent,
-         setContent: setContent,
-         determineDecentInsertPosition: determineDecentInsertPosition,
-         loggingEnabled: loggingEnabled,
-         sendUsersActivitiesSignal: sendUsersActivitiesSignal,
-         fetchDetails: fetchDetails,
-         compileUserProfile: compileUserProfile,
-         insertIntoText: insertIntoText,
-         originHeader: originHeader,
-         uuid: uuid
-      };
-   },
-
-
    compileUserProfile = function(){
       return {
          "address" : {
@@ -73,20 +35,18 @@ define(["jquery", "APIconnector"], function($, api){
    },
 
 
-   fetchDetails = function(res, callback){
-      var badges = [];
-      var date = new Date();
-      var queryID = (uuid + date.getTime()).hashCode().toString();
-      var queryHeader = {};
-      queryHeader.origin = $.extend(true, {}, originHeader.origin);
-      queryHeader.queryID = queryID;
-      for (i=0; i<res.result.length; i++){
-         if(res.result[i].hasOwnProperty("documentBadge")){
-            badges.push(res.result[i].documentBadge);
-         }
+   fetchDetails = function(badges, callback){
+      if(Array.isArray(badges) == true){
+         var date = new Date();
+         var queryID = (uuid + date.getTime()).hashCode().toString();
+         var queryHeader = {};
+         queryHeader.origin = $.extend(true, {}, originHeader.origin);
+         queryHeader.queryID = queryID;
+         var profile = $.extend(queryHeader, {"documentBadge": badges});
+         api.getDetails(profile, callback);
+      } else {
+         throw new Error("Badges is not an Array");
       }
-      var profile = $.extend(queryHeader, {"documentBadge": badges});
-      api.getDetails(profile, callback);
    },
 
    /**
@@ -107,7 +67,7 @@ define(["jquery", "APIconnector"], function($, api){
    sendUsersActivitiesSignal = function(action, documentBadge){
       var resource = documentBadge.uri,
       timestamp = Date.now().toString(),
-      query = $("#searchQuery").text(),
+      query = sessionStorage["eexcess.lastSearchQuery"];
       uuid = documentBadge.id;
 
       var data = {
@@ -426,10 +386,30 @@ define(["jquery", "APIconnector"], function($, api){
    };
 
    /**
-    * This code-snippet instanziates and initializes a EEXCESS_METHODS-Object and makes it
-    * globaly available.
+    * The return object exposes elements to the outside world.
+    * In terms of OO-languages supporting classes this mechanism emulates the "public"
+    * modifier whereas objects that are not mentioned in the return object remain "private".
     */
-   return init; 
+   return {
+      pasteLinkToText: pasteLinkToText,
+      getTerms: getTerms,
+      getCursorPosition: getCursorPosition,
+      setCursorPosition: setCursorPosition,
+      determineArticlesEnd: determineArticlesEnd,
+      findHtmlTagPositions: findHtmlTagPositions,
+      findWhitespaces: findWhitespaces,
+      getCursor: getCursor,
+      getContent: getContent,
+      setContent: setContent,
+      determineDecentInsertPosition: determineDecentInsertPosition,
+      loggingEnabled: loggingEnabled,
+      sendUsersActivitiesSignal: sendUsersActivitiesSignal,
+      fetchDetails: fetchDetails,
+      compileUserProfile: compileUserProfile,
+      insertIntoText: insertIntoText,
+      originHeader: originHeader,
+      uuid: uuid
+   };
 });
 
 
