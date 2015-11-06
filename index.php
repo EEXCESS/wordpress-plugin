@@ -192,7 +192,6 @@ limitations under the License.
          </a>
       </div>
       <!-- /privacy settings thickbox-->
-      <div id="currentCitationStyle" data-citationStyle="apa" style="display:none;">
    <?php }
 
    // Hook for the WYSIWYG editor

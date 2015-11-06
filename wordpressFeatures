@@ -1,10 +1,6 @@
 FEATURES
 - implement logging
-- implement comprehensive user profile 
-- remember the selected citation style for per post 
 
 SHORTCOMINGS
 - an empty results set doens't produce a proper message
-- privacy form must be filled on load
-- birthdate/birthdate thing
 

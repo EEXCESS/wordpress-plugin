@@ -44,6 +44,9 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
       sendQuery : function(profile) {
         api.query(profile, function(res) {
             if (res.status === 'success') {
+                if(res.data.result.length == 0){
+                  iframes.sendMsg({event: "eexcess.error", data: "noResults"}, ["resultList"]);
+                }
                 var res = {profile: profile, result: res.data.result};
                 $('iframe#dashboard').load(function(){
                    // initializing vis dashboard

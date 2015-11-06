@@ -14,7 +14,6 @@
          title: 'Citation Styles',
          icon: false,
          onselect: function(e) {
-            $("#currentCitationStyle").attr("data-citationstyle", this.value());
             var style = this.value();
             require(["citationBuilder"], function(citationBuilder){
                citationBuilder.setStyle(style);
@@ -22,7 +21,7 @@
          }, 
          values: styles,
          onPostRender: function() {
-            var style = ""
+            var style = "";
             thisButton = this;
             require(["citationBuilder"], function(citationBuilder){
                var style = citationBuilder.getStyle();
