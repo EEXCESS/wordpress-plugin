@@ -36,6 +36,11 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
             sessionStorage["eexcess.lastSearchQuery"] = query;
          }
          uiEventsHelper.queryTriggered(query);
+
+         // log event
+         if(eexcessMethods.loggingEnabled()){
+            api.sendLog("itemOpened", eexcessMethods.getItemOpenedLogEvent("SearchResultList"));
+         }
       },
 
       /**

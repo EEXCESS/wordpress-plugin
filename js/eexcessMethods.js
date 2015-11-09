@@ -12,6 +12,13 @@ define(["jquery", "APIconnector"], function($, api){
      loggingLevel: 0
    },
 
+   getItemOpenedLogEvent = function(name){
+      // copy the object
+      var logObj = JSON.parse(JSON.stringify({ origin: this.originHeader.origin}));
+      logObj["content"] = { name: name };
+      return logObj;
+   },
+
    compileUserProfile = function(){
       return {
          "address" : {
@@ -408,6 +415,7 @@ define(["jquery", "APIconnector"], function($, api){
       compileUserProfile: compileUserProfile,
       insertIntoText: insertIntoText,
       originHeader: originHeader,
+      getItemOpenedLogEvent: getItemOpenedLogEvent,
       uuid: uuid
    };
 });
