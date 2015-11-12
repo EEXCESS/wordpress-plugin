@@ -2,8 +2,9 @@
 	/*
 	* The following feunction registers the plugin.
 	*/
-	tinymce.PluginManager.add('EEXCESS_alter_citations', function(editor, url) {
-		// creates the button
+   tinymce.PluginManager.add('EEXCESS_alter_citations', function(editor, url) {
+      var myButton = null;
+      // creates the button
 		editor.addButton( 'Alter_Citations_Button', {
 			title : 'Alter Citations', // title of the button
 			image : url + '/../../images/delete.png',  // path to the button's image
@@ -14,7 +15,22 @@
 				H = $(window).height(),
 				W = ( 750 < width ) ? 750 : width;
 				tb_show( 'Alter EEXCESS Citations', '#TB_inline?width=' + W + '&height=' + H + '&inlineId=alterCitationsForm' );
-			}
+			},
+         onPostRender: function(){
+            myButton = this; 
+            require(["jquery"], function($){
+               // disable button when no citation area present
+               if($(tinyMCE.activeEditor.getBody()).find('.csl-entry').length === 0){
+                  myButton.disabled(true);
+               }
+            });
+         },
+         enable: function(){
+            myButton.disabled(false);
+         },
+         disable: function(){
+            myButton.disabled(true);
+         }
 		});
 	});
 
@@ -124,5 +140,5 @@
 			});
 			tb_remove();
 		});
-	};
+	}
 })();
