@@ -89,7 +89,7 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
 
                 // inform other frames that new results have arrived
                 iframes.sendMsg({event: 'eexcess.newResults', data: res}, ["resultList"]);
-                $('div[aria-label="Visualization Dashboard"]').show("slow");
+                tinyMCE.activeEditor.buttons["Vis_Dashboard"].enable();
             } else {
                 iframes.sendMsg({event: 'eexcess.error', data: res.data}, ["resultList"]);
             }

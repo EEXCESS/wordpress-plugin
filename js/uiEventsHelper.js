@@ -3,12 +3,8 @@ define(['jquery', 'settings'], function($, settings){
    var resultList = $('#resultList'),
    privacyButton = $('#privacySettings');
 
-   $('div[aria-label="Visualization Dashboard"]').hide();
-   resultList.hide();
-
    // event handler keeping track of the profile form, storing
    // changed values into local 
-   
    function profileFormHandler(o){
       var formElement  = $(o.originalEvent.path[0]),
       elementName = formElement.attr("data-eexcess-profile-field"),

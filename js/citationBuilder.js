@@ -23,15 +23,6 @@ define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexce
       var url = record.uri || "",
       title = record.detail.eexcessProxy.dctitle || "";
 
-      if(eexcessMethods.loggingEnabled()){
-         try{
-            sendUsersActivitiesSignal("cited", record);
-         }catch(e){
-            console.log("Logging failed. Message was: " + e.message);
-         }
-
-      }
-
       if(hyperlink){
          var searchQuery = sessionStorage["eexcess.lastSearchQuery"];
          var insertionPosition = eexcessMethods.determineDecentInsertPosition(content, position);
@@ -66,6 +57,8 @@ define(['jquery', 'eexcessMethods', 'CLSWrapper', 'settings'], function($, eexce
                   citationText = citationText[0];
                }
             }
+            // When no year is denoted, CLSWrapper inserts (n.d.). This is removed here
+            citationText = citationText.replace(" (n.d.).", "");
 
             citationText = '<p class="csl-entry" data-eexcessId="' + record.id  + '">' + citationText + "</p>";
             citationText = $(citationText).attr("contenteditable", "false")[0].outerHTML;

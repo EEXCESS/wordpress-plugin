@@ -1,6 +1,6 @@
 (function() {
     tinymce.PluginManager.add( 'EEXCESS_vis_dashboard', function( editor, url ) {
-
+        var myButton = null;
         // Add a button that opens a window
         editor.addButton( 'Vis_Dashboard', {
             //text: 'EEXCESS',
@@ -15,6 +15,16 @@
                      api.sendLog("moduleOpened", eexcessMethods.getModuleOpenedLogObj("Visalization Dashboard"));
                   }
                });
+            },
+            onPostRender: function(){
+               myButton = this; 
+               this.disabled(true);
+            },
+            enable: function(){
+               myButton.disabled(false);
+            },
+            disable: function(){
+               myButton.disabled(true);
             }
         });
     });
