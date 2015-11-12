@@ -12,7 +12,7 @@
                require(["eexcessMethods", "APIconnector"], function(eexcessMethods, api){
                   // log event
                   if(eexcessMethods.loggingEnabled()){
-                     api.sendLog("itemOpened", eexcessMethods.getItemOpenedLogEvent("Visalization Dashboard"));
+                     api.sendLog("moduleOpened", eexcessMethods.getModuleOpenedLogObj("Visalization Dashboard"));
                   }
                });
             }

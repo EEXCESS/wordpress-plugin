@@ -1,5 +1,5 @@
 // load dependencies
-require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($,  iframes, citationBuilder, eexcessMethods) {
+require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods', "APIconnector"], function($,  iframes, citationBuilder, eexcessMethods, api) {
 
     /*
      * Listen for message from the embedded iframes.
@@ -23,6 +23,8 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
         if (msg.data.event && msg.data.event === 'eexcess.citationRequest') {
             insertCitation([msg.data.documentsMetadata.documentBadge], false, function(){
               alert("The citation was successfully added to the blog post");
+              var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
+              api.sendLog("itemCitedAsText", context);
            });
         }
 
@@ -32,6 +34,8 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
         if (msg.data.event && msg.data.event === 'eexcess.imageCitationRequest') {
            embedImage(msg.data.documentsMetadata.title, msg.data.documentsMetadata.previewImage, function(){
               alert("The image was successfully added to the blog post");
+              var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
+              api.sendLog("itemCitedAsImage", context);
            });
         }
         
@@ -41,6 +45,8 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
         if (msg.data.event && msg.data.event === 'eexcess.linkImageClicked') {
            embedImage(msg.data.data.title, msg.data.data.previewImage, function(){
               alert("The image was successfully added to the blog post");
+              var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
+              api.sendLog("itemCitedAsImage", context);
            });
         }
 
@@ -50,6 +56,8 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
         if (msg.data.event && msg.data.event === 'eexcess.linkItemClicked') {
             hideThickbox(msg.data.data, function(){
               alert("The citation was successfully added to the blog post");
+              var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
+              api.sendLog("itemCitedAsText", context);
            });
         }
         
@@ -59,6 +67,8 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
         if (msg.data.event && msg.data.event === 'eexcess.hyperlinkInsertRequest') {
             insertCitation([msg.data.documentsMetadata.documentBadge], true, function(){
               alert("The hyperlink was successfully added to the blog post");
+              var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
+              api.sendLog("itemCitedAsHyperlink", context);
            });
         }
 
@@ -69,10 +79,45 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods'], function($, 
            // registers buttons if iframe loads second
            registerButtons();
         }
+
+
+        /*
+         * Bind logging handler to items in the result list
+         */
+        if (msg.data.event && msg.data.event === 'eexcess.resultListLoadingComplete') {
+           if(eexcessMethods.loggingEnabled()){
+              $("#resultList").contents().find("#recommendationList a").click(function(e){
+                 var url = $(this).attr("href");
+                 if(typeof(url) === "string"){
+                    var context = compileContextInformation(url)
+                    api.sendLog("itemOpened", context);
+                 } else {
+                  throw new Error("Couldn't determine items's URL");
+                 }
+              });
+           }
+        }
     };
     // registers buttons if iframe loads first
     registerButtons();
 
+    /*
+     * Gathers `origin`, `queryID` and `content.documentBadge` for 
+     * logging events. https://github.com/EEXCESS/eexcess/wiki/EEXCESS---Logging
+     * @param {string} url: URL of the item used in the current context
+     */
+    function compileContextInformation(url){
+       var item = eexcessMethods.findResultByUrl(url),
+       queryID = eexcessMethods.getQueryID(),
+       context = {
+          origin: eexcessMethods.originHeader.origin,
+          queryID: queryID,
+          content: {
+             documentBadge: item.documentBadge
+          }
+       };
+       return context;
+    }
 
     function embedImage(title, imageURL, callback){
         var snippet = "<a title='" + title + "' href='" + imageURL + "' target='_blank'><img src='" + imageURL + "'/></a>",

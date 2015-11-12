@@ -39,12 +39,12 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
 
          // log event
          if(eexcessMethods.loggingEnabled()){
-            api.sendLog("itemOpened", eexcessMethods.getItemOpenedLogEvent("SearchResultList"));
+            api.sendLog("moduleOpened", eexcessMethods.getModuleOpenedLogObj("SearchResultList"));
          }
       },
 
       /**
-       * Sends a profil (including a searchterm) to the recommender. 
+       * Sends a profil (including a search term) to the recommender. 
        */
       sendQuery : function(profile) {
         api.query(profile, function(res) {
@@ -52,7 +52,11 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
                 if(res.data.result.length == 0){
                   iframes.sendMsg({event: "eexcess.error", data: "noResults"}, ["resultList"]);
                 }
-                var res = {profile: profile, result: res.data.result};
+                var res = {
+                   profile: profile, 
+                   result: res.data.result, 
+                   queryID: res.data.queryID
+                };
                 $('iframe#dashboard').load(function(){
                    // initializing vis dashboard
                    iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
@@ -67,6 +71,7 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
                    };
                 });
                 sessionStorage.setItem("curResults", JSON.stringify(res));
+
                 // extract documentBadges
                 var badges = [];
                 for (i=0; i<res.result.length; i++){
@@ -74,13 +79,15 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
                       badges.push(res.result[i].documentBadge);
                    }
                 }
-
+                // fetch details
                 eexcessMethods.fetchDetails(badges, function(response){
                    if(response.status == 'success'){
                       mergeWithCache(response.data);
                    } else {
                    }
                 });
+
+                // inform other frames that new results have arrived
                 iframes.sendMsg({event: 'eexcess.newResults', data: res}, ["resultList"]);
                 $('div[aria-label="Visualization Dashboard"]').show("slow");
             } else {

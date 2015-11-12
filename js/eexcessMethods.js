@@ -12,7 +12,7 @@ define(["jquery", "APIconnector"], function($, api){
      loggingLevel: 0
    },
 
-   getItemOpenedLogEvent = function(name){
+   getModuleOpenedLogObj = function(name){
       // copy the object
       var logObj = JSON.parse(JSON.stringify({ origin: this.originHeader.origin}));
       logObj["content"] = { name: name };
@@ -45,7 +45,7 @@ define(["jquery", "APIconnector"], function($, api){
    fetchDetails = function(badges, callback){
       if(Array.isArray(badges) == true){
          var date = new Date();
-         var queryID = (uuid + date.getTime()).hashCode().toString();
+         var queryID = this.getQueryID();
          var queryHeader = {};
          queryHeader.origin = $.extend(true, {}, originHeader.origin);
          queryHeader.queryID = queryID;
@@ -390,6 +390,28 @@ define(["jquery", "APIconnector"], function($, api){
          position = this.determineArticlesEnd(content, htmlTagPositions);
       }
       return position;
+   },
+
+   findResultByUrl = function(url){
+      if(typeof(url) === "string"){
+         var results = JSON.parse(sessionStorage["curResults"]);
+         if(typeof(results) === "object" && results.hasOwnProperty("result") && Array.isArray(results.result)){
+            results = results.result;
+            for(var i=0; i<results.length; i++){
+               if(results[i].documentBadge.uri === url){
+                  return results[i];
+               }
+            }
+            // No match
+            return null;
+         }
+      } else {
+         throw new Error("String expected");
+      }
+   },
+   
+   getQueryID = function(){
+      return JSON.parse(sessionStorage["curResults"]).queryID;
    };
 
    /**
@@ -415,7 +437,9 @@ define(["jquery", "APIconnector"], function($, api){
       compileUserProfile: compileUserProfile,
       insertIntoText: insertIntoText,
       originHeader: originHeader,
-      getItemOpenedLogEvent: getItemOpenedLogEvent,
+      findResultByUrl:findResultByUrl, 
+      getQueryID: getQueryID,
+      getModuleOpenedLogObj: getModuleOpenedLogObj,
       uuid: uuid
    };
 });
