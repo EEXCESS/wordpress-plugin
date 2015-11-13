@@ -1,6 +1,0 @@
-FEATURES
-- implement logging
-
-SHORTCOMINGS
-- an empty results set doens't produce a proper message
-
