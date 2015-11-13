@@ -1,6 +1,6 @@
 === EEXCESS ===
 
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: (eexcess_developers)
 
 Tags: Content Recommendation, Economics Content , Museum Content, Cultural Content, Scientific Content, Educational Content, Scientific Research, EEXCESS, EU Project, Digital Library
 

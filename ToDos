@@ -1,18 +1,30 @@
 KNOWN ISSUES
 - Language for ZBW entries is always "de". Irrespective of the actual language of the recommended item. (see https://digital-jira.joanneum.at/browse/EEX-216)
-- Vagrantfile doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
+- Vagrant file doesn't allow reprovisioning (i.e. 'vagrant reload --provision')
 - The "Results on" field is not filled when the tag-method (i.e. #exceess: keyword #) is used
-- errorhandling should be enhanced. especially when the recommender doesn't answer!
+- error handling should be enhanced. especially when the recommender doesn't answer!
 - number of results should be displayed
-- filteroptions for the resultslist
-- dynamic change of the citationstyle
+- filter options for the results list
+- dynamic change of the citation style
 
 
 TODOS/Upcoming improvements
 - Incorporating EEXCESS modules [Nils]
    - Recommendation dashboard
    - Result list (optional)
-- Polish the plug-in up, to make it available in the plug-in market at wordpress.com [Atif (Documentation), Nils (Code)]
-- Implement the latest exchange format (https://github.com/EEXCESS/documentation/blob/master/result-format-proposal.md) [Nils]
-- Implement user profiles [Atif (HTML form), Nils (Code)]
+- Implement user profiles [Nils]
 - Make use of citeproc-js' localization skills [Nils]
+- Nice features [optional, no assignment:
+   - Displaying the providers that contributed to the result
+   - Giving the user the opportunity to influence the number of results (and thereby the response time)
+- Uploading the project to Wordpress Plugin Directory
+   - Creation of good readme file (https://wordpress.org/plugins/about/readme.txt ). Covering “What, how, when and where” questions. [Atif]
+   - Upload to Wordpress' SVN repo [Nils]
+- Removing the "#EEXCESS# <search term>"-feature [Atif]
+
+Issues concerning the rewrite
+- insert items from dashboard beautifully
+- implement logging
+- remove some icons from resultlist
+- fix bad alignment of icons in resultlist citation 
+- add button for "insert url"
