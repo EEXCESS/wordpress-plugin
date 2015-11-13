@@ -6,9 +6,9 @@ Tags: Content Recommendation, Economics Content , Museum Content, Cultural Conte
 
 Requires at least: 3.0.1
 
-Tested up to: 4.2
+Tested up to: 4.3.1.
 
-Stable tag: 4.3
+Stable tag: 4.3.1
 
 License: (Apache License Version 2.0), GPLv2 or later
 
