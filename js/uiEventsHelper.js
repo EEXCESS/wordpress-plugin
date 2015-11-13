@@ -2,6 +2,7 @@ define(['jquery', 'settings'], function($, settings){
 
    var resultList = $('#resultList'),
    privacyButton = $('#privacySettings');
+   resultList.hide();
 
    // event handler keeping track of the profile form, storing
    // changed values into local 
