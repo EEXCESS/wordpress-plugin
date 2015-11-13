@@ -25,6 +25,9 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods', "APIconnector
               alert("The citation was successfully added to the blog post");
               var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
               api.sendLog("itemCitedAsText", context);
+              
+              // activate "delete citations" button
+              tinyMCE.activeEditor.buttons["Alter_Citations_Button"].enable();
            });
         }
 
@@ -36,6 +39,9 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods', "APIconnector
               alert("The image was successfully added to the blog post");
               var context = compileContextInformation(msg.data.documentsMetadata.documentBadge.uri);
               api.sendLog("itemCitedAsImage", context);
+              
+              // activate "delete citations" button
+              tinyMCE.activeEditor.buttons["Alter_Citations_Button"].enable();
            });
         }
         

@@ -1,6 +1,6 @@
 (function(){
 	/*
-	* The following feunction registers the plugin.
+	* The following function registers the plugin.
 	*/
    tinymce.PluginManager.add('EEXCESS_alter_citations', function(editor, url) {
       var myButton = null;
@@ -85,6 +85,9 @@
 			$(this).removeClass("eexcess-alreadyCited");
 			$(this).removeAttr("data-refnumb");
 		});
+      if(isCitationareaPresent() === false){
+         tinyMCE.activeEditor.buttons["Alter_Citations_Button"].disable();
+      }
 	}
 
 	/*
@@ -141,4 +144,8 @@
 			tb_remove();
 		});
 	}
+
+   var isCitationareaPresent = function(){
+      return $(tinyMCE.activeEditor.getBody()).find('.csl-entry').length > 0;
+   }
 })();
