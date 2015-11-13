@@ -229,7 +229,7 @@ limitations under the License.
    // inlcude the js for tinymce
    function EEXCESS_add_tinymce_plugin( $plugin_array ) {
       $plugin_array['EEXCESS_get_recommendations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Get_Recommendations_Button.js', __FILE__ );
-      $plugin_array['EEXCESS_alter_citations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Alter_Citations_Button.js', __FILE__ );
+      $plugin_array['EEXCESS_delete_citations'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Delete_Citations_Button.js', __FILE__ );
       $plugin_array['EEXCESS_vis_dashboard'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Vis_Dashboard.js', __FILE__ );
       $plugin_array['EEXCESS_citation_styles'] = plugins_url( 'js/tinyMCE_plugins/tinyMCE_Citation_Styles.js', __FILE__ );
       return $plugin_array;
@@ -239,7 +239,7 @@ limitations under the License.
    function EEXCESS_add_tinymce_button( $buttons ) {
 
       array_push( $buttons, 'Get_Recommendations_Button');
-      array_push( $buttons, 'Alter_Citations_Button');
+      array_push( $buttons, 'Delete_Citations_Button');
       array_push( $buttons, 'Vis_Dashboard');
       array_push( $buttons, 'Citation_Styles');
       return $buttons;

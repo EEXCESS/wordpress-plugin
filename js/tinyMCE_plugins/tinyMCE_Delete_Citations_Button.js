@@ -2,11 +2,11 @@
 	/*
 	* The following function registers the plugin.
 	*/
-   tinymce.PluginManager.add('EEXCESS_alter_citations', function(editor, url) {
+   tinymce.PluginManager.add('EEXCESS_delete_citations', function(editor, url) {
       var myButton = null;
       // creates the button
-		editor.addButton( 'Alter_Citations_Button', {
-			title : 'Alter Citations', // title of the button
+		editor.addButton( 'Delete_Citations_Button', {
+			title : 'Delete Citations', // title of the button
 			image : url + '/../../images/delete.png',  // path to the button's image
 			onclick : function() {
 				// triggers the thickbox
@@ -14,7 +14,7 @@
 				var width = $(window).width(),
 				H = $(window).height(),
 				W = ( 750 < width ) ? 750 : width;
-				tb_show( 'Alter EEXCESS Citations', '#TB_inline?width=' + W + '&height=' + H + '&inlineId=alterCitationsForm' );
+				tb_show( 'Delete EEXCESS Citations', '#TB_inline?width=' + W + '&height=' + H + '&inlineId=deleteCitationsForm' );
 			},
          onPostRender: function(){
             myButton = this; 
@@ -86,7 +86,7 @@
 			$(this).removeAttr("data-refnumb");
 		});
       if(isCitationareaPresent() === false){
-         tinyMCE.activeEditor.buttons["Alter_Citations_Button"].disable();
+         tinyMCE.activeEditor.buttons["Delete_Citations_Button"].disable();
       }
 	}
 
@@ -100,7 +100,7 @@
 		references = $(tinyMCE.activeEditor.getBody()).find('.csl-entry');
 		// creates a form to be displayed everytime the button is clicked
 		if(references != null){
-			var form = '<div id="alterCitationsForm"><table id="citation-table" class="form-table">';
+			var form = '<div id="deleteCitationsForm"><table id="citation-table" class="form-table">';
 			for(var i = 0; i<references.length; i++){
 				form = form + '<tr> \
 						<td><input type="checkbox" class="deletionIndicator"></td> \
@@ -116,7 +116,7 @@
 		}
 
 		//removes a possibly existing expired version of the table
-		$("#alterCitationsForm").remove()
+		$("#deleteCitationsForm").remove()
 
 		form = $(form);
 		var table = form.find('table');

@@ -27,7 +27,7 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods', "APIconnector
               api.sendLog("itemCitedAsText", context);
               
               // activate "delete citations" button
-              tinyMCE.activeEditor.buttons["Alter_Citations_Button"].enable();
+              tinyMCE.activeEditor.buttons["Delete_Citations_Button"].enable();
            });
         }
 
@@ -41,7 +41,7 @@ require(['jquery', 'iframes', 'citationBuilder', 'eexcessMethods', "APIconnector
               api.sendLog("itemCitedAsImage", context);
               
               // activate "delete citations" button
-              tinyMCE.activeEditor.buttons["Alter_Citations_Button"].enable();
+              tinyMCE.activeEditor.buttons["Delete_Citations_Button"].enable();
            });
         }
         
