@@ -40,6 +40,7 @@ define([], function(){
          "stylesDir" : "js/lib/citationStyles/",
          "localsDir" : "js/lib/locales/",
          "errorMsg"  : "Insertion into the citationarea is prohibited"
-      }
+      },
+      "version" : "0.6.1"
    };
 });

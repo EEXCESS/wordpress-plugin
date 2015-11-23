@@ -58,12 +58,19 @@ define(['jquery', 'APIconnector', 'iframes', 'settings', 'uiEventsHelper', 'eexc
                    queryID: res.data.queryID
                 };
                 $('iframe#dashboard').load(function(){
+                   if(eexcessMethods.loggingEnabled() && localStorage["userID"] != undefined){
+                      userID = localStorage["userID"];
+                   } else {
+                      userID = "";
+                   }
+
                    // initializing vis dashboard
                    iframes.sendMsgAll({event: 'eexcess.newDashboardSettings', settings: {
                        //selectedChart: 'geochart',
                        hideCollections: true,
                        showLinkImageButton: true,
-                       showLinkItemButton: true
+                       showLinkItemButton: true,
+                       origin: { clientType: 'EEXCESS - Wordpress Plug-in', clientVersion: settings.version, userID: userID }
                    }});
                    // when the dashboard is currently displayed, then...
                    if( $("#dashboard").parent().attr("id") == "TB_ajaxContent"){

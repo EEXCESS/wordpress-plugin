@@ -101,7 +101,8 @@ limitations under the License.
       <?php add_thickbox(); ?>
       <div id="visualizationThickbox" style="display:none;">
          <!-- thickbox content-->
-         <iframe id="dashboard" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/Dashboard/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe>
+         <!--<iframe id="dashboard" src=<?php echo plugin_dir_url(__FILE__) . 'js/lib/visualization-widgets/Dashboard/index.html';?> style="position:relative;width:1000px;height:625px;"></iframe> -->
+         <iframe id="dashboard" src="https://eexcess.github.io/visualization-widgets-files/Dashboard/index.html" style="position:relative;width:1000px;height:625px;"></iframe>
          <!-- /thickbox content-->
       </div>
       <!-- / Visualization thickbox-->
