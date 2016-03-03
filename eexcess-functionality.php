@@ -39,7 +39,7 @@ limitations under the License.
          wp_deregister_script( $eventsScripts );
          wp_enqueue_script( 'requirejs', plugins_url( '/js/lib/require.js', __FILE__ ));
 
-         // make the plugins url available in scripts
+         // make the plugins url available in requirejs config script
          wp_localize_script( 'requirejs', 'plugin_url', plugins_url( '/', __FILE__ ) );
 
 

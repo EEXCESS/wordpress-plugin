@@ -1,4 +1,4 @@
-(function(){
+(function(require, define){
    require(["hashCode"], function(){
       if(localStorage.getItem("eexcess.uuid") === null){
          var date = new Date();
@@ -6,4 +6,4 @@
          localStorage.setItem("eexcess.uuid", seed);
       }
    });
-})();
+}(EEXCESS.require, EEXCESS.define));

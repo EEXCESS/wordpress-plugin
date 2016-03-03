@@ -1,4 +1,4 @@
-(function() {
+(function(require, define){
     tinymce.PluginManager.add( 'EEXCESS_vis_dashboard', function( editor, url ) {
         var myButton = null;
         // Add a button that opens a window
@@ -28,5 +28,5 @@
             }
         });
     });
-})();
+}(EEXCESS.require, EEXCESS.define));
 

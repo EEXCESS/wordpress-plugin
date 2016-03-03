@@ -1,4 +1,4 @@
-(function(){
+(function(require, define){
 	/*
 	* The following function registers the plugin.
 	*/
@@ -148,4 +148,4 @@
    var isCitationareaPresent = function(){
       return $(tinyMCE.activeEditor.getBody()).find('.csl-entry').length > 0;
    }
-})();
+}(EEXCESS.require, EEXCESS.define));

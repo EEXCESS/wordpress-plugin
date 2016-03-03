@@ -1,5 +1,4 @@
-(function() {
-
+(function(require, define){
    tinymce.PluginManager.add( 'EEXCESS_citation_styles', function( editor, url ) {
 
       styles = [];
@@ -30,5 +29,5 @@
          }
       });
    });
-})();
+}(EEXCESS.require, EEXCESS.define));
 
