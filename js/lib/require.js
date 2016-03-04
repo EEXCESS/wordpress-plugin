@@ -10,6 +10,7 @@
 var EEXCESS = {};
 var EEXCESSrequire = (function(){
    var requirejs, require, define;
+
    (function (global) {
        var req, s, head, baseElement, dataMain, src,
            interactiveScript, currentlyAddingScript, mainScript, subPath,
